@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 import requests
 from constants import React
 from react import ReactFunction
-import imoji
+
 
 print("Fetching data from React.dev...")
 
@@ -29,4 +29,4 @@ print("getting the data ...")
 
 # get the page contents
 content = react.get_cotent_data(links)
-
+#print(content)

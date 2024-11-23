@@ -58,7 +58,10 @@ class ReactFunction:
                 if sibling.name == 'div' or sibling.name == 'code' :  # Detect <code> tags
                     code_snippets.append(sibling.get_text(strip=True)) 
                 elif sibling.name and sibling.get_text(strip=True):  # Only include non-empty text
-                    siblings.append(sibling.get_text(strip=True))
+                    text = sibling.get_text(strip=True)
+                    cleaned_text = text.replace("\u2019", "'").replace("\u201c", '"').replace("\u201d", '"')
+                    siblings.append(cleaned_text)
+                    
 
             # Add the collected text content
             header_content["content"] = siblings
@@ -78,18 +81,21 @@ class ReactFunction:
     def extract_links_from_json(self,json_content):
         links = []
         for key, value in json_content.items():
+            links.append(value["url"])
             for sub_key, sub_value in value.items():
                 links.append(sub_value["url"])
         return links
 
     def get_cotent_data(self,link_list):
         body_content = []
-        link_list = link_list[:2]
+        link_list = link_list[:1]
         for link in link_list:
             json_content = self.getting_inner_content(link)
-            body_content.append(json.dumps(json_content))
-            print("\n\n\n", "------------------------------------------------------------------")
-        return body_content
+            body_content.append(json_content)
+            print(json_content)
+        # open('react.json', 'w').write(json.dumps(body_content, indent=4))   
+   
+        return body_content 
     
 
 
