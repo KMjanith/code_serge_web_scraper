@@ -1,6 +1,6 @@
 import json
 import requests
-from constants import React
+from react.react_constants import React
 from bs4 import BeautifulSoup
 import re
 
