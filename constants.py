@@ -10,3 +10,8 @@ class React(Enum):
     A = "a"
     DIV = "div"
     HREF = "href"
+    TOPIC_LIST = ['h1', 'h2', 'h3', 'h4']
+    MAIN = "main"
+
+
+    
