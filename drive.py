@@ -9,8 +9,6 @@ from react import ReactFunction
 print("Fetching data from React.dev...")
 
 
-main_data_list =  []
-
 response = requests.get(React.URL.value)
 response.raise_for_status()  # Ensure the request was successful
 
@@ -41,14 +39,10 @@ for i in range(len(content)):
 
 print("Data parsed successfully")
 
-#extract links from json
-# links = react. extract_links_from_json(result[0])
-
-
-output_file = "original.json"
+output_file = "react.json"
 
 with open(output_file, 'w', encoding='utf-8') as file:
     json.dump(content, file, ensure_ascii=False, indent=4)
 
-print("Data saved to original.json")
+print("React data saved to react.json")
 

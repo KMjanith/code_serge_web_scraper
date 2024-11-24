@@ -46,6 +46,16 @@ class ReactFunction:
             page_list = page_list + div.contents
         return page_list
     
+    def return_data(self, stack, content_name):
+        # poping and making the json hirachi and output the page data as a list of dictionaries
+        original = []
+        while(len(stack) > 1):
+            a = stack.pop()
+            stack[-1][content_name].append(a)
+        original.append(stack.pop())
+        return original
+    
+    
     def sub_heddings_data_collector(self,l, main_header, url):
         stack = [{"headers":main_header, "url": url,"content": []}]  
         original = []
@@ -99,12 +109,12 @@ class ReactFunction:
                         stack[-1]["content"].append(i.text)
 
 
-        while(len(stack) > 1):
-            a = stack.pop()
-            stack[-1]["content"].append(a)
-        original.append(stack.pop())
+        # while(len(stack) > 1):
+        #     a = stack.pop()
+        #     stack[-1]["content"].append(a)
+        # original.append(stack.pop())
 
-        return original
+        return self.return_data(stack, "content")
     
     
     def main_heading_data_collector(self, page_item_list, main_header, url):
@@ -168,12 +178,12 @@ class ReactFunction:
                     else:
                         stack[-1]["sections"].append(i.text)
 
-        while(len(stack) > 1):
-            a = stack.pop()
-            stack[-1]["sections"].append(a)
-        original.append(stack.pop())
+        # while(len(stack) > 1):
+        #     a = stack.pop()
+        #     stack[-1]["sections"].append(a)
+        # original.append(stack.pop())
 
-        return original
+        return self.return_data(stack, "sections")
 
 
     #function to get the inner content of the urls
