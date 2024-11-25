@@ -1,8 +1,7 @@
-import json
 import requests
-from react.react_constants import React
+from constants.react_constants import React
 from bs4 import BeautifulSoup
-import re
+from utilities.utilities import Utilities
 
 class ReactFunction:
 
@@ -34,160 +33,131 @@ class ReactFunction:
             # getting sub topics and their urls for the main sub topics
             for j in inner_li:
                 subtopic_url = url + j.find(React.A.value).get(React.HREF.value)
-                # result[main_sub_topic][j.find(React.A.value).text] ={"url": subtopic_url}
                 temp.append({"topic": j.find(React.A.value).text, "url": subtopic_url})
             temp_dic["subTopics"] = temp
             result.append(temp_dic)
         return [result, main_topic]
     
-    def make_item_list(self, all_divs):
-        page_list = []
-        for index, div in enumerate(all_divs):
-            page_list = page_list + div.contents
-        return page_list
     
-    def return_data(self, stack, content_name):
-        # poping and making the json hirachi and output the page data as a list of dictionaries
+    def sub_heddings_data_collector(self,l, main_header, url, util):
+
+        stack = [{"headers":main_header, "url": url,React.CONTENT.value: []}]  
+        STACK_POINTER = stack[-1][React.CONTENT.value]
         original = []
-        while(len(stack) > 1):
-            a = stack.pop()
-            stack[-1][content_name].append(a)
-        original.append(stack.pop())
-        return original
-    
-    
-    def sub_heddings_data_collector(self,l, main_header, url):
-        stack = [{"headers":main_header, "url": url,"content": []}]  
-        original = []
+
         for i in l:
             if(i.name == None):
                 continue
-            # print(stack)
-            # print("tag: ", i.name)
-            # print("data: ", i.text) 
-            # print("\n")
-            if(i.name in ['h1', 'h2', 'h3', 'h4']):
+            if(i.name in React.TOPIC_LIST.value):
                 level = int(i.name[1])
                 current_stack_length = len(stack)
                 if(current_stack_length < level):
-                    stack.append({"sub_header": i.text, "content": []})
+                    stack.append({React.SUBHEADER.value: i.text, React.CONTENT.value: []})
                 elif(current_stack_length == level and current_stack_length != 0):
                     a = stack.pop()
-                    stack[-1]["content"].append(a)
-                    stack.append({"sub_header": i.text, "content": []})
+                    STACK_POINTER.append(a)
+                    stack.append({React.SUBHEADER.value: i.text, React.CONTENT.value: []})
                 
                 else:
                     while(len(stack) > level):
                         a = stack.pop()
-                        stack[-1]["content"].append(a)
+                        STACK_POINTER.append(a)
                     a = stack.pop()
                     if(len(stack)==0):
                         original.append(a)
-                        stack.append({"sub_header": i.text, "content": []})
+                        stack.append({React.SUBHEADER.value: i.text, React.CONTENT.value: []})
                     else:
-                        stack[-1]["content"].append(a)
-                        stack.append({"sub_header": i.text, "content": []})
+                        STACK_POINTER.append(a)
+                        stack.append({React.SUBHEADER.value: i.text, React.CONTENT.value: []})
             else:
                 if(i.name == 'ul'):
                     for index,j in enumerate(i.find_all('li')):
-                        stack[-1]["content"].append(f"  {index+1}.{j.text}")
+                        STACK_POINTER.append(f"  {index+1}.{j.text}")
                 if(i.name == 'ol'):
                     for index,j in enumerate(i.find_all('li')):
-                        stack[-1]["content"].append(f"  {index+1}.{j.text}")
+                        STACK_POINTER.append(f"  {index+1}.{j.text}")
 
                 if(i.name == 'div'):
                     code = i.find('code')
                     if(code):
-                        stack[-1]["content"].append({"code_example": code.text})
+                        STACK_POINTER.append({React.CODE_ECAMPLE.value: code.text})
                     else:
-                        stack[-1]["content"].append(i.text)
+                        STACK_POINTER.append(i.text)
             
                 else:
                     if(i.name == "ul" or i.name == "ol"):
                         continue
                     else:
-                        stack[-1]["content"].append(i.text)
-
-
-        # while(len(stack) > 1):
-        #     a = stack.pop()
-        #     stack[-1]["content"].append(a)
-        # original.append(stack.pop())
-
-        return self.return_data(stack, "content")
+                        STACK_POINTER.append(i.text)
+        
+        return util.return_data(stack, React.CONTENT.value)
     
     
-    def main_heading_data_collector(self, page_item_list, main_header, url):
+    def main_heading_data_collector(self, page_item_list, main_header, url, util):
 
-        stack = [{"title": main_header,"source": "react" ,"url": url,"sections": [], "subTopics": []}]
+        stack = [{"title": main_header,"source": "react" ,"url": url,"section": [], "subTopics": []}]
         original = []
+        STACK_POINTER = stack[-1][React.SECTIONS.value]
         for i in page_item_list:
             if(i.name == None):
                 continue
-            # print(stack)
-            # print("tag: ", i.name)
-            # print("data: ", i.text) 
-            # print("\n")
             if(i.name in React.TOPIC_LIST.value):
                 level = int(i.name[1])
                 current_stack_length = len(stack)
                 if(current_stack_length < level):
                     sub_url = i.find('a')
                     if(sub_url):
-                        stack.append({"subHeader": i.text, "url": f"{url}/{sub_url.get('href')}","sections": [] })
+                        stack.append({React.SUBHEADER.value: i.text, "url": f"{url}/{sub_url.get(React.HREF.value)}",React.SECTIONS.value: [] })
                 elif(current_stack_length == level and current_stack_length != 0):
                     a = stack.pop()
-                    stack[-1]["sections"].append(a)
+                    STACK_POINTER.append(a)
                     sub_url = i.find('a')
                     if(sub_url):
-                        stack.append({"subHeader": i.text, "url": f"{url}/{sub_url.get('href')}","sections": [] })
+                        stack.append({React.SUBHEADER.value: i.text, "url": f"{url}/{sub_url.get(React.HREF.value)}",React.SECTIONS.value: [] })
                 
                 else:
                     while(len(stack) > level):
                         a = stack.pop()
-                        stack[-1]["sections"].append(a)
+                        STACK_POINTER.append(a)
                     a = stack.pop()
                     if(len(stack)==0):
                         original.append(a)
                         sub_url = i.find('a')
                     if(sub_url):
-                        stack.append({"subHeader": i.text, "url": f"{url}/{sub_url.get('href')}","sections": [] })
+                        stack.append({React.SUBHEADER.value: i.text, "url": f"{url}/{sub_url.get(React.HREF.value)}",React.SECTIONS.value: [] })
                     else:
-                        stack[-1]["sections"].append(a)
+                        STACK_POINTER.append(a)
                         sub_url = i.find('a')
                     if(sub_url):
-                        stack.append({"subHeader": i.text, "url": f"{url}/{sub_url.get('href')}","sections": [] })
+                        stack.append({React.SUBHEADER.value: i.text, "url": f"{url}/{sub_url.get(React.HREF.value)}",React.SECTIONS.value: [] })
             else:
                 if(i.name == 'ul'):
                     for index,j in enumerate(i.find_all('li')):
-                        stack[-1]["sections"].append(f"  {index+1}.{j.text}")
+                        STACK_POINTER.append(f"  {index+1}.{j.text}")
                 if(i.name == 'ol'):
                     for index,j in enumerate(i.find_all('li')):
-                        stack[-1]["sections"].append(f"  {index+1}.{j.text}")
+                        STACK_POINTER.append(f"  {index+1}.{j.text}")
 
                 if(i.name == 'div'):
                     code = i.find('code')
                     if(code):
-                        stack[-1]["sections"].append({"code_example": code.text})
+                        STACK_POINTER.append({React.CODE_ECAMPLE.value: code.text})
                     else:
-                        stack[-1]["sections"].append(i.text)
+                        STACK_POINTER.append(i.text.replace("\n", ""))
             
                 else:
                     if(i.name == "ul" or i.name == "ol"):
                         continue
                     else:
-                        stack[-1]["sections"].append(i.text)
+                        STACK_POINTER.append(i.text.replace("\n", ""))
 
-        # while(len(stack) > 1):
-        #     a = stack.pop()
-        #     stack[-1]["sections"].append(a)
-        # original.append(stack.pop())
-
-        return self.return_data(stack, "sections")
+     
+        return util.return_data(stack, React.SECTIONS.value)
 
 
     #function to get the inner content of the urls
     def getting_inner_content(self,url, main_or_sub):
+        util = Utilities()
         response = requests.get(url)
         soup = BeautifulSoup(response.text, 'html.parser')
 
@@ -224,15 +194,15 @@ class ReactFunction:
         all_divs = actual_data.find_all('div', class_="max-w-4xl ms-0 2xl:mx-auto")
 
         # Extract items with the div and make the list with inner content
-        page_item_list = self.make_item_list(all_divs)
+        page_item_list = util.make_item_list(all_divs)
 
         if(main_or_sub == React.MAIN.value):
             # getting main page data
-            main_pages = self.main_heading_data_collector(page_item_list, h1, url)
+            main_pages = self.main_heading_data_collector(page_item_list, h1, url, util)
             return main_pages
         else:
             # getting sub page data
-            sub_pages = self.sub_heddings_data_collector(page_item_list, h1, url)
+            sub_pages = self.sub_heddings_data_collector(page_item_list, h1, url, util)
             return sub_pages
 
 
@@ -247,6 +217,7 @@ class ReactFunction:
     def get_content_data(self,link_list, main_or_sub):
         body_content = []
         for link in link_list:
+            print(f"Getting data from {link['url']}")
             original_dict = self.getting_inner_content(link["url"], main_or_sub)
             body_content.append(original_dict[0])
         return body_content 

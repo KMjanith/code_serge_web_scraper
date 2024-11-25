@@ -12,6 +12,10 @@ class React(Enum):
     HREF = "href"
     TOPIC_LIST = ['h1', 'h2', 'h3', 'h4']
     MAIN = "main"
+    SUBHEADER = "sub_header"
+    SECTIONS = "sections"
+    CODE_ECAMPLE = "code_example"
+    CONTENT = "content"
 
 
     

@@ -3,9 +3,10 @@ import json
 from bs4 import BeautifulSoup
 import requests
 from aws.aws import AwsFunction
-from aws.aws_constants import Aws
-from react.react_constants import React
+from constants.aws_constants import Aws
+from constants.react_constants import React
 from react.react import ReactFunction
+
 
 
 # print("Fetching data from React.dev...")
@@ -44,48 +45,36 @@ from react.react import ReactFunction
 
 # print("Data parsed successfully")
 
-# output_file = "react.json"
+# output_file = "./outputs/react.json"
 
 # with open(output_file, 'w', encoding='utf-8') as file:
 #     json.dump(content, file, ensure_ascii=False, indent=4)
 
 # print("React data saved to react.json")
 
-from playwright.sync_api import sync_playwright
-with sync_playwright() as p:
-    browser = p.chromium.launch(headless=True)
-    page = browser.new_page()
 
-    page.goto("https://docs.aws.amazon.com/lambda/latest/dg/welcome.html")
 
-    # Wait for the AJAX content to load (e.g., by waiting for a specific element)
-    # page.wait_for_selector('main', timeout=60000)  # Wait for dynamic content for up to 60 seconds
+aws = AwsFunction()
+print("Fetching data from AWS...")
 
-    # # Extract content
-    # content = page.inner_text('main')  # Replace with the actual selector
-    # print(content)
+#getting aws side bar topics and urls
+topic_urls = aws.find_outer_topis()
 
-    title_element = page.query_selector('div#main')
-    print(title_element.inner_text())
-    # for i in title_element:
-    #     print("Title:", i.inner_text())
-    
+# making the parent child side bar content hirachy
+for topic in topic_urls:
+    if(topic.get(Aws.CONTENTS.value)):
+        aws.make_url_hirachy(topic[Aws.CONTENTS.value])
+    else:
+        topic[Aws.SECTIONS.value] = []
 
-    browser.close()
+# getting the html content of the urls
+topic_urls = aws.getting_page_content_driver(topic_urls)
 
-# asw = AwsFunction()
-# print("Fetching data from AWS...")
 
-# topic_urls = asw.find_outer_topis()
+with open("./outputs/aws.json", 'w', encoding='utf-8') as file:
+    json.dump(topic_urls, file, ensure_ascii=False, indent=4)
 
-# for topic in topic_urls:
-#     if(topic.get("contents")):
-#         asw.make_url_hirachy(topic["contents"])
-#     else:
-#         topic["sections"] = []
 
-# with open("aws-test.json", 'w', encoding='utf-8') as file:
-#     json.dump(topic_urls, file, ensure_ascii=False, indent=4)
 
 
 

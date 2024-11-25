@@ -1,0 +1,988 @@
+[
+    {
+        "title": "What is AWS Lambda?",
+        "href": "https://docs.aws.amazon.com/lambda/latest/dg/welcome.html",
+        "sections": [
+            {
+                "headers": null,
+                "url": "https://docs.aws.amazon.com/lambda/latest/dg/welcome.html",
+                "content": [
+                    "",
+                    "You can use AWS Lambda to run code without provisioning or managing servers.",
+                    " Lambda runs your code    on a high-availability compute infrastructure and performs all of the administration of the compute resources,    including server and operating system maintenance, capacity provisioning and automatic scaling, and    logging. With Lambda, all you need to do is supply your code in one of the language runtimes that Lambda supports.",
+                    "You organize your code into Lambda functions. The Lambda service runs your function only when needed and scales automatically. You only pay for the compute time that you consume—there is no charge when your code is not running. For more information, see AWS Lambda Pricing.",
+                    "TipTo learn how to build serverless solutions, check out the Serverless Developer Guide.",
+                    {
+                        "sub_header": "When to use Lambda",
+                        "content": [
+                            "Lambda is an ideal compute service for application scenarios that need to scale up rapidly, and scale down to      zero when not in demand. For example, you can use Lambda for:",
+                            "  1.File processing:  Use Amazon Simple Storage Service (Amazon S3) to trigger Lambda data processing in real time after an upload.",
+                            "  2.Stream processing:  Use Lambda and Amazon Kinesis to process real-time streaming data for application activity tracking, transaction order processing, clickstream analysis, data cleansing, log filtering, indexing, social media analysis, Internet of Things (IoT) device data telemetry, and metering.",
+                            "  3.Web applications:  Combine Lambda with other AWS services to build powerful web applications that automatically scale up and down and run in a highly available configuration across multiple data centers.",
+                            "  4.IoT backends:  Build serverless backends using Lambda to handle web, mobile, IoT, and third-party API requests.",
+                            "  5.Mobile backends:  Build backends using Lambda and Amazon API Gateway  to authenticate and process API requests. Use AWS Amplify to easily integrate with your iOS, Android, Web, and React Native frontends.",
+                            "When using Lambda, you are responsible only for your code. Lambda manages the compute fleet that offers a      balance of memory, CPU, network, and other resources to run your code. Because Lambda manages these resources, you      cannot log in to compute instances or customize the operating system on provided        runtimes. Lambda performs operational and administrative activities on your behalf, including managing      capacity, monitoring, and logging your Lambda functions."
+                        ]
+                    },
+                    {
+                        "sub_header": "Key features",
+                        "content": [
+                            "The following key features help you develop Lambda applications that are scalable, secure, and easily      extensible:",
+                            "  1. Environment variables : \nUse environment variables to adjust your function's behavior without updating code.\n",
+                            "  2.Versions : \nManage the deployment of your functions with versions, so that, for example, a new function can be used for beta testing without affecting users of the stable production version.\n",
+                            "  3.Container images : \nCreate a container image for a Lambda function by using an AWS provided base image or an alternative base\n            image so that you can reuse your existing container tooling or deploy larger workloads that rely on sizable dependencies, such as machine learning.\n",
+                            "  4.Layers : \nPackage libraries and other dependencies to reduce the size of deployment archives and makes it faster to deploy your code.\n",
+                            "  5.Lambda extensions : \nAugment your Lambda functions with tools for monitoring, observability, security, and governance.\n",
+                            "  6.Function URLs : \nAdd a dedicated HTTP(S) endpoint to your Lambda function.\n",
+                            "  7.Response streaming : \nConfigure your Lambda function URLs to stream response payloads back to clients from Node.js functions, to improve time to first byte (TTFB) performance or to return larger payloads.\n",
+                            "  8.Concurrency and scaling controls : \nApply fine-grained control over the scaling and responsiveness of your production applications.\n",
+                            "  9.Code signing : \nVerify that only approved developers publish unaltered, trusted code in your Lambda functions \n",
+                            "  10.Private networking : \nCreate a private network for resources such as databases, cache instances, or internal services.\n",
+                            "  11.File system access : \nConfigure a function to mount an Amazon Elastic File System (Amazon EFS) to a local directory, so that your function code can access and modify shared resources safely and at high concurrency.\n",
+                            "  12.Lambda SnapStart for Java : \nImprove startup performance for Java runtimes by up to 10x at no extra cost, typically with no changes to your function code.\n"
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "title": "Example apps",
+        "href": "https://docs.aws.amazon.com/lambda/latest/dg/example-apps.html",
+        "contents": [
+            {
+                "title": "File-processing app",
+                "href": "https://docs.aws.amazon.com/lambda/latest/dg/file-processing-app.html",
+                "sections": [
+                    {
+                        "headers": null,
+                        "url": "https://docs.aws.amazon.com/lambda/latest/dg/file-processing-app.html",
+                        "content": [
+                            "",
+                            "One of the most common use cases for Lambda is to perform file processing tasks. For example, you might use a Lambda function     to automatically create PDF files from HTML files or images, or to create thumbnails when a user uploads an image.",
+                            "In this example, you create an app which automatically encrypts PDF files when they are uploaded to an Amazon Simple Storage Service (Amazon S3) bucket.     To implement this app, you create the following resources:",
+                            "You also create an AWS Identity and Access Management (IAM) policy to give your Lambda function permission to perform read and write operations     on your S3 buckets.",
+                            "\n\n",
+                            "TipIf you’re brand new to Lambda, we recommend that you carry out the tutorial Create your first Lambda function before\n      creating this example app.",
+                            "You can deploy your app manually by creating and configuring resources with the AWS Management Console or the AWS Command Line Interface (AWS CLI). You can     also deploy the app by using the AWS Serverless Application Model (AWS SAM). AWS SAM is an infrastructure as code (IaC) tool. With IaC, you don’t create     resources manually, but define them in code and then deploy them automatically.",
+                            "If you want to learn more about using Lambda with IaC before deploying this example app, see Using Lambda with infrastructure as code (IaC).",
+                            {
+                                "sub_header": "Prerequisites",
+                                "content": [
+                                    "Before you can create the example app, make sure you have the required command line tools installed.",
+                                    {
+                                        "code_example": "pytest"
+                                    },
+                                    "To deploy the app using AWS SAM, Docker must also be installed on your build machine."
+                                ]
+                            },
+                            {
+                                "sub_header": "Downloading the example app files",
+                                "content": [
+                                    "To create and test the example app, you create the following files in your project directory:",
+                                    {
+                                        "code_example": "lambda_function.py"
+                                    },
+                                    "Expand the following sections to view the code and to learn more about the role of each file in creating and testing your app. To create the       files on your local machine, either copy and paste the code below, or download the files from the aws-lambda-developer-guide GitHub repo.",
+                                    {
+                                        "code_example": "lambda_function.py"
+                                    }
+                                ]
+                            },
+                            {
+                                "sub_header": "Deploying the app",
+                                "content": [
+                                    "You can create and deploy the resources for this example app either manually or by using AWS SAM. In a production environment, we       recommend that you use an IaC tool like AWS SAM to quickly and repeatably deploy whole serverless applications without using manual processes.",
+                                    "For this example, follow the console or AWS CLI instructions to learn how to configure each AWS resource separately, or skip ahead to        Deploy the resources using AWS SAM to quickly deploy the app using a few CLI commands.",
+                                    {
+                                        "sub_header": "Deploy the resources manually",
+                                        "content": [
+                                            "To deploy your app manually, you carry out the following steps:",
+                                            "Follow the instructions in the following paragraphs to create and configure your resources.",
+                                            {
+                                                "sub_header": "Create two S3 buckets",
+                                                "content": [
+                                                    "First create two S3 buckets. The first bucket is the source bucket you will upload your PDF files to. The second bucket is used by     Lambda to save the encrypted file when you invoke your function.",
+                                                    "ConsoleTo create the S3 buckets (console)Open the Buckets page of the Amazon S3 console.Choose Create bucket.Under General configuration, do the following:For Bucket name, enter a globally unique name that meets the Amazon S3 Bucket naming rules.                     Bucket names can contain only lower case letters, numbers, dots (.), and hyphens (-). For AWS Region, choose the AWS Region                     closest to your geographical location. Later in the deployment process, you must create your Lambda function in the same AWS Region, so                     make a note of the region you chose.Leave all other options set to their default values and choose Create bucket.Repeat steps 1 to 4 to create your destination bucket. For Bucket name, enter SOURCEBUCKET-encrypted,                 where SOURCEBUCKET is the name of the source bucket you just created.AWS CLITo create the Amazon S3 buckets (AWS CLI)Run the following CLI command to create your source bucket. The name you choose for your bucket must be globally unique and                 follow the Amazon S3 Bucket naming rules.                 Names can only contain lower case letters, numbers, dots (.), and hyphens (-). For region and LocationConstraint,                 choose the AWS Region closest to your geographical                 location.aws s3api create-bucket --bucket SOURCEBUCKET --region us-west-2 \\--create-bucket-configuration LocationConstraint=us-west-2Later in the tutorial, you must create your Lambda function in the same AWS Region as your source bucket, so make a note of the                 region you chose.Run the following command to create your destination bucket. For the bucket name, you must use SOURCEBUCKET-encrypted,                 where SOURCEBUCKET is the name of the source bucket you created in step 1. For region                 and LocationConstraint, choose the same AWS Region you used to create your source bucket.aws s3api create-bucket --bucket SOURCEBUCKET-encrypted --region us-west-2 \\--create-bucket-configuration LocationConstraint=us-west-2anchoranchorConsoleAWS CLITo create the S3 buckets (console)Open the Buckets page of the Amazon S3 console.Choose Create bucket.Under General configuration, do the following:For Bucket name, enter a globally unique name that meets the Amazon S3 Bucket naming rules.                     Bucket names can contain only lower case letters, numbers, dots (.), and hyphens (-). For AWS Region, choose the AWS Region                     closest to your geographical location. Later in the deployment process, you must create your Lambda function in the same AWS Region, so                     make a note of the region you chose.Leave all other options set to their default values and choose Create bucket.Repeat steps 1 to 4 to create your destination bucket. For Bucket name, enter SOURCEBUCKET-encrypted,                 where SOURCEBUCKET is the name of the source bucket you just created."
+                                                ]
+                                            },
+                                            {
+                                                "sub_header": "Create an execution role (AWS CLI only)",
+                                                "content": [
+                                                    "An execution role is an IAM role that grants a Lambda function permission to access AWS services and resources. When you create a function       using the Lambda console, Lambda automatically creates an execution role. You only need to create a role manually if you choose to deploy the app       using the AWS CLI. To give your function read and write access to Amazon S3, you attach the       AWS managed policyAmazonS3FullAccess.",
+                                                    "ConsoleThis step is only required if you choose to deploy your app using the AWS CLI.AWS CLITo create an execution role and attach the AmazonS3FullAccess managed policy (AWS CLI)Save the following JSON in a file named trust-policy.json. This trust policy allows Lambda to use the role’s                permissions by giving the service principal lambda.amazonaws.com permission to call the AWS Security Token Service (AWS STS) AssumeRole                action.{  \"Version\": \"2012-10-17\",  \"Statement\": [    {      \"Effect\": \"Allow\",      \"Principal\": {        \"Service\": \"lambda.amazonaws.com\"      },      \"Action\": \"sts:AssumeRole\"    }  ]}From the directory you saved the JSON trust policy document in, run the following CLI command to create the execution role.aws iam create-role --role-name LambdaS3Role --assume-role-policy-document file://trust-policy.jsonTo attach the AmazonS3FullAccess managed policy, run the following CLI command.aws iam attach-role-policy --role-name LambdaS3Role --policy-arn arn:aws:iam::aws:policy/AmazonS3FullAccessanchoranchorConsoleAWS CLIThis step is only required if you choose to deploy your app using the AWS CLI."
+                                                ]
+                                            },
+                                            {
+                                                "sub_header": "Create the function deployment package",
+                                                "content": [
+                                                    "To create your function, you create a deployment package containing your function code and its dependencies. For this       application, your function code uses a separate library for the PDF encryption.",
+                                                    {
+                                                        "code_example": "lambda_function.py"
+                                                    },
+                                                    "You can also create your deployment package using a Python virtual environment. See Working with .zip file archives for Python Lambda functions"
+                                                ]
+                                            },
+                                            {
+                                                "sub_header": "Create the Lambda function",
+                                                "content": [
+                                                    "You now use the deployment package you created in the previous step to deploy your Lambda function.",
+                                                    "ConsoleTo create the function (console)To create your Lambda function using the console, you first create a basic function containing some ‘Hello world’ code. You then           replace this code with your own function code by uploading the.zip file you created in the previous step.To ensure that your function doesn't time out when encrypting large PDF files, you configure the function's memory and timeout settings.           You also set the function's log format to JSON. Configuring JSON formatted logs is necessary when using the provided test script so it can read the           function's invocation status from CloudWatch Logs to confirm successful invocation.Open the Functions page of the Lambda console.Make sure you're working in the same AWS Region you created your S3 bucket in. You can change your region using the drop-down             list at the top of the screen.Choose Create function.Choose Author from scratch.Under Basic information, do the following:For Function name, enter EncryptPDF.For Runtime choose Python 3.12.For Architecture, choose x86_64.Choose Create function.To upload the function code (console)In the Code source pane, choose Upload from.Choose .zip file.Choose Upload.In the file selector, select your .zip file and choose Open.Choose Save.To configure the function memory and timeout (console)Select the Configuration tab for your function.In the General configuration pane, choose Edit.Set Memory to 256 MB and Timeout to 15 seconds.Choose Save.To configure the log format (console)Select the Configuration tab for your function.Select Monitoring and operations tools.In the Logging configuration pane, choose Edit.For Logging configuration, select JSON.Choose Save.AWS CLITo create the function (AWS CLI)Run the following command from the directory containing your lambda_function.zip             file.For the region parameter, replace us-west-2 with the region you created your             S3 buckets in.aws lambda create-function --function-name EncryptPDF \\--zip-file fileb://lambda_function.zip --handler lambda_function.lambda_handler \\--runtime python3.12 --timeout 15 --memory-size 256 \\--role arn:aws:iam::123456789012:role/LambdaS3Role --region us-west-2 \\--logging-config LogFormat=JSONanchoranchorConsoleAWS CLITo create the function (console)To create your Lambda function using the console, you first create a basic function containing some ‘Hello world’ code. You then           replace this code with your own function code by uploading the.zip file you created in the previous step.To ensure that your function doesn't time out when encrypting large PDF files, you configure the function's memory and timeout settings.           You also set the function's log format to JSON. Configuring JSON formatted logs is necessary when using the provided test script so it can read the           function's invocation status from CloudWatch Logs to confirm successful invocation.Open the Functions page of the Lambda console.Make sure you're working in the same AWS Region you created your S3 bucket in. You can change your region using the drop-down             list at the top of the screen.Choose Create function.Choose Author from scratch.Under Basic information, do the following:For Function name, enter EncryptPDF.For Runtime choose Python 3.12.For Architecture, choose x86_64.Choose Create function.To upload the function code (console)In the Code source pane, choose Upload from.Choose .zip file.Choose Upload.In the file selector, select your .zip file and choose Open.Choose Save.To configure the function memory and timeout (console)Select the Configuration tab for your function.In the General configuration pane, choose Edit.Set Memory to 256 MB and Timeout to 15 seconds.Choose Save.To configure the log format (console)Select the Configuration tab for your function.Select Monitoring and operations tools.In the Logging configuration pane, choose Edit.For Logging configuration, select JSON.Choose Save."
+                                                ]
+                                            },
+                                            {
+                                                "sub_header": "Configure an Amazon S3 trigger to invoke the function",
+                                                "content": [
+                                                    "For your Lambda function to run when you upload a file to your source bucket, you need to configure a trigger for your function. You can     configure the Amazon S3 trigger using either the console or the AWS CLI.",
+                                                    "ImportantThis procedure configures the S3 bucket to invoke your function every time that an object is created in the bucket. Be sure to \n      configure this only on the source bucket. If your Lambda function creates objects in the same bucket that invokes it, your function can be \n        invoked continuously in a loop. This can result \n        in un expected charges being billed to your AWS account.",
+                                                    "ConsoleTo configure the Amazon S3 trigger (console)Open the Functions page of the Lambda console and choose your function (EncryptPDF).Choose Add trigger.Select S3.Under Bucket, select your source bucket.Under Event types, select All object create events.Under Recursive invocation, select the check box to acknowledge that using the same S3 bucket for input                 and output is not recommended. You can learn more about recursive invocation patterns in Lambda by reading                Recursive patterns that cause run-away Lambda functions                in Serverless Land.Choose Add.When you create a trigger using the Lambda console, Lambda automatically creates a resource based policy                 to give the service you select permission to invoke your function. AWS CLITo configure the Amazon S3 trigger (AWS CLI)For your Amazon S3 source bucket to invoke your function when you add a file, you first need to configure permissions for your                 function using a resource based policy.                 A resource-based policy statement gives other AWS services permission to invoke your function. To give Amazon S3 permission to invoke                 your function, run the following CLI command. Be sure to replace the source-account parameter with your own AWS account ID and to                 use your own source bucket name.aws lambda add-permission --function-name EncryptPDF \\--principal s3.amazonaws.com --statement-id s3invoke --action \"lambda:InvokeFunction\" \\--source-arn arn:aws:s3:::SOURCEBUCKET \\--source-account 123456789012The policy you define with this command allows Amazon S3 to invoke your function only when an action takes place on your source bucket.NoteAlthough S3 bucket names are globally unique, when using resource-based policies it is best practice to specify that the                 bucket must belong to your account.  This is because if you delete a bucket, it is possible for another AWS account to create a                 bucket with the same Amazon Resource Name (ARN).Save the following JSON in a file named notification.json. When applied to your source bucket, this JSON                 configures the bucket to send a notification to your Lambda function every time a new object is added. Replace the AWS account               number and AWS Region in the Lambda function ARN with your own account number and region.{\"LambdaFunctionConfigurations\": [    {      \"Id\": \"EncryptPDFEventConfiguration\",      \"LambdaFunctionArn\": \"arn:aws:lambda:us-west-2:123456789012:function:EncryptPDF\",      \"Events\": [ \"s3:ObjectCreated:Put\" ]    }  ]}Run the following CLI command to apply the notification settings in the JSON file you created to your source bucket. Replace                 SOURCEBUCKET with the name of your own source bucket.aws s3api put-bucket-notification-configuration --bucket SOURCEBUCKET \\--notification-configuration file://notification.jsonTo learn more about the put-bucket-notification-configuration command and the                 notification-configuration option, see put-bucket-notification-configuration                 in the AWS CLI Command Reference.anchoranchorConsoleAWS CLITo configure the Amazon S3 trigger (console)Open the Functions page of the Lambda console and choose your function (EncryptPDF).Choose Add trigger.Select S3.Under Bucket, select your source bucket.Under Event types, select All object create events.Under Recursive invocation, select the check box to acknowledge that using the same S3 bucket for input                 and output is not recommended. You can learn more about recursive invocation patterns in Lambda by reading                Recursive patterns that cause run-away Lambda functions                in Serverless Land.Choose Add.When you create a trigger using the Lambda console, Lambda automatically creates a resource based policy                 to give the service you select permission to invoke your function. "
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "sub_header": "Deploy the resources using AWS SAM",
+                                        "content": [
+                                            "To deploy the example app using the AWS SAM CLI, carry out the following steps.",
+                                            "Make sure that you have         installed the latest version of the           CLI and that Docker is installed on your build machine.",
+                                            {
+                                                "code_example": "template.yaml"
+                                            },
+                                            "During the deployment process, AWS SAM creates the following resources in your AWS account:",
+                                            {
+                                                "code_example": "sam-app"
+                                            },
+                                            "When AWS SAM finishes creating your resources, you should see the following message:",
+                                            "Successfully created/updated stack - sam-app in us-west-2"
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "sub_header": "Testing the app",
+                                "content": [
+                                    "To test your app, you upload a PDF file to your source bucket, and confirm that Lambda creates an encrypted version of the file in your       destination bucket. In this example, you can either test this manually using the console or the AWS CLI, or by using the provided test script.",
+                                    "For production applications, you can use traditional test methods and techniques, such as unit testing, to confirm the       correct functioning of your Lambda function code. Best practice is also to conduct tests like those in the provided test script which perform integration       testing with real, cloud-based resources. Integration testing in the cloud confirms that your infrastructure has been correctly deployed and that events flow       between different services as expected. To learn more, see How to test serverless functions and applications.",
+                                    {
+                                        "sub_header": "Testing the app manually",
+                                        "content": [
+                                            "You can test your function manually by adding a PDF file to           your Amazon S3 source bucket. When you add your file to the source bucket, your Lambda function should be automatically invoked and should store an encrypted           version of the file in your target bucket.",
+                                            "ConsoleTo test your app by uploading a file (console)To upload a PDF file to your S3 bucket, do the following:Open the Buckets page of the Amazon S3 console and choose your source bucket.Choose Upload.Choose Add files and use the file selector to choose the PDF file you want to upload.Choose Open, then choose Upload.Verify that Lambda has saved an encrypted version of your PDF file in your target bucket by doing the following:Navigate back to the Buckets page of the Amazon S3 console and choose your destination bucket.In the Objects pane, you should now see a file with name format filename_encrypted.pdf (where                         filename.pdf was the name of the file you uploaded to your source bucket).                        To download your encrypted PDF, select the file, then choose Download.Confirm that you can open the downloaded file with the password your Lambda function protected it with (my-secret-password).AWS CLITo test your app by uploading a file (AWS CLI)From the directory containing the PDF file you want to upload, run the following CLI command. Replace the --bucket                     parameter with the name of your source bucket. For the --key and --body parameters, use the filename of                     your test file.aws s3api put-object --bucket SOURCEBUCKET --key test.pdf --body ./test.pdfVerify that your function has created an encrypted version of your file and saved it to your target S3 bucket. Run the                     following CLI command, replacing SOURCEBUCKET-encrypted with the name of your own destination bucket.aws s3api list-objects-v2 --bucket SOURCEBUCKET-encryptedIf your function runs successfully, you’ll see output similar to the following. Your target bucket should contain a file with the                     name format <your_test_file>_encrypted.pdf, where <your_test_file>                     is the name of the file you uploaded.{    \"Contents\": [        {            \"Key\": \"test_encrypted.pdf\",            \"LastModified\": \"2023-06-07T00:15:50+00:00\",            \"ETag\": \"\\\"7781a43e765a8301713f533d70968a1e\\\"\",            \"Size\": 2763,            \"StorageClass\": \"STANDARD\"        }    ]}To download the file that Lambda saved in your destination bucket, run the following CLI command. Replace the --bucket                     parameter with the name of your destination bucket. For the --key parameter, use the filename <your_test_file>_encrypted.pdf,                     where <your_test_file> is the name of the the test file you uploaded.aws s3api get-object --bucket SOURCEBUCKET-encrypted --key test_encrypted.pdf my_encrypted_file.pdfThis command downloads the file to your current directory and saves it as my_encrypted_file.pdf.Confirm the you can open the downloaded file with the password your Lambda function protected it with (my-secret-password).anchoranchorConsoleAWS CLITo test your app by uploading a file (console)To upload a PDF file to your S3 bucket, do the following:Open the Buckets page of the Amazon S3 console and choose your source bucket.Choose Upload.Choose Add files and use the file selector to choose the PDF file you want to upload.Choose Open, then choose Upload.Verify that Lambda has saved an encrypted version of your PDF file in your target bucket by doing the following:Navigate back to the Buckets page of the Amazon S3 console and choose your destination bucket.In the Objects pane, you should now see a file with name format filename_encrypted.pdf (where                         filename.pdf was the name of the file you uploaded to your source bucket).                        To download your encrypted PDF, select the file, then choose Download.Confirm that you can open the downloaded file with the password your Lambda function protected it with (my-secret-password)."
+                                        ]
+                                    },
+                                    {
+                                        "sub_header": "Testing the app with the automated script",
+                                        "content": [
+                                            "To test your app using the provided test script, first ensure that the pytest module is installed in your local environment. You can install       pytest by running the following command:",
+                                            "pip install pytest",
+                                            "You also need to edit the code in the test_pdf_encrypt.py file to replace the placeholder bucket names with the names of           your Amazon S3 source and destination buckets. Make the following changes to test_pdf_encrypt.py:",
+                                            {
+                                                "code_example": "test_source_bucket_available"
+                                            },
+                                            "To run the tests do the following:",
+                                            {
+                                                "code_example": "test.pdf"
+                                            },
+                                            "When the test completes, you should see output like the following:",
+                                            "============================================================== test session starts =========================================================platform linux -- Python 3.12.2, pytest-7.2.2, pluggy-1.0.0 -- /usr/bin/python3cachedir: .pytest_cachehypothesis profile 'default' -> database=DirectoryBasedExampleDatabase('/home/pdf_encrypt_app/.hypothesis/examples')Test order randomisation NOT enabled. Enable with --random-order or --random-order-bucket=<bucket_type>rootdir: /home/pdf_encrypt_app, configfile: pytest.iniplugins: anyio-3.7.1, hypothesis-6.70.0, localserver-0.7.1, random-order-1.1.0collected 4 itemstest_pdf_encrypt.py::test_source_bucket_available PASSEDtest_pdf_encrypt.py::test_lambda_invoked PASSEDtest_pdf_encrypt.py::test_encrypted_file_in_bucket PASSEDtest_pdf_encrypt.py::test_cleanup PASSEDDeleted test.pdf from EXAMPLE-BUCKETDeleted test_encrypted.pdf from EXAMPLE-BUCKET-encrypted=============================================================== 4 passed in 7.32s =========================================================="
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "sub_header": "Next steps",
+                                "content": [
+                                    "Now you've created this example app, you can use the provided code as a basis to create other types of file-processing application. Modify the     code in the lambda_function.py file to implement the file-processing logic for your use case.",
+                                    "Many typical file-processing use cases involve image processing. When using Python, the most popular image-processing libraries like       pillow typically contain C or C++ components. In order to ensure that your function's deployment package is     compatible with the Lambda execution environment, it's important to use the correct source distribution binary.",
+                                    "When deploying your resources with AWS SAM, you need to take some extra steps to include the right source distribution in your deployment package. Because AWS SAM won't install dependencies     for a different platform than your build machine, specifying the correct source distribution (.whl file) in your requirements.txt       file won't work if your build machine uses an operating system or architecture that's different from the Lambda execution environment. Instead, you should do one of the following:",
+                                    {
+                                        "code_example": "--use-container"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "title": "Scheduled-maintenance app",
+                "href": "https://docs.aws.amazon.com/lambda/latest/dg/scheduled-task-app.html",
+                "sections": [
+                    {
+                        "headers": null,
+                        "url": "https://docs.aws.amazon.com/lambda/latest/dg/scheduled-task-app.html",
+                        "content": [
+                            "",
+                            "You can use AWS Lambda to replace scheduled processes such as automated system backups, file conversions, and maintenance tasks.   In this example, you create a serverless application that performs regular scheduled maintenance on a DynamoDB table by deleting old entries. The app uses EventBridge Scheduler to invoke a   Lambda function on a cron schedule. When invoked, the function queries the table for items older than one year, and deletes them. The function logs each deleted item  in CloudWatch Logs.",
+                            "To implement this example, first create a DynamoDB table and populate it with some test data for your function to query. Then, create a Python Lambda function with   an EventBridge Scheduler trigger and an IAM execution role that gives the function permission to read, and delete, items from your table.",
+                            "\n\n",
+                            "TipIf you’re new to Lambda, we recommend that you complete the tutorial Create your first Lambda function before\n      creating this example app.",
+                            "You can deploy your app manually by creating and configuring resources with the AWS Management Console. You can     also deploy the app by using the AWS Serverless Application Model (AWS SAM). AWS SAM is an infrastructure as code (IaC) tool. With IaC, you don’t create     resources manually, but define them in code and then deploy them automatically.",
+                            "If you want to learn more about using Lambda with IaC before deploying this example app, see Using Lambda with infrastructure as code (IaC).",
+                            {
+                                "sub_header": "Prerequisites",
+                                "content": [
+                                    "Before you can create the example app, make sure you have the required command line tools and programs installed.",
+                                    "  1.Python ",
+                                    "  2.AWS SAM CLI ",
+                                    "  3.AWS CLI ",
+                                    "  4.Docker "
+                                ]
+                            },
+                            {
+                                "sub_header": "Downloading the example app files",
+                                "content": [
+                                    "To create the example database and the scheduled-maintenance app, you need to create the following files in your project directory:",
+                                    "Example database files",
+                                    {
+                                        "code_example": "template.yaml"
+                                    },
+                                    "Scheduled-maintenance app files",
+                                    {
+                                        "code_example": "lambda_function.py"
+                                    },
+                                    "Test file",
+                                    {
+                                        "code_example": "test_app.py"
+                                    },
+                                    "Expand the following sections to view the code and to learn more about the role of each file in creating and testing your app. To create the       files on your local machine, copy and paste the code below.",
+                                    {
+                                        "code_example": "template.yaml"
+                                    }
+                                ]
+                            },
+                            {
+                                "sub_header": "Creating and populating the example DynamoDB table",
+                                "content": [
+                                    "To test your scheduled-maintenance app, you first create a DynamoDB table and populate it with some sample data. You can create the table either manually using the       AWS Management Console or by using AWS SAM. We recommend that you use AWS SAM to quickly create and configure the table using a few AWS CLI commands.",
+                                    "ConsoleTo create the DynamoDB tableOpen the Tables page of the DynamoDB console.Choose Create table.Create the table by doing the following:Under Table details, for Table name, enter MyOrderTable.For Partition key, enter Order_number and leave the type as String.For Sort key, enter Date and leave the type as String.Leave Table settings set to Default settings and choose Create table.When your table has finished creating and its Status shows as Active, create a global secondary index (GSI) by doing the               following. Your app will use this GSI to search for items directly by date to determine what to delete.Choose MyOrderTable from the list of tables.Choose the Indexes tab.Under Global secondary indexes, choose Create index.Under Index details, enter Date for the Partition key and leave the                   Data type set to String.For Index name, enter Date-index.Leave all other parameters set to their default values, scroll to the bottom of the page, and choose Create index.AWS SAMTo create the DynamoDB tableNavigate to the folder you saved the template.yaml file for the DynamoDB table in. Note that this example uses two                 template.yaml files. Make sure they are saved in separate sub-folders and that you are in the correct folder containing                 the template to create your DynamoDB table.Run the following command.sam buildThis command gathers the build artifacts for the resources you want to deploy and places them in the proper format and                 location to deploy them.To create the DynamoDB resource specified in the template.yaml file, run the following command.sam deploy --guidedUsing the --guided flag means that AWS SAM will show you prompts to guide you through the deployment process. For this deployment,                 enter a Stack name of cron-app-test-db, and accept the defaults for all other options by using Enter.When AWS SAM has finished creating the DynamoDB resource, you should see the following message.Successfully created/updated stack - cron-app-test-db in us-west-2You can additionally confirm that the DynamoDB table has been created by opening the Tables page of the DynamoDB console.                 You should see a table named MyOrderTable.anchoranchorConsoleAWS SAMTo create the DynamoDB tableOpen the Tables page of the DynamoDB console.Choose Create table.Create the table by doing the following:Under Table details, for Table name, enter MyOrderTable.For Partition key, enter Order_number and leave the type as String.For Sort key, enter Date and leave the type as String.Leave Table settings set to Default settings and choose Create table.When your table has finished creating and its Status shows as Active, create a global secondary index (GSI) by doing the               following. Your app will use this GSI to search for items directly by date to determine what to delete.Choose MyOrderTable from the list of tables.Choose the Indexes tab.Under Global secondary indexes, choose Create index.Under Index details, enter Date for the Partition key and leave the                   Data type set to String.For Index name, enter Date-index.Leave all other parameters set to their default values, scroll to the bottom of the page, and choose Create index.",
+                                    "After you've created your table, you next add some sample data to test your app. The CSV file sample_data.csv you downloaded     earlier contains a number of example entries comprised of order numbers, dates, and customer and order information. Use the provided python script     load_sample_data.py to add this data to your table.",
+                                    {
+                                        "code_example": "sample_data.csv"
+                                    }
+                                ]
+                            },
+                            {
+                                "sub_header": "Creating the scheduled-maintenance app",
+                                "content": [
+                                    "You can create and deploy the resources for this example app step by step using the AWS Management Console or by using AWS SAM. In a production environment, we       recommend that you use an Infrustracture-as-Code (IaC) tool like AWS SAM to repeatably deploy serverless applications without using manual processes.",
+                                    "For this example, follow the console instructions to learn how to configure each AWS resource separately, or follow the AWS SAM instructions     to quickly deploy the app using AWS CLI commands.",
+                                    "ConsoleTo create the function using the AWS Management ConsoleFirst, create a function containing basic starter code. You then                 replace this code with your own function code by either copying and pasting the code directly in the Lambda code editor, or by uploading your code                as a .zip package. For this task, we recommend simply copying and pasting the code.Open the Functions page of the Lambda console.Choose Create function.Choose Author from scratch.Under Basic information, do the following:For Function name, enter ScheduledDBMaintenance.For Runtime choose the latest Python version.For Architecture, choose x86_64.Choose Create function.After your function is created, you can configure your function with the provided function code.In the Code source pane, replace the Hello world code that Lambda created with the Python function code from                        the lambda_function.py file that you saved earlier.In the DEPLOY section, choose Deploy to update your function's code:To configure the function memory and timeout (console)Select the Configuration tab for your function.In the General configuration pane, choose Edit.Set Memory to 256 MB and Timeout to 15 seconds.                  If you are processing a large table with many records, for example in the case of a production environment,                  you might consider setting Timeout to a larger number. This gives your function                  more time to scan, and clean the database.Choose Save.To configure the log format (console)You can configure Lambda functions to output logs in either unstructured text or JSON format. We recommend that you use JSON format for logs to                   make it easier to search and filter log data. To learn more about Lambda log configuration options, see Configuring advanced logging controls for Lambda functions.Select the Configuration tab for your function.Select Monitoring and operations tools.In the Logging configuration pane, choose Edit.For Logging configuration, select JSON.Choose Save.To set Up IAM permissionsTo give your function the permissions it needs to read and delete DynamoDB items, you need to add a policy to your function's                     execution role defining the necessary permissions.Open the Configuration tab, then choose                        Permissions from the left navigation bar.Choose the role name under Execution role.In the IAM console, choose Add permissions, then                        Create inline policy.Use the JSON editor and enter the following policy:{    \"Version\": \"2012-10-17\",    \"Statement\": [        {            \"Effect\": \"Allow\",            \"Action\": [                \"dynamodb:Scan\",                \"dynamodb:DeleteItem\",                \"dynamodb:BatchWriteItem\"            ],            \"Resource\": \"arn:aws:dynamodb:*:*:table/MyOrderTable\"        }    ]}Name the policy DynamoDBCleanupPolicy, then create it.To set up EventBridge Scheduler as a trigger (console)Open the EventBridge console.In the left navigation pane, choose Schedulers under the                        Scheduler section.Choose Create schedule.Configure the schedule by doing the following:Under Schedule name, enter a name for your schedule (for example, DynamoDBCleanupSchedule).Under Schedule pattern, choose Recurring schedule.For Schedule type leave the default as Cron-based schedule,                          then enter the following schedule details:Minutes: 0Hours: 3Day of month: 1Month: *Day of the week: ?Year: *When evaluated, this cron expression runs on the first day of every month at 03:00 AM.For Flexible time window, select Off.Choose Next.Configure the trigger for your Lambda function by doing the following:In the Target detail pane, leave Target API set to Templated targets,                         then select AWS Lambda Invoke.Under Invoke, select your Lambda function (ScheduledDBMaintenance) from the dropdown list.Leave the Payload empty and choose Next.Scroll down to Permissions and select Create a new role for this schedule.                            When you create a new EventBridge Scheduler schedule using the console, EventBridge Scheduler creates a new policy with the required                          permissions the schedule needs to invoke your function. For more information about managing your schedule permissions, see                          Cron-based schedules.                          in the EventBridge Scheduler User Guide.Choose Next.Review your settings and choose Create schedule to complete creation of the schedule and Lambda trigger.AWS SAMTo deploy the app using AWS SAMNavigate to the folder you saved the template.yaml file for the app in. Note that this example uses two template.yaml files.               Make sure they are saved in separate sub-folders and that you are in the correct folder containing the template to create the app.Copy the lambda_function.py and requirements.txt files you downloaded earlier to the same folder. The code location specified in the                 AWS SAM template is ./, meaning the current location. AWS SAM will search in this folder for the Lambda function code when you try to deploy the app.Run the following command.sam build --use-containerThis command gathers the build artifacts for the resources you want to deploy and places them in the proper format and                 location to deploy them. Specifying the --use-container option builds your function inside a Lambda-like Docker container.                 We use it here so you don't need to have Python 3.12 installed on your local machine for the build to work.To create the Lambda and EventBridge Scheduler resources specified in the template.yaml file, run the following command.sam deploy --guidedUsing the --guided flag means that AWS SAM will show you prompts to guide you through the deployment process. For this deployment,                 enter a Stack name of cron-maintenance-app, and accept the defaults for all other options by using Enter.When AWS SAM has finished creating the Lambda and EventBridge Scheduler resources, you should see the following message.Successfully created/updated stack - cron-maintenance-app in us-west-2You can additionally confirm that the Lambda function has been created by opening the Functions page of the Lambda console.                 You should see a function named ScheduledDBMaintenance.anchoranchorConsoleAWS SAMTo create the function using the AWS Management ConsoleFirst, create a function containing basic starter code. You then                 replace this code with your own function code by either copying and pasting the code directly in the Lambda code editor, or by uploading your code                as a .zip package. For this task, we recommend simply copying and pasting the code.Open the Functions page of the Lambda console.Choose Create function.Choose Author from scratch.Under Basic information, do the following:For Function name, enter ScheduledDBMaintenance.For Runtime choose the latest Python version.For Architecture, choose x86_64.Choose Create function.After your function is created, you can configure your function with the provided function code.In the Code source pane, replace the Hello world code that Lambda created with the Python function code from                        the lambda_function.py file that you saved earlier.In the DEPLOY section, choose Deploy to update your function's code:To configure the function memory and timeout (console)Select the Configuration tab for your function.In the General configuration pane, choose Edit.Set Memory to 256 MB and Timeout to 15 seconds.                  If you are processing a large table with many records, for example in the case of a production environment,                  you might consider setting Timeout to a larger number. This gives your function                  more time to scan, and clean the database.Choose Save.To configure the log format (console)You can configure Lambda functions to output logs in either unstructured text or JSON format. We recommend that you use JSON format for logs to                   make it easier to search and filter log data. To learn more about Lambda log configuration options, see Configuring advanced logging controls for Lambda functions.Select the Configuration tab for your function.Select Monitoring and operations tools.In the Logging configuration pane, choose Edit.For Logging configuration, select JSON.Choose Save.To set Up IAM permissionsTo give your function the permissions it needs to read and delete DynamoDB items, you need to add a policy to your function's                     execution role defining the necessary permissions.Open the Configuration tab, then choose                        Permissions from the left navigation bar.Choose the role name under Execution role.In the IAM console, choose Add permissions, then                        Create inline policy.Use the JSON editor and enter the following policy:{    \"Version\": \"2012-10-17\",    \"Statement\": [        {            \"Effect\": \"Allow\",            \"Action\": [                \"dynamodb:Scan\",                \"dynamodb:DeleteItem\",                \"dynamodb:BatchWriteItem\"            ],            \"Resource\": \"arn:aws:dynamodb:*:*:table/MyOrderTable\"        }    ]}Name the policy DynamoDBCleanupPolicy, then create it.To set up EventBridge Scheduler as a trigger (console)Open the EventBridge console.In the left navigation pane, choose Schedulers under the                        Scheduler section.Choose Create schedule.Configure the schedule by doing the following:Under Schedule name, enter a name for your schedule (for example, DynamoDBCleanupSchedule).Under Schedule pattern, choose Recurring schedule.For Schedule type leave the default as Cron-based schedule,                          then enter the following schedule details:Minutes: 0Hours: 3Day of month: 1Month: *Day of the week: ?Year: *When evaluated, this cron expression runs on the first day of every month at 03:00 AM.For Flexible time window, select Off.Choose Next.Configure the trigger for your Lambda function by doing the following:In the Target detail pane, leave Target API set to Templated targets,                         then select AWS Lambda Invoke.Under Invoke, select your Lambda function (ScheduledDBMaintenance) from the dropdown list.Leave the Payload empty and choose Next.Scroll down to Permissions and select Create a new role for this schedule.                            When you create a new EventBridge Scheduler schedule using the console, EventBridge Scheduler creates a new policy with the required                          permissions the schedule needs to invoke your function. For more information about managing your schedule permissions, see                          Cron-based schedules.                          in the EventBridge Scheduler User Guide.Choose Next.Review your settings and choose Create schedule to complete creation of the schedule and Lambda trigger."
+                                ]
+                            },
+                            {
+                                "sub_header": "Testing the app",
+                                "content": [
+                                    "      To test that your schedule correctly triggers your function, and that your function correctly cleans records      from the database, you can temporarily modify your schedule to run once at a specific time. You can then run sam deploy again to      reset your recurrence schedule to run once a month.    ",
+                                    "To run the application using the AWS Management Console\nNavigate back to the EventBridge Scheduler console page.\n\nChoose your schedule, then choose Edit.\n\nIn the Schedule pattern section, under Recurrence, choose One-time schedule.\n\n\n          Set your invocation time to a few minutes from now, review your settings, then choose Save.\n        \n",
+                                    "      After the schedule runs and invokes its target, you run the test_app.py script to verify that your function successfully removed all old records      from the DynamoDB table.    ",
+                                    {
+                                        "code_example": "test_app.py"
+                                    }
+                                ]
+                            },
+                            {
+                                "sub_header": "Next steps",
+                                "content": [
+                                    "      You can now modify the EventBridge Scheduler schedule to meet your partifuclar application requirements. EventBridge Scheduler supports the following schedule expressions: cron, rate, and one-time schedules.    ",
+                                    "      For more information about EventBridge Scheduler schedule expresssions, see Schedule types in the      EventBridge Scheduler User Guide.    "
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
+        "sections": [
+            {
+                "headers": null,
+                "url": "https://docs.aws.amazon.com/lambda/latest/dg/example-apps.html",
+                "content": [
+                    "",
+                    "The following examples provide function code and  infrastructure as code (IaC) templates to quickly create and deploy serverless apps that implement some common Lambda uses cases. The  examples also include code examples and instructions to test the apps after you deploy them.",
+                    "For each of the example apps, we provide instructions to either create and configure resources manually using the AWS Management Console, or to   use the AWS Serverless Application Model to deploy the resources using IaC. Follow the console intructions to learn more about configuring the individual AWS   resources for each app, or use to AWS SAM to quickly deploy resources as you would in a production environment.",
+                    "You can use the provided examples as a basis for your own serverless applications by modifying the provided function code and templates   for your own use case.",
+                    "We're continuing to create new examples, so check back again to find more severless apps for common Lambda use cases.",
+                    {
+                        "sub_header": "Example apps",
+                        "content": []
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "title": "Building with TypeScript",
+        "href": "https://docs.aws.amazon.com/lambda/latest/dg/lambda-typescript.html",
+        "contents": [
+            {
+                "title": "Handler",
+                "href": "https://docs.aws.amazon.com/lambda/latest/dg/typescript-handler.html",
+                "sections": []
+            },
+            {
+                "title": "Deploy .zip file archives",
+                "href": "https://docs.aws.amazon.com/lambda/latest/dg/typescript-package.html",
+                "sections": []
+            },
+            {
+                "title": "Deploy container images",
+                "href": "https://docs.aws.amazon.com/lambda/latest/dg/typescript-image.html",
+                "sections": []
+            },
+            {
+                "title": "Layers",
+                "href": "https://docs.aws.amazon.com/lambda/latest/dg/typescript-layers.html",
+                "sections": []
+            },
+            {
+                "title": "Context",
+                "href": "https://docs.aws.amazon.com/lambda/latest/dg/typescript-context.html",
+                "sections": []
+            },
+            {
+                "title": "Logging",
+                "href": "https://docs.aws.amazon.com/lambda/latest/dg/typescript-logging.html",
+                "sections": []
+            },
+            {
+                "title": "Tracing",
+                "href": "https://docs.aws.amazon.com/lambda/latest/dg/typescript-tracing.html",
+                "sections": []
+            }
+        ],
+        "sections": []
+    },
+    {
+        "title": "Integrating other services",
+        "href": "https://docs.aws.amazon.com/lambda/latest/dg/lambda-services.html",
+        "contents": [
+            {
+                "title": "Apache Kafka",
+                "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-kafka.html",
+                "contents": [
+                    {
+                        "title": "Configure event source",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-kafka-configure.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Process messages",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-kafka-process.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Event filtering",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-kafka-filtering.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "On-failure destinations",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-kafka-on-failure.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Troubleshooting",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-kafka-troubleshoot.html",
+                        "sections": []
+                    }
+                ],
+                "sections": []
+            },
+            {
+                "title": "API Gateway",
+                "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-apigateway.html",
+                "contents": [
+                    {
+                        "title": "Tutorial",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-apigateway-tutorial.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Errors",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-apigateway-errors.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Select an HTTP invoke method for Lambda",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/apig-http-invoke-decision.html",
+                        "sections": []
+                    }
+                ],
+                "sections": []
+            },
+            {
+                "title": "Infrastructure Composer",
+                "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-appcomposer.html",
+                "sections": []
+            },
+            {
+                "title": "CloudFormation",
+                "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-cloudformation.html",
+                "sections": []
+            },
+            {
+                "title": "Amazon DocumentDB",
+                "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-documentdb.html",
+                "contents": [
+                    {
+                        "title": "Tutorial",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-documentdb-tutorial.html",
+                        "sections": []
+                    }
+                ],
+                "sections": []
+            },
+            {
+                "title": "DynamoDB",
+                "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-ddb.html",
+                "contents": [
+                    {
+                        "title": "Create mapping",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-dynamodb-eventsourcemapping.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Batch item failures",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-ddb-batchfailurereporting.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Error handling",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-dynamodb-errors.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Stateful processing",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-ddb-windows.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Parameters",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-ddb-params.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Event filtering",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-ddb-filtering.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Tutorial",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-ddb-example.html",
+                        "sections": []
+                    }
+                ],
+                "sections": []
+            },
+            {
+                "title": "EC2",
+                "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-ec2.html",
+                "sections": []
+            },
+            {
+                "title": "Elastic Load Balancing (Application Load Balancer)",
+                "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-alb.html",
+                "sections": []
+            },
+            {
+                "title": "Invoke using an EventBridge Scheduler",
+                "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-eventbridge-scheduler.html",
+                "sections": []
+            },
+            {
+                "title": "IoT",
+                "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-iot.html",
+                "sections": []
+            },
+            {
+                "title": "Kinesis Data Streams",
+                "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-kinesis.html",
+                "contents": [
+                    {
+                        "title": "Create mapping",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-kinesis-create.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Batch item failures",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-kinesis-batchfailurereporting.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Error handling",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/kinesis-on-failure-destination.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Stateful processing",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-kinesis-windows.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Parameters",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-kinesis-parameters.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Event filtering",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-kinesis-filtering.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Tutorial",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-kinesis-example.html",
+                        "sections": []
+                    }
+                ],
+                "sections": []
+            },
+            {
+                "title": "MQ",
+                "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-mq.html",
+                "contents": [
+                    {
+                        "title": "Configure event source",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/process-mq-messages-with-lambda.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Parameters",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-mq-params.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Event filtering",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-mq-filtering.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Troubleshoot",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-mq-errors.html",
+                        "sections": []
+                    }
+                ],
+                "sections": []
+            },
+            {
+                "title": "MSK",
+                "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-msk.html",
+                "contents": [
+                    {
+                        "title": "Configure event source",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-msk-configure.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Process messages",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-msk-process.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Event filtering",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-msk-filtering.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "On-failure destinations",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-msk-on-failure.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Tutorial",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-msk-tutorial.html",
+                        "sections": []
+                    }
+                ],
+                "sections": []
+            },
+            {
+                "title": "RDS",
+                "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-rds.html",
+                "sections": []
+            },
+            {
+                "title": "S3",
+                "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-s3.html",
+                "contents": [
+                    {
+                        "title": "Tutorial: Use an S3 trigger",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-s3-example.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Tutorial: Use an Amazon S3 trigger to create thumbnails",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-s3-tutorial.html",
+                        "sections": []
+                    }
+                ],
+                "sections": []
+            },
+            {
+                "title": "SQS",
+                "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html",
+                "contents": [
+                    {
+                        "title": "Create mapping",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-sqs-configure.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Scaling behavior",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-sqs-scaling.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Error handling",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-sqs-errorhandling.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Parameters",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-sqs-parameters.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Event filtering",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-sqs-filtering.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Tutorial",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-sqs-example.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "SQS cross-account tutorial",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-sqs-cross-account-example.html",
+                        "sections": []
+                    }
+                ],
+                "sections": []
+            },
+            {
+                "title": "S3 Batch",
+                "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-s3-batch.html",
+                "sections": []
+            },
+            {
+                "title": "SNS",
+                "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-sns.html",
+                "contents": [
+                    {
+                        "title": "Tutorial",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-sns-example.html",
+                        "sections": []
+                    }
+                ],
+                "sections": []
+            }
+        ],
+        "sections": []
+    },
+    {
+        "title": "Code examples",
+        "href": "https://docs.aws.amazon.com/lambda/latest/dg/service_code_examples.html",
+        "contents": [
+            {
+                "title": "Basics",
+                "href": "https://docs.aws.amazon.com/lambda/latest/dg/service_code_examples_basics.html",
+                "contents": [
+                    {
+                        "title": "Hello Lambda",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_Hello_section.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Learn the basics",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_Scenario_GettingStartedFunctions_section.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Actions",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/service_code_examples_actions.html",
+                        "contents": [
+                            {
+                                "title": "CreateAlias",
+                                "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_CreateAlias_section.html",
+                                "sections": []
+                            },
+                            {
+                                "title": "CreateFunction",
+                                "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_CreateFunction_section.html",
+                                "sections": []
+                            },
+                            {
+                                "title": "DeleteAlias",
+                                "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_DeleteAlias_section.html",
+                                "sections": []
+                            },
+                            {
+                                "title": "DeleteFunction",
+                                "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_DeleteFunction_section.html",
+                                "sections": []
+                            },
+                            {
+                                "title": "DeleteFunctionConcurrency",
+                                "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_DeleteFunctionConcurrency_section.html",
+                                "sections": []
+                            },
+                            {
+                                "title": "DeleteProvisionedConcurrencyConfig",
+                                "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_DeleteProvisionedConcurrencyConfig_section.html",
+                                "sections": []
+                            },
+                            {
+                                "title": "GetAccountSettings",
+                                "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_GetAccountSettings_section.html",
+                                "sections": []
+                            },
+                            {
+                                "title": "GetAlias",
+                                "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_GetAlias_section.html",
+                                "sections": []
+                            },
+                            {
+                                "title": "GetFunction",
+                                "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_GetFunction_section.html",
+                                "sections": []
+                            },
+                            {
+                                "title": "GetFunctionConcurrency",
+                                "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_GetFunctionConcurrency_section.html",
+                                "sections": []
+                            },
+                            {
+                                "title": "GetFunctionConfiguration",
+                                "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_GetFunctionConfiguration_section.html",
+                                "sections": []
+                            },
+                            {
+                                "title": "GetPolicy",
+                                "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_GetPolicy_section.html",
+                                "sections": []
+                            },
+                            {
+                                "title": "GetProvisionedConcurrencyConfig",
+                                "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_GetProvisionedConcurrencyConfig_section.html",
+                                "sections": []
+                            },
+                            {
+                                "title": "Invoke",
+                                "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_Invoke_section.html",
+                                "sections": []
+                            },
+                            {
+                                "title": "ListFunctions",
+                                "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_ListFunctions_section.html",
+                                "sections": []
+                            },
+                            {
+                                "title": "ListProvisionedConcurrencyConfigs",
+                                "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_ListProvisionedConcurrencyConfigs_section.html",
+                                "sections": []
+                            },
+                            {
+                                "title": "ListTags",
+                                "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_ListTags_section.html",
+                                "sections": []
+                            },
+                            {
+                                "title": "ListVersionsByFunction",
+                                "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_ListVersionsByFunction_section.html",
+                                "sections": []
+                            },
+                            {
+                                "title": "PublishVersion",
+                                "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_PublishVersion_section.html",
+                                "sections": []
+                            },
+                            {
+                                "title": "PutFunctionConcurrency",
+                                "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_PutFunctionConcurrency_section.html",
+                                "sections": []
+                            },
+                            {
+                                "title": "PutProvisionedConcurrencyConfig",
+                                "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_PutProvisionedConcurrencyConfig_section.html",
+                                "sections": []
+                            },
+                            {
+                                "title": "RemovePermission",
+                                "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_RemovePermission_section.html",
+                                "sections": []
+                            },
+                            {
+                                "title": "TagResource",
+                                "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_TagResource_section.html",
+                                "sections": []
+                            },
+                            {
+                                "title": "UntagResource",
+                                "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_UntagResource_section.html",
+                                "sections": []
+                            },
+                            {
+                                "title": "UpdateAlias",
+                                "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_UpdateAlias_section.html",
+                                "sections": []
+                            },
+                            {
+                                "title": "UpdateFunctionCode",
+                                "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_UpdateFunctionCode_section.html",
+                                "sections": []
+                            },
+                            {
+                                "title": "UpdateFunctionConfiguration",
+                                "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_UpdateFunctionConfiguration_section.html",
+                                "sections": []
+                            }
+                        ],
+                        "sections": []
+                    }
+                ],
+                "sections": []
+            },
+            {
+                "title": "Scenarios",
+                "href": "https://docs.aws.amazon.com/lambda/latest/dg/service_code_examples_scenarios.html",
+                "contents": [
+                    {
+                        "title": "Automatically confirm known users with a Lambda function",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_cross_CognitoAutoConfirmUser_section.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Automatically migrate known users with a Lambda function",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_cross_CognitoAutoMigrateUser_section.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Create a REST API to track COVID-19 data",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_cross_ApiGatewayDataTracker_section.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Create a lending library REST API",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_cross_AuroraRestLendingLibrary_section.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Create a messenger application",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_cross_StepFunctionsMessenger_section.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Create a serverless application to manage photos",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_cross_PAM_section.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Create a websocket chat application",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_cross_ApiGatewayWebsocketChat_section.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Create an application to analyze customer feedback",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_cross_FSA_section.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Invoke a Lambda function from a browser",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_cross_LambdaForBrowser_section.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Transform data with S3 Object Lambda",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_cross_ServerlessS3DataTransformation_section.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Use API Gateway to invoke a Lambda function",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_cross_LambdaAPIGateway_section.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Use Step Functions to invoke Lambda functions",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_cross_ServerlessWorkflows_section.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Use scheduled events to invoke a Lambda function",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_cross_LambdaScheduledEvents_section.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Write custom activity data with a Lambda function after Amazon Cognito user authentication",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_cross_CognitoCustomActivityLog_section.html",
+                        "sections": []
+                    }
+                ],
+                "sections": []
+            },
+            {
+                "title": "Serverless examples",
+                "href": "https://docs.aws.amazon.com/lambda/latest/dg/service_code_examples_serverless_examples.html",
+                "contents": [
+                    {
+                        "title": "Connecting to an Amazon RDS database in a Lambda function",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_serverless_connect_RDS_Lambda_section.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Invoke a Lambda function from a Kinesis trigger",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_serverless_Kinesis_Lambda_section.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Invoke a Lambda function from a DynamoDB trigger",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_serverless_DynamoDB_Lambda_section.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Invoke a Lambda function from a Amazon DocumentDB trigger",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_serverless_DocumentDB_Lambda_section.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Invoke a Lambda function from an Amazon MSK trigger",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_serverless_MSK_Lambda_section.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Invoke a Lambda function from an Amazon S3 trigger",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_serverless_S3_Lambda_section.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Invoke a Lambda function from an Amazon SNS trigger",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_serverless_SNS_Lambda_section.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Invoke a Lambda function from an Amazon SQS trigger",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_serverless_SQS_Lambda_section.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Reporting batch item failures for Lambda functions with a Kinesis trigger",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_serverless_Kinesis_Lambda_batch_item_failures_section.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Reporting batch item failures for Lambda functions with a DynamoDB trigger",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_serverless_DynamoDB_Lambda_batch_item_failures_section.html",
+                        "sections": []
+                    },
+                    {
+                        "title": "Reporting batch item failures for Lambda functions with an Amazon SQS trigger",
+                        "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_serverless_SQS_Lambda_batch_item_failures_section.html",
+                        "sections": []
+                    }
+                ],
+                "sections": []
+            }
+        ],
+        "sections": []
+    }
+]
