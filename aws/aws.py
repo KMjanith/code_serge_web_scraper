@@ -80,32 +80,39 @@ class AwsFunction:
                     if(code):
                         stack[-1]["content"].append({"code_example": code.text})
 
-                    elif(i.find('dl')):
+                    if(i.find('dl')):
                         dl = i.find('dl')
                         dt = dl.find_all('dt')
                         dd = dl.find_all('dd')
                         for index, j in enumerate(dt):
-                            stack[-1]["content"].append(f"  {index+1}.{dt[index].text} : {dd[index].text}")
+                            if(dd[index].find('code')):
+                                stack[-1]["content"].append(f"  {index+1}.{dt[index].text} : {dd[index].find('code').text}")
+                            else:
+                                stack[-1]["content"].append(f"  {index+1}.{dt[index].text} : {dd[index].text}")
 
 
-                    elif(i.find('ul')):
+                    if(i.find('ul')):
                         for index,j in enumerate(i.find_all('li')):
-                            try:
-                                header =  j.find('p').find("b").text
-                                stack[-1]["content"].append(f"  {index+1}.{header} {j.find('p').text.replace(header, '')}")
-                            except: AttributeError
-                        
+                            if(j.find('p')):
+                                if(j.find('p').find("b") != None):
+                                    header =  j.find("b").text
+                                    print(header)
+                                    stack[-1]["content"].append(f"  {index+1}.{header} {j.find('p').text.replace(header, '')}")
+                            else:
+                                # there are some ul tags which don not have b tags in them becuase they don have a title in the list item
+                                stack[-1]["content"].append(f"  {index+1}.{j.text.replace("\n", '')}")    
+
                     else:
                         stack[-1]["content"].append(i.text)
             
                 else:
-                    if(i.name == "ul" or i.name == "ol" or i.text == ""):
+                    if(i.name == "ul" or i.name == "ol" or i.text == "" or i.text == "\n\n"):
                         continue
                     else:
                         stack[-1]["content"].append(i.text.replace("\n", ""))
 
         util = Utilities()
-        return util.return_data(stack, "content")
+        return util.return_data(stack, "content")[-1]['content']
     
     #function to get the html content of the urls
     def getting_inner_content(self, url):
@@ -139,7 +146,7 @@ class AwsFunction:
         return content
     
     def getting_page_content_driver(self, urls):
-        for i in urls[:2]:
+        for i in urls:
             if(i.get(Aws.CONTENTS.value)):
                 data =  self.getting_inner_content(i['href'])
                 print("\n")

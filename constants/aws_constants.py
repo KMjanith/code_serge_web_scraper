@@ -13,7 +13,7 @@ class Aws(Enum):
     CONTENTS = "contents"
     SECTIONS = "sections"   
     TITLE = "title"
-    TOPIC_LIST = ['h1', 'h2', 'h3', 'h4']
+    TOPIC_LIST = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']   
     MAIN_TOPICS = [
             "What is AWS Lambda?",
             "Example apps",

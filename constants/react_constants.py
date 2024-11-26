@@ -13,7 +13,7 @@ class React(Enum):
     TOPIC_LIST = ['h1', 'h2', 'h3', 'h4']
     MAIN = "main"
     SUBHEADER = "sub_header"
-    SECTIONS = "sections"
+    SECTION = "section"
     CODE_ECAMPLE = "code_example"
     CONTENT = "content"
 

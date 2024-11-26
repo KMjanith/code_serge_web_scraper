@@ -22,5 +22,20 @@ class Utilities:
     def make_item_list(self, all_divs):
         page_list = []
         for index, div in enumerate(all_divs):
-            page_list = page_list + div.contents
+            #print(div.get('class'))
+            if(div.get('class')[0] == 'sandpack'):
+                page_list.append(div)
+            else:
+                page_list = page_list + div.contents
+
         return page_list
+    
+    # make the string replacing redundant strings
+    def remove_redundant(self, string):
+        replace_targets = ["\n", "index.js", "index.html", "index.css", "App.js", " ResetFork", "Show more"]
+
+        # Replace using a loop
+        processed_text = string
+        for target in replace_targets:
+            processed_text = processed_text.replace(target, '')
+        return processed_text

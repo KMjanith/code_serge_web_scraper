@@ -40,64 +40,70 @@ class ReactFunction:
     
     
     def sub_heddings_data_collector(self,l, main_header, url, util):
-
-        stack = [{"headers":main_header, "url": url,React.CONTENT.value: []}]  
-        STACK_POINTER = stack[-1][React.CONTENT.value]
+        stack = [{"headers":main_header, "url": url,"content": []}]  
         original = []
-
         for i in l:
             if(i.name == None):
                 continue
-            if(i.name in React.TOPIC_LIST.value):
+            # print(stack)
+            # print("tag: ", i.name)
+            # print("data: ", i.text) 
+            # print("\n")
+            if(i.name in ['h1', 'h2', 'h3', 'h4']):
                 level = int(i.name[1])
                 current_stack_length = len(stack)
                 if(current_stack_length < level):
-                    stack.append({React.SUBHEADER.value: i.text, React.CONTENT.value: []})
+                    stack.append({"sub_header": i.text, "content": []})
                 elif(current_stack_length == level and current_stack_length != 0):
                     a = stack.pop()
-                    STACK_POINTER.append(a)
-                    stack.append({React.SUBHEADER.value: i.text, React.CONTENT.value: []})
+                    stack[-1]["content"].append(a)
+                    stack.append({"sub_header": i.text, "content": []})
                 
                 else:
                     while(len(stack) > level):
                         a = stack.pop()
-                        STACK_POINTER.append(a)
+                        stack[-1]["content"].append(a)
                     a = stack.pop()
                     if(len(stack)==0):
                         original.append(a)
-                        stack.append({React.SUBHEADER.value: i.text, React.CONTENT.value: []})
+                        stack.append({"sub_header": i.text, "content": []})
                     else:
-                        STACK_POINTER.append(a)
-                        stack.append({React.SUBHEADER.value: i.text, React.CONTENT.value: []})
+                        stack[-1]["content"].append(a)
+                        stack.append({"sub_header": i.text, "content": []})
             else:
                 if(i.name == 'ul'):
                     for index,j in enumerate(i.find_all('li')):
-                        STACK_POINTER.append(f"  {index+1}.{j.text}")
+                        stack[-1]["content"].append(f"  {index+1}.{j.text}")
                 if(i.name == 'ol'):
                     for index,j in enumerate(i.find_all('li')):
-                        STACK_POINTER.append(f"  {index+1}.{j.text}")
-
+                        stack[-1]["content"].append(f"  {index+1}.{j.text}")
+                
                 if(i.name == 'div'):
-                    code = i.find('code')
-                    if(code):
-                        STACK_POINTER.append({React.CODE_ECAMPLE.value: code.text})
-                    else:
-                        STACK_POINTER.append(i.text)
+                    try:
+                        code = i.find('code')
+                        if(code and (stack[-1]["content"][-1] != {"code_example": code.text})):
+                            stack[-1]["content"].append({"code_example": code.text})
+                        elif(i.get('class')[1] == 'sandpack--playground'):
+                            code_sandbox = util.remove_redundant(i.text)
+                            stack[-1]["content"].append({"code_sandbox": code_sandbox})
+                        else:
+                            stack[-1]["content"].append(i.text)
+                    except: IndexError
+                   
             
                 else:
-                    if(i.name == "ul" or i.name == "ol"):
+                    if(i.name == "ul" or i.name == "ol" or i.name == "div"):
                         continue
                     else:
-                        STACK_POINTER.append(i.text)
-        
-        return util.return_data(stack, React.CONTENT.value)
+                        stack[-1]["content"].append(i.text)
+
+        return util.return_data(stack, "content")
     
     
     def main_heading_data_collector(self, page_item_list, main_header, url, util):
 
-        stack = [{"title": main_header,"source": "react" ,"url": url,"section": [], "subTopics": []}]
+        stack = [{"title": main_header,"source": "react" ,"url": url,"sections": [], "subTopics": []}]
         original = []
-        STACK_POINTER = stack[-1][React.SECTIONS.value]
         for i in page_item_list:
             if(i.name == None):
                 continue
@@ -107,52 +113,58 @@ class ReactFunction:
                 if(current_stack_length < level):
                     sub_url = i.find('a')
                     if(sub_url):
-                        stack.append({React.SUBHEADER.value: i.text, "url": f"{url}/{sub_url.get(React.HREF.value)}",React.SECTIONS.value: [] })
+                        stack.append({"subHeader": i.text, "url": f"{url}/{sub_url.get('href')}","sections": [] })
                 elif(current_stack_length == level and current_stack_length != 0):
                     a = stack.pop()
-                    STACK_POINTER.append(a)
+                    stack[-1]["sections"].append(a)
                     sub_url = i.find('a')
                     if(sub_url):
-                        stack.append({React.SUBHEADER.value: i.text, "url": f"{url}/{sub_url.get(React.HREF.value)}",React.SECTIONS.value: [] })
+                        stack.append({"subHeader": i.text, "url": f"{url}/{sub_url.get('href')}","sections": [] })
                 
                 else:
                     while(len(stack) > level):
                         a = stack.pop()
-                        STACK_POINTER.append(a)
+                        stack[-1]["sections"].append(a)
                     a = stack.pop()
                     if(len(stack)==0):
                         original.append(a)
                         sub_url = i.find('a')
                     if(sub_url):
-                        stack.append({React.SUBHEADER.value: i.text, "url": f"{url}/{sub_url.get(React.HREF.value)}",React.SECTIONS.value: [] })
+                        stack.append({"subHeader": i.text, "url": f"{url}/{sub_url.get('href')}","sections": [] })
                     else:
-                        STACK_POINTER.append(a)
+                        stack[-1]["sections"].append(a)
                         sub_url = i.find('a')
                     if(sub_url):
-                        stack.append({React.SUBHEADER.value: i.text, "url": f"{url}/{sub_url.get(React.HREF.value)}",React.SECTIONS.value: [] })
+                        stack.append({"subHeader": i.text, "url": f"{url}/{sub_url.get('href')}","sections": [] })
             else:
                 if(i.name == 'ul'):
                     for index,j in enumerate(i.find_all('li')):
-                        STACK_POINTER.append(f"  {index+1}.{j.text}")
+                        stack[-1]["sections"].append(f"  {index+1}.{j.text}")
                 if(i.name == 'ol'):
                     for index,j in enumerate(i.find_all('li')):
-                        STACK_POINTER.append(f"  {index+1}.{j.text}")
+                        stack[-1]["sections"].append(f"  {index+1}.{j.text}")
 
                 if(i.name == 'div'):
-                    code = i.find('code')
-                    if(code):
-                        STACK_POINTER.append({React.CODE_ECAMPLE.value: code.text})
-                    else:
-                        STACK_POINTER.append(i.text.replace("\n", ""))
+                    
+                    try:
+                        code = i.find('code')
+                        if(code and (stack[-1]["sections"][-1] != {"code_example": code.text})):
+                            stack[-1]["sections"].append({"code_example": code.text})
+                        elif(i.get('class')[1] == 'sandpack--playground'):
+                            code_sandbox = util.remove_redundant(i.text)
+                            stack[-1]["sections"].append({"code_sandbox": code_sandbox})
+                        else:
+                            stack[-1]["sections"].append(i.text)
+                    except: IndexError
+                
             
                 else:
-                    if(i.name == "ul" or i.name == "ol"):
+                    if(i.name == "ul" or i.name == "ol" or i.name == "div"):
                         continue
                     else:
-                        STACK_POINTER.append(i.text.replace("\n", ""))
+                        stack[-1]["sections"].append(i.text)
 
-     
-        return util.return_data(stack, React.SECTIONS.value)
+        return util.return_data(stack, "sections")
 
 
     #function to get the inner content of the urls
@@ -190,8 +202,16 @@ class ReactFunction:
         # Extracting the actual data from the data,2nd item is the footer
         actual_data = data.contents[0]  
 
+        divs = actual_data.contents
+        all_divs = []
+        for i in divs:
+            if(i.name == None):
+                continue
+            else:
+                all_divs.append(i)
+            
         # Extracting all the divs from the actual data
-        all_divs = actual_data.find_all('div', class_="max-w-4xl ms-0 2xl:mx-auto")
+        # all_divs = actual_data.find_all('div', class_="max-w-4xl ms-0 2xl:mx-auto")
 
         # Extract items with the div and make the list with inner content
         page_item_list = util.make_item_list(all_divs)
@@ -217,7 +237,7 @@ class ReactFunction:
     def get_content_data(self,link_list, main_or_sub):
         body_content = []
         for link in link_list:
-            print(f"Getting data from {link['url']}")
+            print(f"-------Getting data from {link['url']}")
             original_dict = self.getting_inner_content(link["url"], main_or_sub)
             body_content.append(original_dict[0])
         return body_content 
