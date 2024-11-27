@@ -1,9 +1,11 @@
+import logging
 import requests
 from constants.react_constants import React
 from bs4 import BeautifulSoup
 from utilities.utilities import Utilities
 
 class ReactFunction:
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
 
     def __init__(self):
         pass
@@ -45,10 +47,6 @@ class ReactFunction:
         for i in l:
             if(i.name == None):
                 continue
-            # print(stack)
-            # print("tag: ", i.name)
-            # print("data: ", i.text) 
-            # print("\n")
             if(i.name in ['h1', 'h2', 'h3', 'h4']):
                 level = int(i.name[1])
                 current_stack_length = len(stack)
@@ -237,7 +235,7 @@ class ReactFunction:
     def get_content_data(self,link_list, main_or_sub):
         body_content = []
         for link in link_list:
-            print(f"-------Getting data from {link['url']}")
+            logging.info(f"-------Getting data from {link['url']}")
             original_dict = self.getting_inner_content(link["url"], main_or_sub)
             body_content.append(original_dict[0])
         return body_content 
