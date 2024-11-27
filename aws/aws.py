@@ -208,7 +208,7 @@ class AwsFunction:
         return content
     
     def getting_page_content_driver(self, urls):
-        for i in urls[:2]:
+        for i in urls:
             if(i.get(Aws.CONTENTS.value)):
                 data =  self.getting_inner_content(i['href'])
                 logging.info(f'Main Topic :  {i["title"]}')
