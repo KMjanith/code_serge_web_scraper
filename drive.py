@@ -12,50 +12,51 @@ SUBTOPICS = "subTopics"
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
 
 
-# logging.info(".......***********************........")
-# logging.info("           SCRAPING REACT             ")
-# logging.info ("******.......................********\n")
-# logging.info("Fetching data from React.dev...")
+logging.info(".......***********************........")
+logging.info("           SCRAPING REACT             ")
+logging.info ("******.......................********\n")
+
+logging.info("Fetching data from React.dev...")
 
 
-# react_response = requests.get(React.URL.value)
-# react_response.raise_for_status()  # Ensure the request was successful
+react_response = requests.get(React.URL.value)
+react_response.raise_for_status()  # Ensure the request was successful
 
-# logging.info("Data fetched successfully")
+logging.info("Data fetched successfully")
 
-# logging.info("Parsing data please wait.....")
-# # Parse the HTML content
-# soup = BeautifulSoup(react_response.text, 'html.parser')
+logging.info("Parsing data please wait.....")
+# Parse the HTML content
+soup = BeautifulSoup(react_response.text, 'html.parser')
 
-# # Find the main topics and their subtopics with the URLs
-# react = ReactFunction()
-# aws = AwsFunction()
+# Find the main topics and their subtopics with the URLs
+react = ReactFunction()
+aws = AwsFunction()
 
-# logging.info("getting all the topics and subtopics")
-# react_result = react.find_outer_topis(soup, React.PARSING_URL.value)
+logging.info("getting all the topics and subtopics")
+react_result = react.find_outer_topis(soup, React.PARSING_URL.value)
 
-# sub_topic_links = react_result[0]
-# main_topic_links = react_result[1]
+sub_topic_links = react_result[0]
+main_topic_links = react_result[1]
 
-# logging.info("Structuring the main pages' data")
+logging.info("Structuring the main pages' data")
 
-# # get the main page contents
-# content = react.get_content_data(main_topic_links, React.MAIN.value)
+# get the main page contents
+content = react.get_content_data(main_topic_links, React.MAIN.value)
 
-# logging.info("Structuring the subtopics data")
+logging.info("Structuring the subtopics data")
 
-# for i in range(len(content)):
-#     links = sub_topic_links[i]["subTopics"]
-#     content[i]["subTopics"] = react.get_content_data(links, "")
+for i in range(len(content)):
+    links = sub_topic_links[i]["subTopics"]
+    content[i]["subTopics"] = react.get_content_data(links, "")
 
-# logging.info("Data parsed successfully")
+logging.info("Data parsed successfully")
 
-# output_file = "./outputs/react.json"
+output_file = "./outputs/react.json"
 
-# with open(output_file, 'w', encoding='utf-8') as file:
-#     json.dump(content, file, ensure_ascii=False, indent=4)
+with open(output_file, 'w', encoding='utf-8') as file:
+    json.dump(content, file, ensure_ascii=False, indent=4)
 
-# logging.info("React data saved to react.json") 
+logging.info("React data saved to react.json") 
 
 logging.info("""
 \n.......***********************........
@@ -89,6 +90,34 @@ with open(output_file, 'w', encoding='utf-8') as file:
     json.dump(topic_urls, file, ensure_ascii=False, indent=4)
 
 logging.info("AWS data saved to aws.json")
+
+logging.info("""
+---------------*********-----------
+             COMBINNING DATA
+---------------*********-----------""")
+
+# combining the data of react and aws
+combined_data = []
+json_object_list = ['outputs/aws.json', 'outputs/react.json']
+
+for json_object in json_object_list:
+    with open(json_object, 'r') as file:
+        data = json.load(file)
+        combined_data.append(data)
+
+output_file = "./outputs/original.json"
+
+with open(output_file, 'w', encoding='utf-8') as file:
+    json.dump(combined_data, file, ensure_ascii=False, indent=4)
+
+logging.info("Data combined and saved to original.json")
+
+logging.info("""
+------------*********-----------    
+Process completed successfully
+------------*********-----------
+""")
+
 
 
 

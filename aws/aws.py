@@ -23,6 +23,7 @@ class AwsFunction:
                 self.make_url_hirachy(i[Aws.CONTENTS.value])
             else:
                 i[Aws.HREF.value] = f"{Aws.BASE_URL.value}{i[Aws.HREF.value]}"
+                i[Aws.SOURCE.value] = "Aws"
                 i[Aws.SECTIONS.value] = []
 
 
@@ -49,10 +50,10 @@ class AwsFunction:
                 if(i.find('pre')):
                     if(i.find('pre').find('code')):
                         code = i.find('pre').find('code').text
-                        stack[-1]["content"].append(f"  {i.text.replace(code, ' ')}")
-                        stack[-1]["content"].append({"code_example": code})
+                        stack[-1][Aws.CONTENT.value].append(f" {index + 1} : {i.text.replace(code, ' ').replace("\n", '')}")
+                        stack[-1][Aws.CONTENT.value].append({"code_example": code})
                 else:
-                    stack[-1]["content"].append(f"  {index + 1} : {i.text.replace('\n', '')}")
+                    stack[-1][Aws.CONTENT.value].append(f"  {index + 1} : {i.text.replace('\n', '')}")
             if(i.name == 'ol'):
                 stack = self.ol_handler(i, stack)
            
@@ -64,14 +65,14 @@ class AwsFunction:
             if(j.find('p')):
                 if(j.find('p').find("b") != None):
                     header =  j.find("b").text
-                    stack[-1]["content"].append(f"  {index+1}.{header} : {j.text.replace(header, '').replace("\n", '')}")
+                    stack[-1][Aws.CONTENT.value].append(f"  {index+1}.{header} : {j.text.replace(header, '').replace("\n", '')}")
                 else:
                     # there are some ul tags which don not have b tags in them becuase they don have a title in the list item
-                    stack[-1]["content"].append(f"  {index+1}.{j.text.replace("\n", '')}")    
+                    stack[-1][Aws.CONTENT.value].append(f"  {index+1}.{j.text.replace("\n", '')}")    
             if(j.find('pre')): 
                 if(j.find('pre').find('code')):
                     code = j.find('pre').find('code').text
-                    stack[-1]["content"].append({"code_example": code})
+                    stack[-1][Aws.CONTENT.value].append({"code_example": code})
         return stack
     
     # dl item handler
@@ -80,9 +81,9 @@ class AwsFunction:
         dd = dl_item.find_all('dd')
         for index, j in enumerate(dt):
             if(dd[index].find('code')):
-                stack[-1]["content"].append(f"  {index+1}.{dt[index].text} : {dd[index].find('code').text}")
+                stack[-1][Aws.CONTENT.value].append(f"  {index+1}.{dt[index].text} : {dd[index].find('code').text}")
             else:
-                stack[-1]["content"].append(f"  {index+1}.{dt[index].text} : {dd[index].text}")
+                stack[-1][Aws.CONTENT.value].append(f"  {index+1}.{dt[index].text} : {dd[index].text}")
         return stack
 
     # div item handler
@@ -97,12 +98,12 @@ class AwsFunction:
 
             if(i.name == 'code') and (i.name != 'ol'):
                 code = i.find('code')
-                stack[-1]["content"].append({"code_example": code.text})
+                stack[-1][Aws.CONTENT.value].append({"code_example": code.text})
 
             if(i.name == 'pre'): 
                 code = i.find('code')
                 if(code):
-                    stack[-1]["content"].append({"code_example": code.text})
+                    stack[-1][Aws.CONTENT.value].append({"code_example": code.text})
 
             if(i.name == 'ol'):
                 stack = self.ol_handler(i, stack)
@@ -118,14 +119,14 @@ class AwsFunction:
                 if(i.name == "ul" or i.name == "ol" or i.text == "" or i.text == "\n\n" or i.name == 'div' or i.name == 'pre'):
                     continue
                 else:
-                    stack[-1]["content"].append(i.text.replace("\n", ""))
+                    stack[-1][Aws.CONTENT.value].append(i.text.replace("\n", ""))
             
         return stack
             
     
     
     def data_organizer(self,l, main_header, url):
-        stack = [{"headers":main_header, "url": url,"content": []}]  
+        stack = [{"headers":main_header, "url": url,Aws.CONTENT.value: []}]  
         original = []
         for i in l:
             if(i.name == None):
@@ -134,30 +135,30 @@ class AwsFunction:
                 level = int(i.name[1])
                 current_stack_length = len(stack)
                 if(current_stack_length < level):
-                    stack.append({"sub_header": i.text, "content": []})
+                    stack.append({"sub_header": i.text, Aws.CONTENT.value: []})
                 elif(current_stack_length == level and current_stack_length != 0):
                     a = stack.pop()
-                    stack[-1]["content"].append(a)
-                    stack.append({"sub_header": i.text, "content": []})
+                    stack[-1][Aws.CONTENT.value].append(a)
+                    stack.append({"sub_header": i.text, Aws.CONTENT.value: []})
                 
                 else:
                     while(len(stack) > level):
                         a = stack.pop()
-                        stack[-1]["content"].append(a)
+                        stack[-1][Aws.CONTENT.value].append(a)
                     a = stack.pop()
                     if(len(stack)==0):
                         original.append(a)
-                        stack.append({"sub_header": i.text, "content": []})
+                        stack.append({"sub_header": i.text, Aws.CONTENT.value: []})
                     else:
-                        stack[-1]["content"].append(a)
-                        stack.append({"sub_header": i.text, "content": []})
+                        stack[-1][Aws.CONTENT.value].append(a)
+                        stack.append({"sub_header": i.text, Aws.CONTENT.value: []})
             else:
                 if(i.name == 'ul'):
                     for index,j in enumerate(i.find_all('li')):
-                        stack[-1]["content"].append(f"  {index+1}.{j.text}")
+                        stack[-1][Aws.CONTENT.value].append(f"  {index+1}.{j.text}")
                 if(i.name == 'ol'):
                     for index,j in enumerate(i.find_all('li')):
-                        stack[-1]["content"].append(f"  {index+1}.{j.text}")
+                        stack[-1][Aws.CONTENT.value].append(f"  {index+1}.{j.text}")
 
                 if(i.name == 'div'):
                     stack = self.div_handler(i, stack)
@@ -166,13 +167,13 @@ class AwsFunction:
                     stack = self.div_handler(i, stack)
             
                 else:
-                    if(i.name == "ul" or i.name == "ol" or i.text == "" or i.text == "\n\n" or i.name == 'div'):
+                    if(i.name == "ul" or i.name == "ol" or i.text == "" or i.text == "\n\n" or i.name == 'div' or i.name == 'awsdocs-tabs'):
                         continue
                     else:
-                        stack[-1]["content"].append(i.text.replace("\n", ""))
+                        stack[-1][Aws.CONTENT.value].append(i.text.replace("\n", ""))
 
         util = Utilities()
-        return util.return_data(stack, "content")[-1]['content']
+        return util.return_data(stack, Aws.CONTENT.value)[-1]['content']
     
     #function to get the html content of the urls
     def getting_inner_content(self, url):
