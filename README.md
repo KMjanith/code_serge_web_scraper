@@ -32,7 +32,7 @@ python drive.py
 2. aws.json
 3. final_result.json
 
-### the finl_result.json has the combined result of the both sraped contents
+the final_result.json has the combined result of the both scraped contents
 
 
 
