@@ -148,8 +148,8 @@ def main():
 
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
 
-    # get_react_data()
-    # structure_react_data()
+    get_react_data()
+    structure_react_data()
     get_aws_data()
     structure_aws_data() 
     combining_data()
