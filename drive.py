@@ -13,6 +13,20 @@ import asyncio
 
 
 def structure_aws_data():
+
+    # for simplicity of the dcraping the aws main 5 topics maintain a list of sections as follow
+    # {
+    # "title": main_header,
+    #   "source": Aws.SOURCE_NAME.value ,
+    #   "url": url_of_the_page ,
+    #   "contents": [content os the sub pages], 
+    #   "parent_content": [content of the main page]
+    #}
+    # unlike the react aws documentation has more nested sub topics than 2.
+    # hence this function combine the parent_conten list and content list if exists .
+    # (some main topics don't have sub topics, only have main page.) 
+
+
     aws_data = []
     with open(Utility.AWS_OUTPUT_FILE.value, 'r', encoding="UTF-8") as file:
         aws_data = json.load(file)
@@ -34,6 +48,17 @@ def structure_aws_data():
         json.dump(aws_data, file, ensure_ascii=False, indent=4)
 
 def structure_react_data():
+
+    # for simplicity of the dcraping the react main 5 topics maintain a list of sections as follow
+    # {
+    #   "title": main_header,
+    #   "source": React.SOURCE.value ,
+    #   "url": url_of_the_page ,
+    #   "sections": [content of the main page], 
+    #   "subTopics": [sub pages and their content]
+    # }
+    # this function will simply append the `subTopic` lits to the `sections` list
+
     react_data = []
     with open(Utility.REACT_OUTPUT_FILE.value, 'r', encoding='utf-8') as file:
         react_data = json.load(file)
@@ -125,6 +150,7 @@ def get_aws_data():
         
 
 def combining_data():
+
     logging.info(".......***********************........")
     logging.info("           COMBINNING DATA             ")
     logging.info ("******.......................********\n")
@@ -147,7 +173,9 @@ def combining_data():
         logging.info(".......**********************************........")
         logging.info("         PROCESS COMPLETED SUCCESSFULLY         ")
         logging.info ("******..................................********\n")
+
     except json.decoder.JSONDecodeError as e:
+
         logging.error("one of the file content missing or try again")
         logging.error(e)
         logging.info(".......*******************........")
