@@ -15,9 +15,13 @@ class React(Enum):
     MAIN = "main"
     SUBHEADER = "sub_header"
     SECTIONS = "sections"
-    CODE_ECAMPLE = "code_example"
+    CODE_EXAMPLE = "code_example"
     CONTENT = "content"
+    CODE = "code"
+    ARTICLE = "article"
     SOURCE = "react"
+    CODE_SANDBOX = "code_sandbox"
+    SANDPACK_PLAYGROUND = 'sandpack--playground'
 
 
 
