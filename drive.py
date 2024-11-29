@@ -130,19 +130,29 @@ def combining_data():
     logging.info ("******.......................********\n")
 
     # combining the data of react and aws
-    combined_data = []
-    json_object_list = [Utility.REACT_OUTPUT_FILE.value, Utility.AWS_OUTPUT_FILE.value]
+    try:
+        combined_data = []
+        json_object_list = [Utility.REACT_OUTPUT_FILE.value, Utility.AWS_OUTPUT_FILE.value]
 
-    for json_object in json_object_list:
-        with open(json_object, 'r') as file:
-            data = json.load(file)
-            combined_data += data
+        for json_object in json_object_list:
+            with open(json_object, 'r') as file:
+                data = json.load(file)
+                combined_data += data
 
 
-    with open(Utility.FINAL_OUTPUT_FILE.value, 'w', encoding='utf-8') as file:
-        json.dump(combined_data, file, ensure_ascii=False, indent=4)
+        with open(Utility.FINAL_OUTPUT_FILE.value, 'w', encoding='utf-8') as file:
+            json.dump(combined_data, file, ensure_ascii=False, indent=4)
 
-    logging.info("Data combined and saved to original.json\n")
+        logging.info("Data combined and saved to original.json\n")
+        logging.info(".......**********************************........")
+        logging.info("         PROCESS COMPLETED SUCCESSFULLY         ")
+        logging.info ("******..................................********\n")
+    except json.decoder.JSONDecodeError as e:
+        logging.error("one of the file content missing or try again")
+        logging.error(e)
+        logging.info(".......*******************........")
+        logging.info("             TRY AGAIN           ")
+        logging.info ("******...................********\n")
 
 
 def main():
@@ -156,20 +166,23 @@ def main():
     combining_data()
 
 
-    logging.info(".......**********************************........")
-    logging.info("         PROCESS COMPLETED SUCCESSFULLY         ")
-    logging.info ("******..................................********\n")
-
-   
 if __name__ == "__main__":  
 
-    # Create the outputs directory
     os.makedirs("outputs", exist_ok=True)
 
-    # Clear the output files
-    open(Utility.REACT_OUTPUT_FILE.value, 'w').close()  # make json file for react
-    open(Utility.AWS_OUTPUT_FILE.value, 'w').close()  # make json file for aws
-    open(Utility.FINAL_OUTPUT_FILE.value, 'w').close()   # make json file for final output
+    react_file = Utility.REACT_OUTPUT_FILE.value
+    aws_file = Utility.AWS_OUTPUT_FILE.value
+    final_file = Utility.FINAL_OUTPUT_FILE.value
+
+    # Check and create the output files only if they don't exist
+    if not os.path.exists(react_file):
+        open(react_file, 'w').close()  # create an empty json file for react
+
+    if not os.path.exists(aws_file):
+        open(aws_file, 'w').close()  # create an empty json file for aws
+
+    if not os.path.exists(final_file):
+        open(final_file, 'w').close()  # create an empty json file for final output
 
     # Run the main function
     main()
