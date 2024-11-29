@@ -21,6 +21,7 @@ class React(Enum):
     ARTICLE = "article"
     SOURCE = "react"
     CODE_SANDBOX = "code_sandbox"
+    TOPIC_URL = "url"
     SANDPACK_PLAYGROUND = 'sandpack--playground'
 
 

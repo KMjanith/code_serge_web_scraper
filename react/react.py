@@ -22,7 +22,7 @@ class ReactFunction:
         for index,i in enumerate(outer_li):
             a = i.find(React.A.value)
             url_main_topics  = a.get(React.HREF.value)
-            main_topic.append({"topic": a.text , React.URL.value:url + url_main_topics}) 
+            main_topic.append({"topic": a.text , React.TOPIC_URL.value:url + url_main_topics}) 
 
         #dictionary to store the toic hirachy
         result = []
@@ -35,14 +35,14 @@ class ReactFunction:
             # getting sub topics and their urls for the main sub topics
             for j in inner_li:
                 subtopic_url = url + j.find(React.A.value).get(React.HREF.value)
-                temp.append({"topic": j.find(React.A.value).text, React.URL.value: subtopic_url})
+                temp.append({"topic": j.find(React.A.value).text, React.TOPIC_URL.value: subtopic_url})
             temp_dic["subTopics"] = temp
             result.append(temp_dic)
         return [result, main_topic]
     
     
     def sub_heddings_data_collector(self,l, main_header, url, util):
-        stack = [{"headers":main_header, React.URL.value: url,React.CONTENT.value: []}]  
+        stack = [{"headers":main_header, React.TOPIC_URL.value: url,React.CONTENT.value: []}]  
         original = []
         for i in l:
             if(i.name == None):
@@ -52,12 +52,12 @@ class ReactFunction:
                 current_stack_length = len(stack)
                 if(current_stack_length < level):
                     sub_url = i.find(React.A.value)
-                    stack.append({React.SUBHEADER.value: i.text, "source":React.SOURCE.value,React.URL.value: f"{url}/{sub_url.get(React.HREF.value)}",React.CONTENT.value: []})
+                    stack.append({React.SUBHEADER.value: i.text, "source":React.SOURCE.value,React.TOPIC_URL.value: f"{url}/{sub_url.get(React.HREF.value)}",React.CONTENT.value: []})
                 elif(current_stack_length == level and current_stack_length != 0):
                     a = stack.pop()
                     stack[-1][React.CONTENT.value].append(a)
                     sub_url = i.find(React.A.value)
-                    stack.append({React.SUBHEADER.value: i.text,"source":React.SOURCE.value, React.URL.value: f"{url}/{sub_url.get(React.HREF.value)}",React.CONTENT.value: []})
+                    stack.append({React.SUBHEADER.value: i.text,"source":React.SOURCE.value, React.TOPIC_URL.value: f"{url}/{sub_url.get(React.HREF.value)}",React.CONTENT.value: []})
                 
                 else:
                     while(len(stack) > level):
@@ -67,11 +67,11 @@ class ReactFunction:
                     if(len(stack)==0):
                         original.append(a)
                         sub_url = i.find(React.A.value)
-                        stack.append({React.SUBHEADER.value: i.text,"source":React.SOURCE.value, React.URL.value: f"{url}/{sub_url.get(React.HREF.value)}",React.CONTENT.value: []})
+                        stack.append({React.SUBHEADER.value: i.text,"source":React.SOURCE.value, React.TOPIC_URL.value: f"{url}/{sub_url.get(React.HREF.value)}",React.CONTENT.value: []})
                     else:
                         stack[-1][React.CONTENT.value].append(a)
                         sub_url = i.find(React.A.value)
-                        stack.append({React.SUBHEADER.value: i.text, "source":React.SOURCE.value,React.URL.value: f"{url}/{sub_url.get(React.HREF.value)}",React.CONTENT.value: []})
+                        stack.append({React.SUBHEADER.value: i.text, "source":React.SOURCE.value,React.TOPIC_URL.value: f"{url}/{sub_url.get(React.HREF.value)}",React.CONTENT.value: []})
             else:
                 if(i.name == React.UL.value):
                     for index,j in enumerate(i.find_all(React.LI.value)):
@@ -114,7 +114,7 @@ class ReactFunction:
     
     def main_heading_data_collector(self, page_item_list, main_header, url, util):
 
-        stack = [{"title": main_header,"source": React.SOURCE.value ,React.URL.value: url,React.SECTIONS.value: [], "subTopics": []}]
+        stack = [{"title": main_header,"source": React.SOURCE.value ,React.TOPIC_URL.value: url,React.SECTIONS.value: [], "subTopics": []}]
         original = []
         for i in page_item_list:
             if(i.name == None):
@@ -125,13 +125,13 @@ class ReactFunction:
                 if(current_stack_length < level):
                     sub_url = i.find(React.A.value)
                     if(sub_url):
-                        stack.append({"subHeader": i.text, React.URL.value: f"{url}/{sub_url.get(React.HREF.value)}",React.SECTIONS.value: [] })
+                        stack.append({"subHeader": i.text, React.TOPIC_URL.value: f"{url}/{sub_url.get(React.HREF.value)}",React.SECTIONS.value: [] })
                 elif(current_stack_length == level and current_stack_length != 0):
                     a = stack.pop()
                     stack[-1][React.SECTIONS.value].append(a)
                     sub_url = i.find(React.A.value)
                     if(sub_url):
-                        stack.append({"subHeader": i.text, React.URL.value: f"{url}/{sub_url.get(React.HREF.value)}",React.SECTIONS.value: [] })
+                        stack.append({"subHeader": i.text, React.TOPIC_URL.value: f"{url}/{sub_url.get(React.HREF.value)}",React.SECTIONS.value: [] })
                 
                 else:
                     while(len(stack) > level):
@@ -142,12 +142,12 @@ class ReactFunction:
                         original.append(a)
                         sub_url = i.find(React.A.value)
                     if(sub_url):
-                        stack.append({"subHeader": i.text, React.URL.value: f"{url}/{sub_url.get(React.HREF.value)}",React.SECTIONS.value: [] })
+                        stack.append({"subHeader": i.text, React.TOPIC_URL.value: f"{url}/{sub_url.get(React.HREF.value)}",React.SECTIONS.value: [] })
                     else:
                         stack[-1][React.SECTIONS.value].append(a)
                         sub_url = i.find(React.A.value)
                     if(sub_url):
-                        stack.append({"subHeader": i.text, React.URL.value: f"{url}/{sub_url.get(React.HREF.value)}",React.SECTIONS.value: [] })
+                        stack.append({"subHeader": i.text, React.TOPIC_URL.value: f"{url}/{sub_url.get(React.HREF.value)}",React.SECTIONS.value: [] })
             else:
                 if(i.name == React.UL.value):
                     for index,j in enumerate(i.find_all(React.LI.value)):
@@ -162,7 +162,7 @@ class ReactFunction:
                         code = i.find(React.CODE.value)
                         if(code and (stack[-1][React.SECTIONS.value][-1] != {React.CODE_EXAMPLE.value: code.text})):
                             stack[-1][React.SECTIONS.value].append({React.CODE_EXAMPLE.value: code.text})
-                        if(i.get('class')[1] == React.SANDPACK_PLAYGROUND.value):
+                        if(i.get('class')[1] == 'sandpack--playground'):
                             code_sandbox = util.remove_redundant(i.text)
                             stack[-1][React.SECTIONS.value].append({React.CODE_SANDBOX.value: code_sandbox})
                         else:
@@ -205,10 +205,10 @@ class ReactFunction:
         soup = BeautifulSoup(response.text, 'html.parser')
 
         # Locate the main content
-        outer_div = soup.find(React.MAIN.value)
+        outer_div = soup.find('main')
 
         # Extracting the article content
-        article = outer_div.find(React.ARTICLE.value).find(React.DIV.value, class_="ps-0")
+        article = outer_div.find('article').find(React.DIV.value, class_="ps-0")
 
         # Extracting the inner content of the article
         inner_content = article.contents
@@ -253,14 +253,14 @@ class ReactFunction:
         links = []
         for key, value in json_content.items():
             for sub_key, sub_value in value.items():
-                links.append(sub_value[React.URL.value])
+                links.append(sub_value[React.TOPIC_URL.value])
         return links
 
     def get_content_data(self,link_list, main_or_sub):
         body_content = []
         for link in link_list:
             logging.info(f"-------Getting data from {link['url']}")
-            original_dict = self.getting_inner_content(link[React.URL.value], main_or_sub)
+            original_dict = self.getting_inner_content(link[React.TOPIC_URL.value], main_or_sub)
             body_content.append(original_dict[0])
         return body_content 
     
