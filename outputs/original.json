@@ -6496,18 +6496,16 @@
                 " Lambda runs your code    on a high-availability compute infrastructure and performs all of the administration of the compute resources,    including server and operating system maintenance, capacity provisioning and automatic scaling, and    logging. With Lambda, all you need to do is supply your code in one of the language runtimes that Lambda supports.",
                 "You organize your code into Lambda functions. The Lambda service runs your function only when needed and scales automatically. You only pay for the compute time that you consume—there is no charge when your code is not running. For more information, see AWS Lambda Pricing.",
                 "Tip",
-                [],
                 "To learn how to build serverless solutions, check out the Serverless Developer Guide.",
-                [],
                 {
                     "sub_header": "When to use Lambda",
                     "content": [
                         "Lambda is an ideal compute service for application scenarios that need to scale up rapidly, and scale down to      zero when not in demand. For example, you can use Lambda for:",
-                        "  1.File processing::  Use Amazon Simple Storage Service (Amazon S3) to trigger Lambda data processing in real time after an upload.",
-                        "  2.Stream processing::  Use Lambda and Amazon Kinesis to process real-time streaming data for application activity tracking, transaction order processing, clickstream analysis, data cleansing, log filtering, indexing, social media analysis, Internet of Things (IoT) device data telemetry, and metering.",
-                        "  3.Web applications::  Combine Lambda with other AWS services to build powerful web applications that automatically scale up and down and run in a highly available configuration across multiple data centers.",
-                        "  4.IoT backends::  Build serverless backends using Lambda to handle web, mobile, IoT, and third-party API requests.",
-                        "  5.Mobile backends::  Build backends using Lambda and Amazon API Gateway  to authenticate and process API requests. Use AWS Amplify to easily integrate with your iOS, Android, Web, and React Native frontends.",
+                        "  1.File processing: :  Use Amazon Simple Storage Service (Amazon S3) to trigger Lambda data processing in real time after an upload.",
+                        "  2.Stream processing: :  Use Lambda and Amazon Kinesis to process real-time streaming data for application activity tracking, transaction order processing, clickstream analysis, data cleansing, log filtering, indexing, social media analysis, Internet of Things (IoT) device data telemetry, and metering.",
+                        "  3.Web applications: :  Combine Lambda with other AWS services to build powerful web applications that automatically scale up and down and run in a highly available configuration across multiple data centers.",
+                        "  4.IoT backends: :  Build serverless backends using Lambda to handle web, mobile, IoT, and third-party API requests.",
+                        "  5.Mobile backends: :  Build backends using Lambda and Amazon API Gateway  to authenticate and process API requests. Use AWS Amplify to easily integrate with your iOS, Android, Web, and React Native frontends.",
                         "When using Lambda, you are responsible only for your code. Lambda manages the compute fleet that offers a      balance of memory, CPU, network, and other resources to run your code. Because Lambda manages these resources, you      cannot log in to compute instances or customize the operating system on provided        runtimes. Lambda performs operational and administrative activities on your behalf, including managing      capacity, monitoring, and logging your Lambda functions."
                     ]
                 },
@@ -6546,20 +6544,17 @@
                         "  2.A Lambda function in Python which reads the uploaded file and creates an encrypted, password-protected version of it",
                         "  3.A second S3 bucket for Lambda to save the encrypted file in",
                         "You also create an AWS Identity and Access Management (IAM) policy to give your Lambda function permission to perform read and write operations     on your S3 buckets.",
-                        [],
                         "Tip",
-                        [],
                         "If you’re brand new to Lambda, we recommend that you carry out the tutorial Create your first Lambda function before      creating this example app.",
-                        [],
                         "You can deploy your app manually by creating and configuring resources with the AWS Management Console or the AWS Command Line Interface (AWS CLI). You can     also deploy the app by using the AWS Serverless Application Model (AWS SAM). AWS SAM is an infrastructure as code (IaC) tool. With IaC, you don’t create     resources manually, but define them in code and then deploy them automatically.",
                         "If you want to learn more about using Lambda with IaC before deploying this example app, see Using Lambda with infrastructure as code (IaC).",
                         {
                             "sub_header": "Prerequisites",
                             "content": [
                                 "Before you can create the example app, make sure you have the required command line tools installed.",
-                                "  1.AWS CLI: You can manually deploy the resources for your app using either the AWS Management Console or the . To use the CLI, install it by following               the installation                 instructions in the AWS Command Line Interface User Guide.",
-                                "  2.AWS SAM CLI: If you want to deploy the example app using AWS SAM, you need to install both the AWS CLI and the . To install the ,               follow the installation instructions               in the AWS SAM User Guide.",
-                                "  3.pytest module: After you’ve deployed your app, you can test it using an automated Python test script that we provide. To use this script, install the               pytest package in you local development environment by running the following command:pip install pytest",
+                                "  1.AWS CLI : You can manually deploy the resources for your app using either the AWS Management Console or the . To use the CLI, install it by following               the installation                 instructions in the AWS Command Line Interface User Guide.",
+                                "  2.AWS SAM CLI : If you want to deploy the example app using AWS SAM, you need to install both the AWS CLI and the . To install the ,               follow the installation instructions               in the AWS SAM User Guide.",
+                                "  3.pytest module : After you’ve deployed your app, you can test it using an automated Python test script that we provide. To use this script, install the               pytest package in you local development environment by running the following command:pip install pytest",
                                 {
                                     "code_example": "pip install pytest"
                                 },
@@ -6581,77 +6576,37 @@
                                     "code_example": "from pypdf import PdfReader, PdfWriter\nimport uuid\nimport os\nfrom urllib.parse import unquote_plus\nimport boto3\n\n# Create the S3 client to download and upload objects from S3\ns3_client = boto3.client('s3')\n\ndef lambda_handler(event, context):\n    # Iterate over the S3 event object and get the key for all uploaded files\n    for record in event['Records']:\n        bucket = record['s3']['bucket']['name']\n        key = unquote_plus(record['s3']['object']['key']) # Decode the S3 object key to remove any URL-encoded characters\n        download_path = f'/tmp/{uuid.uuid4()}.pdf' # Create a path in the Lambda tmp directory to save the file to \n        upload_path = f'/tmp/converted-{uuid.uuid4()}.pdf' # Create another path to save the encrypted file to\n        \n        # If the file is a PDF, encrypt it and upload it to the destination S3 bucket\n        if key.lower().endswith('.pdf'):\n            s3_client.download_file(bucket, key, download_path)\n            encrypt_pdf(download_path, upload_path)\n            encrypted_key = add_encrypted_suffix(key)\n            s3_client.upload_file(upload_path, f'{bucket}-encrypted', encrypted_key)\n\n# Define the function to encrypt the PDF file with a password\ndef encrypt_pdf(file_path, encrypted_file_path):\n    reader = PdfReader(file_path)\n    writer = PdfWriter()\n    \n    for page in reader.pages:\n        writer.add_page(page)\n\n    # Add a password to the new PDF\n    writer.encrypt(\"my-secret-password\")\n\n    # Save the new PDF to a file\n    with open(encrypted_file_path, \"wb\") as file:\n        writer.write(file)\n\n# Define a function to add a suffix to the original filename after encryption\ndef add_encrypted_suffix(original_key):\n    filename, extension = original_key.rsplit('.', 1)\n    return f'{filename}_encrypted.{extension}'"
                                 },
                                 "Note",
-                                [],
                                 "In this example code, a password for the encrypted file (my-secret-password) is hardcoded into the           function code. In a production application, don't include sensitive information like passwords in your function code. Use           AWS Secrets Manager to securely store sensitive parameters.",
-                                [],
-                                [],
                                 "The python function code contains three functions - the handler function that Lambda runs           when your function is invoked, and two separate function named add_encrypted_suffix and encrypt_pdf that the handler calls to perform the PDF encryption.",
                                 "When your function is invoked by Amazon S3, Lambda passes a JSON formatted event argument to the function that contains details about the           event that caused the invocation. In this case, the information includes name of the S3 bucket and the object keys for the uploaded files.           To learn more about the format of event object for Amazon S3, see Process Amazon S3 event notifications with Lambda.",
                                 "Your function then uses the AWS SDK for Python (Boto3) to download the PDF files specified in the event object to its local temporary storage directory, before           encrypting them using the pypdf library.",
                                 "Finally, the function uses the Boto3 SDK to store the encrypted file in your S3 destination bucket.",
-                                [],
                                 "Python function code",
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
                                 "Copy and paste the following code into a file named lambda_function.py.",
                                 {
                                     "code_example": "from pypdf import PdfReader, PdfWriter\nimport uuid\nimport os\nfrom urllib.parse import unquote_plus\nimport boto3\n\n# Create the S3 client to download and upload objects from S3\ns3_client = boto3.client('s3')\n\ndef lambda_handler(event, context):\n    # Iterate over the S3 event object and get the key for all uploaded files\n    for record in event['Records']:\n        bucket = record['s3']['bucket']['name']\n        key = unquote_plus(record['s3']['object']['key']) # Decode the S3 object key to remove any URL-encoded characters\n        download_path = f'/tmp/{uuid.uuid4()}.pdf' # Create a path in the Lambda tmp directory to save the file to \n        upload_path = f'/tmp/converted-{uuid.uuid4()}.pdf' # Create another path to save the encrypted file to\n        \n        # If the file is a PDF, encrypt it and upload it to the destination S3 bucket\n        if key.lower().endswith('.pdf'):\n            s3_client.download_file(bucket, key, download_path)\n            encrypt_pdf(download_path, upload_path)\n            encrypted_key = add_encrypted_suffix(key)\n            s3_client.upload_file(upload_path, f'{bucket}-encrypted', encrypted_key)\n\n# Define the function to encrypt the PDF file with a password\ndef encrypt_pdf(file_path, encrypted_file_path):\n    reader = PdfReader(file_path)\n    writer = PdfWriter()\n    \n    for page in reader.pages:\n        writer.add_page(page)\n\n    # Add a password to the new PDF\n    writer.encrypt(\"my-secret-password\")\n\n    # Save the new PDF to a file\n    with open(encrypted_file_path, \"wb\") as file:\n        writer.write(file)\n\n# Define a function to add a suffix to the original filename after encryption\ndef add_encrypted_suffix(original_key):\n    filename, extension = original_key.rsplit('.', 1)\n    return f'{filename}_encrypted.{extension}'"
                                 },
                                 "Note",
-                                [],
                                 "In this example code, a password for the encrypted file (my-secret-password) is hardcoded into the           function code. In a production application, don't include sensitive information like passwords in your function code. Use           AWS Secrets Manager to securely store sensitive parameters.",
-                                [],
-                                [],
                                 "The python function code contains three functions - the handler function that Lambda runs           when your function is invoked, and two separate function named add_encrypted_suffix and encrypt_pdf that the handler calls to perform the PDF encryption.",
                                 "When your function is invoked by Amazon S3, Lambda passes a JSON formatted event argument to the function that contains details about the           event that caused the invocation. In this case, the information includes name of the S3 bucket and the object keys for the uploaded files.           To learn more about the format of event object for Amazon S3, see Process Amazon S3 event notifications with Lambda.",
                                 "Your function then uses the AWS SDK for Python (Boto3) to download the PDF files specified in the event object to its local temporary storage directory, before           encrypting them using the pypdf library.",
                                 "Finally, the function uses the Boto3 SDK to store the encrypted file in your S3 destination bucket.",
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
                                 "Copy and paste the following code into a file named requirements.txt.",
                                 {
                                     "code_example": "boto3\npypdf"
                                 },
                                 "For this example, your function code has only two dependencies that aren't part of the standard Python library -           the SDK for Python (Boto3) and the pypdf package the function uses to perform the PDF encryption.",
                                 "Note",
-                                [],
                                 "A version of the SDK for Python (Boto3) is included as part of the Lambda runtime, so your code would run without adding Boto3 to your             function's deployment package. However, to maintain full control of your function's dependencies and avoid possible issues with             version misalignment, best practice for Python is to include all function dependencies in your function's deployment package.           See Runtime dependencies in Python to learn more.",
-                                [],
-                                [],
-                                [],
                                 "requirements.txt manifest file",
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
                                 "Copy and paste the following code into a file named requirements.txt.",
                                 {
                                     "code_example": "boto3\npypdf"
                                 },
                                 "For this example, your function code has only two dependencies that aren't part of the standard Python library -           the SDK for Python (Boto3) and the pypdf package the function uses to perform the PDF encryption.",
                                 "Note",
-                                [],
                                 "A version of the SDK for Python (Boto3) is included as part of the Lambda runtime, so your code would run without adding Boto3 to your             function's deployment package. However, to maintain full control of your function's dependencies and avoid possible issues with             version misalignment, best practice for Python is to include all function dependencies in your function's deployment package.           See Runtime dependencies in Python to learn more.",
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
                                 "Copy and paste the following code into a file named template.yaml.",
                                 {
                                     "code_example": "AWSTemplateFormatVersion: '2010-09-09'\nTransform: AWS::Serverless-2016-10-31\n\nResources:\n  EncryptPDFFunction:\n    Type: AWS::Serverless::Function\n    Properties:\n      FunctionName: EncryptPDF\n      Architectures: [x86_64]\n      CodeUri: ./\n      Handler: lambda_function.lambda_handler\n      Runtime: python3.12\n      Timeout: 15\n      MemorySize: 256\n      LoggingConfig:\n        LogFormat: JSON\n      Policies:\n        - AmazonS3FullAccess\n      Events:\n        S3Event:\n          Type: S3\n          Properties:\n            Bucket: !Ref PDFSourceBucket\n            Events: s3:ObjectCreated:*\n\n  PDFSourceBucket:\n    Type: AWS::S3::Bucket\n    Properties:\n      BucketName: EXAMPLE-BUCKET\n\n  EncryptedPDFBucket:\n    Type: AWS::S3::Bucket\n    Properties:\n      BucketName: EXAMPLE-BUCKET-encrypted"
@@ -6659,13 +6614,7 @@
                                 "The AWS SAM template defines the resources you create for your app. In this example, the template defines a Lambda function using the         AWS::Serverless::Function type and two S3 buckets using the AWS::S3::Bucket type. The bucket names specified in the         template are placeholders. Before you deploy the app using AWS SAM, you need to edit the template to rename the buckets with globally unique names that          meet the S3 bucket naming rules. This step is           explained further in Deploy the resources using AWS SAM.",
                                 "The definition of the Lambda function resource configures a trigger for the function using the S3Event event property. This         trigger causes your function to be invoked whenever an object is created in your source bucket.",
                                 "The function definition also specifies an AWS Identity and Access Management (IAM) policy to be attached to the function's execution role.           The AWS managed policyAmazonS3FullAccess gives your function the permissions it needs to read and write objects to Amazon S3.",
-                                [],
                                 "AWS SAM template",
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
                                 "Copy and paste the following code into a file named template.yaml.",
                                 {
                                     "code_example": "AWSTemplateFormatVersion: '2010-09-09'\nTransform: AWS::Serverless-2016-10-31\n\nResources:\n  EncryptPDFFunction:\n    Type: AWS::Serverless::Function\n    Properties:\n      FunctionName: EncryptPDF\n      Architectures: [x86_64]\n      CodeUri: ./\n      Handler: lambda_function.lambda_handler\n      Runtime: python3.12\n      Timeout: 15\n      MemorySize: 256\n      LoggingConfig:\n        LogFormat: JSON\n      Policies:\n        - AmazonS3FullAccess\n      Events:\n        S3Event:\n          Type: S3\n          Properties:\n            Bucket: !Ref PDFSourceBucket\n            Events: s3:ObjectCreated:*\n\n  PDFSourceBucket:\n    Type: AWS::S3::Bucket\n    Properties:\n      BucketName: EXAMPLE-BUCKET\n\n  EncryptedPDFBucket:\n    Type: AWS::S3::Bucket\n    Properties:\n      BucketName: EXAMPLE-BUCKET-encrypted"
@@ -6673,14 +6622,6 @@
                                 "The AWS SAM template defines the resources you create for your app. In this example, the template defines a Lambda function using the         AWS::Serverless::Function type and two S3 buckets using the AWS::S3::Bucket type. The bucket names specified in the         template are placeholders. Before you deploy the app using AWS SAM, you need to edit the template to rename the buckets with globally unique names that          meet the S3 bucket naming rules. This step is           explained further in Deploy the resources using AWS SAM.",
                                 "The definition of the Lambda function resource configures a trigger for the function using the S3Event event property. This         trigger causes your function to be invoked whenever an object is created in your source bucket.",
                                 "The function definition also specifies an AWS Identity and Access Management (IAM) policy to be attached to the function's execution role.           The AWS managed policyAmazonS3FullAccess gives your function the permissions it needs to read and write objects to Amazon S3.",
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
                                 "Copy and paste the following code into a file named test_pdf_encrypt.py.",
                                 {
                                     "code_example": "import boto3\nimport json\nimport pytest\nimport time\nimport os\n\n@pytest.fixture\ndef lambda_client():\n    return boto3.client('lambda')\n    \n@pytest.fixture\ndef s3_client():\n    return boto3.client('s3')\n\n@pytest.fixture\ndef logs_client():\n    return boto3.client('logs')\n\n@pytest.fixture(scope='session')\ndef cleanup():\n    # Create a new S3 client for cleanup\n    s3_client = boto3.client('s3')\n\n    yield\n    # Cleanup code will be executed after all tests have finished\n\n    # Delete test.pdf from the source bucket\n    source_bucket = 'EXAMPLE-BUCKET'\n    source_file_key = 'test.pdf'\n    s3_client.delete_object(Bucket=source_bucket, Key=source_file_key)\n    print(f\"\\nDeleted {source_file_key} from {source_bucket}\")\n\n    # Delete test_encrypted.pdf from the destination bucket\n    destination_bucket = 'EXAMPLE-BUCKET-encrypted'\n    destination_file_key = 'test_encrypted.pdf'\n    s3_client.delete_object(Bucket=destination_bucket, Key=destination_file_key)\n    print(f\"Deleted {destination_file_key} from {destination_bucket}\")\n        \n\n@pytest.mark.order(1)\ndef test_source_bucket_available(s3_client):\n    s3_bucket_name = 'EXAMPLE-BUCKET'\n    file_name = 'test.pdf'\n    file_path = os.path.join(os.path.dirname(__file__), file_name)\n\n    file_uploaded = False\n    try:\n        s3_client.upload_file(file_path, s3_bucket_name, file_name)\n        file_uploaded = True\n    except:\n        print(\"Error: couldn't upload file\")\n\n    assert file_uploaded, \"Could not upload file to S3 bucket\"\n\n    \n\n@pytest.mark.order(2)\ndef test_lambda_invoked(logs_client):\n\n    # Wait for a few seconds to make sure the logs are available\n    time.sleep(5)\n\n    # Get the latest log stream for the specified log group\n    log_streams = logs_client.describe_log_streams(\n        logGroupName='/aws/lambda/EncryptPDF',\n        orderBy='LastEventTime',\n        descending=True,\n        limit=1\n    )\n\n    latest_log_stream_name = log_streams['logStreams'][0]['logStreamName']\n\n    # Retrieve the log events from the latest log stream\n    log_events = logs_client.get_log_events(\n        logGroupName='/aws/lambda/EncryptPDF',\n        logStreamName=latest_log_stream_name\n    )\n\n    success_found = False\n    for event in log_events['events']:\n        message = json.loads(event['message'])\n        status = message.get('record', {}).get('status')\n        if status == 'success':\n            success_found = True\n            break\n\n    assert success_found, \"Lambda function execution did not report 'success' status in logs.\"\n\n@pytest.mark.order(3)\ndef test_encrypted_file_in_bucket(s3_client):\n    # Specify the destination S3 bucket and the expected converted file key\n    destination_bucket = 'EXAMPLE-BUCKET-encrypted'\n    converted_file_key = 'test_encrypted.pdf'\n\n    try:\n        # Attempt to retrieve the metadata of the converted file from the destination S3 bucket\n        s3_client.head_object(Bucket=destination_bucket, Key=converted_file_key)\n    except s3_client.exceptions.ClientError as e:\n        # If the file is not found, the test will fail\n        pytest.fail(f\"Converted file '{converted_file_key}' not found in the destination bucket: {str(e)}\")\n\ndef test_cleanup(cleanup):\n    # This test uses the cleanup fixture and will be executed last\n    pass"
@@ -6689,16 +6630,9 @@
                                 "  1.The test test_source_bucket_available confirms that your source bucket has been successfully created             by uploading a test PDF file to the bucket.",
                                 "  2.The test test_lambda_invoked interrogates the latest CloudWatch Logs log stream for your function to confirm that             when you uploaded the test file, your Lambda function ran and reported success.",
                                 "  3.The test test_encrypted_file_in_bucket confirms that your destination bucket contains the encrypted test_encrypted.pdf             file.",
-                                [],
                                 "After all these tests have run, the script runs an additional cleanup step to delete the test.pdf and test_encrypted.pdf files from         both your source and destination buckets.",
                                 "As with the AWS SAM template, the bucket names specified in this file are placeholders. Before running the test, you need to edit this file           with your app's real bucket names. This step is explained further in Testing the app with the automated script",
-                                [],
                                 "Automated test script",
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
                                 "Copy and paste the following code into a file named test_pdf_encrypt.py.",
                                 {
                                     "code_example": "import boto3\nimport json\nimport pytest\nimport time\nimport os\n\n@pytest.fixture\ndef lambda_client():\n    return boto3.client('lambda')\n    \n@pytest.fixture\ndef s3_client():\n    return boto3.client('s3')\n\n@pytest.fixture\ndef logs_client():\n    return boto3.client('logs')\n\n@pytest.fixture(scope='session')\ndef cleanup():\n    # Create a new S3 client for cleanup\n    s3_client = boto3.client('s3')\n\n    yield\n    # Cleanup code will be executed after all tests have finished\n\n    # Delete test.pdf from the source bucket\n    source_bucket = 'EXAMPLE-BUCKET'\n    source_file_key = 'test.pdf'\n    s3_client.delete_object(Bucket=source_bucket, Key=source_file_key)\n    print(f\"\\nDeleted {source_file_key} from {source_bucket}\")\n\n    # Delete test_encrypted.pdf from the destination bucket\n    destination_bucket = 'EXAMPLE-BUCKET-encrypted'\n    destination_file_key = 'test_encrypted.pdf'\n    s3_client.delete_object(Bucket=destination_bucket, Key=destination_file_key)\n    print(f\"Deleted {destination_file_key} from {destination_bucket}\")\n        \n\n@pytest.mark.order(1)\ndef test_source_bucket_available(s3_client):\n    s3_bucket_name = 'EXAMPLE-BUCKET'\n    file_name = 'test.pdf'\n    file_path = os.path.join(os.path.dirname(__file__), file_name)\n\n    file_uploaded = False\n    try:\n        s3_client.upload_file(file_path, s3_bucket_name, file_name)\n        file_uploaded = True\n    except:\n        print(\"Error: couldn't upload file\")\n\n    assert file_uploaded, \"Could not upload file to S3 bucket\"\n\n    \n\n@pytest.mark.order(2)\ndef test_lambda_invoked(logs_client):\n\n    # Wait for a few seconds to make sure the logs are available\n    time.sleep(5)\n\n    # Get the latest log stream for the specified log group\n    log_streams = logs_client.describe_log_streams(\n        logGroupName='/aws/lambda/EncryptPDF',\n        orderBy='LastEventTime',\n        descending=True,\n        limit=1\n    )\n\n    latest_log_stream_name = log_streams['logStreams'][0]['logStreamName']\n\n    # Retrieve the log events from the latest log stream\n    log_events = logs_client.get_log_events(\n        logGroupName='/aws/lambda/EncryptPDF',\n        logStreamName=latest_log_stream_name\n    )\n\n    success_found = False\n    for event in log_events['events']:\n        message = json.loads(event['message'])\n        status = message.get('record', {}).get('status')\n        if status == 'success':\n            success_found = True\n            break\n\n    assert success_found, \"Lambda function execution did not report 'success' status in logs.\"\n\n@pytest.mark.order(3)\ndef test_encrypted_file_in_bucket(s3_client):\n    # Specify the destination S3 bucket and the expected converted file key\n    destination_bucket = 'EXAMPLE-BUCKET-encrypted'\n    converted_file_key = 'test_encrypted.pdf'\n\n    try:\n        # Attempt to retrieve the metadata of the converted file from the destination S3 bucket\n        s3_client.head_object(Bucket=destination_bucket, Key=converted_file_key)\n    except s3_client.exceptions.ClientError as e:\n        # If the file is not found, the test will fail\n        pytest.fail(f\"Converted file '{converted_file_key}' not found in the destination bucket: {str(e)}\")\n\ndef test_cleanup(cleanup):\n    # This test uses the cleanup fixture and will be executed last\n    pass"
@@ -6707,42 +6641,19 @@
                                 "  1.The test test_source_bucket_available confirms that your source bucket has been successfully created             by uploading a test PDF file to the bucket.",
                                 "  2.The test test_lambda_invoked interrogates the latest CloudWatch Logs log stream for your function to confirm that             when you uploaded the test file, your Lambda function ran and reported success.",
                                 "  3.The test test_encrypted_file_in_bucket confirms that your destination bucket contains the encrypted test_encrypted.pdf             file.",
-                                [],
                                 "After all these tests have run, the script runs an additional cleanup step to delete the test.pdf and test_encrypted.pdf files from         both your source and destination buckets.",
                                 "As with the AWS SAM template, the bucket names specified in this file are placeholders. Before running the test, you need to edit this file           with your app's real bucket names. This step is explained further in Testing the app with the automated script",
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
                                 "Copy and paste the following code into a file named pytest.ini.",
                                 {
                                     "code_example": "[pytest]\nmarkers =\n    order: specify test execution order"
                                 },
                                 "This is needed to specify the order in which the tests in the test_pdf_encrypt.py script run.",
-                                [],
                                 "Test script configuration file",
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
                                 "Copy and paste the following code into a file named pytest.ini.",
                                 {
                                     "code_example": "[pytest]\nmarkers =\n    order: specify test execution order"
                                 },
-                                "This is needed to specify the order in which the tests in the test_pdf_encrypt.py script run.",
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                []
+                                "This is needed to specify the order in which the tests in the test_pdf_encrypt.py script run."
                             ]
                         },
                         {
@@ -6766,24 +6677,12 @@
                                                 "  2.AWS CLI : region",
                                                 "anchor",
                                                 "anchor",
-                                                [],
-                                                [],
-                                                [],
                                                 "To create the S3 buckets (console)",
                                                 "  1 : Open the Buckets page of the Amazon S3 console.",
                                                 "  2 : Choose Create bucket.",
                                                 "  3 : Under General configuration, do the following:For Bucket name, enter a globally unique name that meets the Amazon S3 Bucket naming rules.                     Bucket names can contain only lower case letters, numbers, dots (.), and hyphens (-). For AWS Region, choose the AWS Region                     closest to your geographical location. Later in the deployment process, you must create your Lambda function in the same AWS Region, so                     make a note of the region you chose.",
                                                 "  4 : Leave all other options set to their default values and choose Create bucket.",
-                                                "  5 : Repeat steps 1 to 4 to create your destination bucket. For Bucket name, enter SOURCEBUCKET-encrypted,                 where SOURCEBUCKET is the name of the source bucket you just created.",
-                                                [],
-                                                [],
-                                                [],
-                                                [],
-                                                [],
-                                                [],
-                                                [],
-                                                [],
-                                                []
+                                                "  5 : Repeat steps 1 to 4 to create your destination bucket. For Bucket name, enter SOURCEBUCKET-encrypted,                 where SOURCEBUCKET is the name of the source bucket you just created."
                                             ]
                                         },
                                         {
@@ -6794,18 +6693,7 @@
                                                 "  2.AWS CLI : AmazonS3FullAccess",
                                                 "anchor",
                                                 "anchor",
-                                                [],
-                                                [],
-                                                [],
-                                                "This step is only required if you choose to deploy your app using the AWS CLI.",
-                                                [],
-                                                [],
-                                                [],
-                                                [],
-                                                [],
-                                                [],
-                                                [],
-                                                []
+                                                "This step is only required if you choose to deploy your app using the AWS CLI."
                                             ]
                                         },
                                         {
@@ -6833,9 +6721,6 @@
                                                 "  2.AWS CLI : lambda_function.zip",
                                                 "anchor",
                                                 "anchor",
-                                                [],
-                                                [],
-                                                [],
                                                 "To create the function (console)",
                                                 "To create your Lambda function using the console, you first create a basic function containing some ‘Hello world’ code. You then           replace this code with your own function code by uploading the.zip file you created in the previous step.",
                                                 "To ensure that your function doesn't time out when encrypting large PDF files, you configure the function's memory and timeout settings.           You also set the function's log format to JSON. Configuring JSON formatted logs is necessary when using the provided test script so it can read the           function's invocation status from CloudWatch Logs to confirm successful invocation.",
@@ -6845,35 +6730,23 @@
                                                 "  4 : Choose Author from scratch.",
                                                 "  5 : Under Basic information, do the following:For Function name, enter EncryptPDF.For Runtime choose Python 3.12.For Architecture, choose x86_64.",
                                                 "  6 : Choose Create function.",
-                                                [],
                                                 "To upload the function code (console)",
                                                 "  1 : In the Code source pane, choose Upload from.",
                                                 "  2 : Choose .zip file.",
                                                 "  3 : Choose Upload.",
                                                 "  4 : In the file selector, select your .zip file and choose Open.",
                                                 "  5 : Choose Save.",
-                                                [],
                                                 "To configure the function memory and timeout (console)",
                                                 "  1 : Select the Configuration tab for your function.",
                                                 "  2 : In the General configuration pane, choose Edit.",
                                                 "  3 : Set Memory to 256 MB and Timeout to 15 seconds.",
                                                 "  4 : Choose Save.",
-                                                [],
                                                 "To configure the log format (console)",
                                                 "  1 : Select the Configuration tab for your function.",
                                                 "  2 : Select Monitoring and operations tools.",
                                                 "  3 : In the Logging configuration pane, choose Edit.",
                                                 "  4 : For Logging configuration, select JSON.",
-                                                "  5 : Choose Save.",
-                                                [],
-                                                [],
-                                                [],
-                                                [],
-                                                [],
-                                                [],
-                                                [],
-                                                [],
-                                                []
+                                                "  5 : Choose Save."
                                             ]
                                         },
                                         {
@@ -6881,16 +6754,11 @@
                                             "content": [
                                                 "For your Lambda function to run when you upload a file to your source bucket, you need to configure a trigger for your function. You can     configure the Amazon S3 trigger using either the console or the AWS CLI.",
                                                 "Important",
-                                                [],
                                                 "This procedure configures the S3 bucket to invoke your function every time that an object is created in the bucket. Be sure to       configure this only on the source bucket. If your Lambda function creates objects in the same bucket that invokes it, your function can be         invoked continuously in a loop. This can result         in un expected charges being billed to your AWS account.",
-                                                [],
                                                 "  1.Console : EncryptPDF",
                                                 "  2.AWS CLI : source-account",
                                                 "anchor",
                                                 "anchor",
-                                                [],
-                                                [],
-                                                [],
                                                 "To configure the Amazon S3 trigger (console)",
                                                 "  1 : Open the Functions page of the Lambda console and choose your function (EncryptPDF).",
                                                 "  2 : Choose Add trigger.",
@@ -6898,16 +6766,7 @@
                                                 "  4 : Under Bucket, select your source bucket.",
                                                 "  5 : Under Event types, select All object create events.",
                                                 "  6 : Under Recursive invocation, select the check box to acknowledge that using the same S3 bucket for input                 and output is not recommended. You can learn more about recursive invocation patterns in Lambda by reading                Recursive patterns that cause run-away Lambda functions                in Serverless Land.",
-                                                "  7 : Choose Add.When you create a trigger using the Lambda console, Lambda automatically creates a resource based policy                 to give the service you select permission to invoke your function. ",
-                                                [],
-                                                [],
-                                                [],
-                                                [],
-                                                [],
-                                                [],
-                                                [],
-                                                [],
-                                                []
+                                                "  7 : Choose Add.When you create a trigger using the Lambda console, Lambda automatically creates a resource based policy                 to give the service you select permission to invoke your function. "
                                             ]
                                         }
                                     ]
@@ -6950,21 +6809,9 @@
                                         "  2.AWS CLI : --bucket",
                                         "anchor",
                                         "anchor",
-                                        [],
-                                        [],
-                                        [],
                                         "To test your app by uploading a file (console)",
                                         "  1 : To upload a PDF file to your S3 bucket, do the following:Open the Buckets page of the Amazon S3 console and choose your source bucket.Choose Upload.Choose Add files and use the file selector to choose the PDF file you want to upload.Choose Open, then choose Upload.",
-                                        "  2 : Verify that Lambda has saved an encrypted version of your PDF file in your target bucket by doing the following:Navigate back to the Buckets page of the Amazon S3 console and choose your destination bucket.In the Objects pane, you should now see a file with name format filename_encrypted.pdf (where                         filename.pdf was the name of the file you uploaded to your source bucket).                        To download your encrypted PDF, select the file, then choose Download.Confirm that you can open the downloaded file with the password your Lambda function protected it with (my-secret-password).",
-                                        [],
-                                        [],
-                                        [],
-                                        [],
-                                        [],
-                                        [],
-                                        [],
-                                        [],
-                                        []
+                                        "  2 : Verify that Lambda has saved an encrypted version of your PDF file in your target bucket by doing the following:Navigate back to the Buckets page of the Amazon S3 console and choose your destination bucket.In the Objects pane, you should now see a file with name format filename_encrypted.pdf (where                         filename.pdf was the name of the file you uploaded to your source bucket).                        To download your encrypted PDF, select the file, then choose Download.Confirm that you can open the downloaded file with the password your Lambda function protected it with (my-secret-password)."
                                     ]
                                 },
                                 {
@@ -7007,21 +6854,18 @@
                     "parent_content": [
                         "You can use AWS Lambda to replace scheduled processes such as automated system backups, file conversions, and maintenance tasks.   In this example, you create a serverless application that performs regular scheduled maintenance on a DynamoDB table by deleting old entries. The app uses EventBridge Scheduler to invoke a   Lambda function on a cron schedule. When invoked, the function queries the table for items older than one year, and deletes them. The function logs each deleted item  in CloudWatch Logs.",
                         "To implement this example, first create a DynamoDB table and populate it with some test data for your function to query. Then, create a Python Lambda function with   an EventBridge Scheduler trigger and an IAM execution role that gives the function permission to read, and delete, items from your table.",
-                        [],
                         "Tip",
-                        [],
                         "If you’re new to Lambda, we recommend that you complete the tutorial Create your first Lambda function before      creating this example app.",
-                        [],
                         "You can deploy your app manually by creating and configuring resources with the AWS Management Console. You can     also deploy the app by using the AWS Serverless Application Model (AWS SAM). AWS SAM is an infrastructure as code (IaC) tool. With IaC, you don’t create     resources manually, but define them in code and then deploy them automatically.",
                         "If you want to learn more about using Lambda with IaC before deploying this example app, see Using Lambda with infrastructure as code (IaC).",
                         {
                             "sub_header": "Prerequisites",
                             "content": [
                                 "Before you can create the example app, make sure you have the required command line tools and programs installed.",
-                                "  1.Python: To populate the DynamoDB table you create to test your app, this example uses a  script and a CSV file to write data into the table. Make sure you have          version 3.8 or later installed on your machine.",
-                                "  2.AWS SAM CLI: If you want to create the DynamoDB table and deploy the example app using AWS SAM, you need to install the .           Follow the installation instructions           in the AWS SAM User Guide.",
-                                "  3.AWS CLI: To use the provided Python script to populate your test table, you need to have installed and configured the . This is because the script uses           the AWS SDK for Python (Boto3), which needs access to your AWS Identity and Access Management (IAM) credentials. You also need the  installed to deploy resources using AWS SAM. Install the CLI by following           the installation instructions in the AWS Command Line Interface User Guide.",
-                                "  4.Docker: To deploy the app using AWS SAM,  must also be installed on your build machine. Follow the instructions in Install  Engine         on the  documentation website."
+                                "  1.Python : To populate the DynamoDB table you create to test your app, this example uses a  script and a CSV file to write data into the table. Make sure you have          version 3.8 or later installed on your machine.",
+                                "  2.AWS SAM CLI : If you want to create the DynamoDB table and deploy the example app using AWS SAM, you need to install the .           Follow the installation instructions           in the AWS SAM User Guide.",
+                                "  3.AWS CLI : To use the provided Python script to populate your test table, you need to have installed and configured the . This is because the script uses           the AWS SDK for Python (Boto3), which needs access to your AWS Identity and Access Management (IAM) credentials. You also need the  installed to deploy resources using AWS SAM. Install the CLI by following           the installation instructions in the AWS Command Line Interface User Guide.",
+                                "  4.Docker : To deploy the app using AWS SAM,  must also be installed on your build machine. Follow the instructions in Install  Engine         on the  documentation website."
                             ]
                         },
                         {
@@ -7044,88 +6888,40 @@
                                     "code_example": "AWSTemplateFormatVersion: '2010-09-09'\nTransform: AWS::Serverless-2016-10-31\nDescription: SAM Template for DynamoDB Table with Order_number as Partition Key and Date as Sort Key\n\nResources:\n  MyDynamoDBTable:\n    Type: AWS::DynamoDB::Table\n    DeletionPolicy: Retain\n    UpdateReplacePolicy: Retain\n    Properties:\n      TableName: MyOrderTable\n      BillingMode: PAY_PER_REQUEST\n      AttributeDefinitions:\n        - AttributeName: Order_number\n          AttributeType: S\n        - AttributeName: Date\n          AttributeType: S\n      KeySchema:\n        - AttributeName: Order_number\n          KeyType: HASH\n        - AttributeName: Date\n          KeyType: RANGE\n      SSESpecification:\n        SSEEnabled: true\n      GlobalSecondaryIndexes:\n        - IndexName: Date-index\n          KeySchema:\n            - AttributeName: Date\n              KeyType: HASH\n          Projection:\n            ProjectionType: ALL\n      PointInTimeRecoverySpecification:\n        PointInTimeRecoveryEnabled: true\n\nOutputs:\n  TableName:\n    Description: DynamoDB Table Name\n    Value: !Ref MyDynamoDBTable\n  TableArn:\n    Description: DynamoDB Table ARN\n    Value: !GetAtt MyDynamoDBTable.Arn"
                                 },
                                 "Note",
-                                [],
                                 "AWS SAM templates use a standard naming convention of template.yaml. In this example, you have two template files - one to create the           example database and another to create the app itself. Save them in separate sub-directories in your project folder.",
-                                [],
-                                [],
                                 "This AWS SAM template defines the DynamoDB table resource you create to test your app. The table uses a primary key of Order_number with a sort           key of Date. In order for your Lambda function to find items directly by date, we also define a Global Secondary Index         named Date-index.",
                                 "To learn more about creating and configuring a DynamoDB table using the AWS::DynamoDB::Table resource, see AWS::DynamoDB::Table in           the AWS CloudFormation User Guide.",
-                                [],
                                 "AWS SAM template (example DynamoDB table)",
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
                                 "Copy and paste the following code into a file named template.yaml.",
                                 {
                                     "code_example": "AWSTemplateFormatVersion: '2010-09-09'\nTransform: AWS::Serverless-2016-10-31\nDescription: SAM Template for DynamoDB Table with Order_number as Partition Key and Date as Sort Key\n\nResources:\n  MyDynamoDBTable:\n    Type: AWS::DynamoDB::Table\n    DeletionPolicy: Retain\n    UpdateReplacePolicy: Retain\n    Properties:\n      TableName: MyOrderTable\n      BillingMode: PAY_PER_REQUEST\n      AttributeDefinitions:\n        - AttributeName: Order_number\n          AttributeType: S\n        - AttributeName: Date\n          AttributeType: S\n      KeySchema:\n        - AttributeName: Order_number\n          KeyType: HASH\n        - AttributeName: Date\n          KeyType: RANGE\n      SSESpecification:\n        SSEEnabled: true\n      GlobalSecondaryIndexes:\n        - IndexName: Date-index\n          KeySchema:\n            - AttributeName: Date\n              KeyType: HASH\n          Projection:\n            ProjectionType: ALL\n      PointInTimeRecoverySpecification:\n        PointInTimeRecoveryEnabled: true\n\nOutputs:\n  TableName:\n    Description: DynamoDB Table Name\n    Value: !Ref MyDynamoDBTable\n  TableArn:\n    Description: DynamoDB Table ARN\n    Value: !GetAtt MyDynamoDBTable.Arn"
                                 },
                                 "Note",
-                                [],
                                 "AWS SAM templates use a standard naming convention of template.yaml. In this example, you have two template files - one to create the           example database and another to create the app itself. Save them in separate sub-directories in your project folder.",
-                                [],
-                                [],
                                 "This AWS SAM template defines the DynamoDB table resource you create to test your app. The table uses a primary key of Order_number with a sort           key of Date. In order for your Lambda function to find items directly by date, we also define a Global Secondary Index         named Date-index.",
                                 "To learn more about creating and configuring a DynamoDB table using the AWS::DynamoDB::Table resource, see AWS::DynamoDB::Table in           the AWS CloudFormation User Guide.",
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
                                 "Copy and paste the following code into a file named sample_data.csv.",
                                 {
                                     "code_example": "Date,Order_number,CustomerName,ProductID,Quantity,TotalAmount\n2023-09-01,ORD001,Alejandro Rosalez,PROD123,2,199.98\n2023-09-01,ORD002,Akua Mansa,PROD456,1,49.99\n2023-09-02,ORD003,Ana Carolina Silva,PROD789,3,149.97\n2023-09-03,ORD004,Arnav Desai,PROD123,1,99.99\n2023-10-01,ORD005,Carlos Salazar,PROD456,2,99.98\n2023-10-02,ORD006,Diego Ramirez,PROD789,1,49.99\n2023-10-03,ORD007,Efua Owusu,PROD123,4,399.96\n2023-10-04,ORD008,John Stiles,PROD456,2,99.98\n2023-10-05,ORD009,Jorge Souza,PROD789,3,149.97\n2023-10-06,ORD010,Kwaku Mensah,PROD123,1,99.99\n2023-11-01,ORD011,Li Juan,PROD456,5,249.95\n2023-11-02,ORD012,Marcia Oliveria,PROD789,2,99.98\n2023-11-03,ORD013,Maria Garcia,PROD123,3,299.97\n2023-11-04,ORD014,Martha Rivera,PROD456,1,49.99\n2023-11-05,ORD015,Mary Major,PROD789,4,199.96\n2023-12-01,ORD016,Mateo Jackson,PROD123,2,199.99\n2023-12-02,ORD017,Nikki Wolf,PROD456,3,149.97\n2023-12-03,ORD018,Pat Candella,PROD789,1,49.99\n2023-12-04,ORD019,Paulo Santos,PROD123,5,499.95\n2023-12-05,ORD020,Richard Roe,PROD456,2,99.98\n2024-01-01,ORD021,Saanvi Sarkar,PROD789,3,149.97\n2024-01-02,ORD022,Shirley Rodriguez,PROD123,1,99.99\n2024-01-03,ORD023,Sofia Martinez,PROD456,4,199.96\n2024-01-04,ORD024,Terry Whitlock,PROD789,2,99.98\n2024-01-05,ORD025,Wang Xiulan,PROD123,3,299.97"
                                 },
                                 "This file contains some example test data to populate your DynamoDB table with in a standard comma-separated values (CSV) format.",
-                                [],
                                 "Sample database data file",
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
                                 "Copy and paste the following code into a file named sample_data.csv.",
                                 {
                                     "code_example": "Date,Order_number,CustomerName,ProductID,Quantity,TotalAmount\n2023-09-01,ORD001,Alejandro Rosalez,PROD123,2,199.98\n2023-09-01,ORD002,Akua Mansa,PROD456,1,49.99\n2023-09-02,ORD003,Ana Carolina Silva,PROD789,3,149.97\n2023-09-03,ORD004,Arnav Desai,PROD123,1,99.99\n2023-10-01,ORD005,Carlos Salazar,PROD456,2,99.98\n2023-10-02,ORD006,Diego Ramirez,PROD789,1,49.99\n2023-10-03,ORD007,Efua Owusu,PROD123,4,399.96\n2023-10-04,ORD008,John Stiles,PROD456,2,99.98\n2023-10-05,ORD009,Jorge Souza,PROD789,3,149.97\n2023-10-06,ORD010,Kwaku Mensah,PROD123,1,99.99\n2023-11-01,ORD011,Li Juan,PROD456,5,249.95\n2023-11-02,ORD012,Marcia Oliveria,PROD789,2,99.98\n2023-11-03,ORD013,Maria Garcia,PROD123,3,299.97\n2023-11-04,ORD014,Martha Rivera,PROD456,1,49.99\n2023-11-05,ORD015,Mary Major,PROD789,4,199.96\n2023-12-01,ORD016,Mateo Jackson,PROD123,2,199.99\n2023-12-02,ORD017,Nikki Wolf,PROD456,3,149.97\n2023-12-03,ORD018,Pat Candella,PROD789,1,49.99\n2023-12-04,ORD019,Paulo Santos,PROD123,5,499.95\n2023-12-05,ORD020,Richard Roe,PROD456,2,99.98\n2024-01-01,ORD021,Saanvi Sarkar,PROD789,3,149.97\n2024-01-02,ORD022,Shirley Rodriguez,PROD123,1,99.99\n2024-01-03,ORD023,Sofia Martinez,PROD456,4,199.96\n2024-01-04,ORD024,Terry Whitlock,PROD789,2,99.98\n2024-01-05,ORD025,Wang Xiulan,PROD123,3,299.97"
                                 },
                                 "This file contains some example test data to populate your DynamoDB table with in a standard comma-separated values (CSV) format.",
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
                                 "Copy and paste the following code into a file named load_sample_data.py.",
                                 {
                                     "code_example": "import boto3\nimport csv\nfrom decimal import Decimal\n\n# Initialize the DynamoDB client\ndynamodb = boto3.resource('dynamodb')\ntable = dynamodb.Table('MyOrderTable') \nprint(\"DDB client initialized.\")\n\ndef load_data_from_csv(filename):\n    with open(filename, 'r') as file:\n        csv_reader = csv.DictReader(file)\n        for row in csv_reader:\n            item = {\n                'Order_number': row['Order_number'],\n                'Date': row['Date'],\n                'CustomerName': row['CustomerName'],\n                'ProductID': row['ProductID'],\n                'Quantity': int(row['Quantity']),\n                'TotalAmount': Decimal(str(row['TotalAmount']))\n            }\n            table.put_item(Item=item)\n            print(f\"Added item: {item['Order_number']} - {item['Date']}\")\n\nif __name__ == \"__main__\":\n    load_data_from_csv('sample_data.csv')\n    print(\"Data loading completed.\")"
                                 },
                                 "This Python script first uses the AWS SDK for Python (Boto3) to create a connection to your DynamoDB table. It then iterates over each row in the example-data CSV file, creates an item from that row, and            writes the item to the DynamoDB table using the boto3 SDK.",
-                                [],
                                 "Python script to load sample data",
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
                                 "Copy and paste the following code into a file named load_sample_data.py.",
                                 {
                                     "code_example": "import boto3\nimport csv\nfrom decimal import Decimal\n\n# Initialize the DynamoDB client\ndynamodb = boto3.resource('dynamodb')\ntable = dynamodb.Table('MyOrderTable') \nprint(\"DDB client initialized.\")\n\ndef load_data_from_csv(filename):\n    with open(filename, 'r') as file:\n        csv_reader = csv.DictReader(file)\n        for row in csv_reader:\n            item = {\n                'Order_number': row['Order_number'],\n                'Date': row['Date'],\n                'CustomerName': row['CustomerName'],\n                'ProductID': row['ProductID'],\n                'Quantity': int(row['Quantity']),\n                'TotalAmount': Decimal(str(row['TotalAmount']))\n            }\n            table.put_item(Item=item)\n            print(f\"Added item: {item['Order_number']} - {item['Date']}\")\n\nif __name__ == \"__main__\":\n    load_data_from_csv('sample_data.csv')\n    print(\"Data loading completed.\")"
                                 },
                                 "This Python script first uses the AWS SDK for Python (Boto3) to create a connection to your DynamoDB table. It then iterates over each row in the example-data CSV file, creates an item from that row, and            writes the item to the DynamoDB table using the boto3 SDK.",
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
                                 "Copy and paste the following code into a file named lambda_function.py.",
                                 {
                                     "code_example": "import boto3\nfrom datetime import datetime, timedelta\nfrom boto3.dynamodb.conditions import Key, Attr\nimport logging\n\nlogger = logging.getLogger()\nlogger.setLevel(\"INFO\")\n\ndef lambda_handler(event, context):\n    # Initialize the DynamoDB client\n    dynamodb = boto3.resource('dynamodb')\n    \n    # Specify the table name\n    table_name = 'MyOrderTable'\n    table = dynamodb.Table(table_name)\n    \n    # Get today's date\n    today = datetime.now()\n    \n    # Calculate the date one year ago\n    one_year_ago = (today - timedelta(days=365)).strftime('%Y-%m-%d')\n    \n    # Scan the table using a global secondary index\n    response = table.scan(\n        IndexName='Date-index',\n        FilterExpression='#date < :one_year_ago',\n        ExpressionAttributeNames={\n            '#date': 'Date'\n        },\n        ExpressionAttributeValues={\n            ':one_year_ago': one_year_ago\n        }\n    )\n    \n     # Delete old items\n    with table.batch_writer() as batch:\n        for item in response['Items']:\n            Order_number = item['Order_number']\n            batch.delete_item(\n                Key={\n                    'Order_number': Order_number,\n                    'Date': item['Date']\n                }\n            )\n            logger.info(f'deleted order number {Order_number}')\n    \n    # Check if there are more items to scan\n    while 'LastEvaluatedKey' in response:\n        response = table.scan(\n            IndexName='DateIndex',\n            FilterExpression='#date < :one_year_ago',\n            ExpressionAttributeNames={\n                '#date': 'Date'\n            },\n            ExpressionAttributeValues={\n                ':one_year_ago': one_year_ago\n            },\n            ExclusiveStartKey=response['LastEvaluatedKey']\n        )\n        \n        # Delete old items\n        with table.batch_writer() as batch:\n            for item in response['Items']:\n                batch.delete_item(\n                    Key={\n                        'Order_number': item['Order_number'],\n                        'Date': item['Date']\n                    }\n                )\n    \n    return {\n        'statusCode': 200,\n        'body': 'Cleanup completed successfully'\n    }"
@@ -7133,13 +6929,7 @@
                                 "The Python function code contains the handler function (lambda_handler) that Lambda runs when your function is     invoked.",
                                 "When the function is invoked by EventBridge Scheduler, it uses the AWS SDK for Python (Boto3) to create a connection to the DynamoDB table on which the scheduled maintenance task is to be performed.     It then uses the Python datetime library to calculate the date one year ago, before scanning the table for items older than this and deleting them.",
                                 "Note that responses from DynamoDB query and scan operations are limited to a maximum of 1 MB in size. If the response is larger than 1 MB, DynamoDB paginates the       data and returns a LastEvaluatedKey element in the response. To ensure that our function processes all the records in the table, we check for the presence of this key       and continue performing table scans from the last evaluated position until the whole table has been scanned.",
-                                [],
                                 "Python function code",
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
                                 "Copy and paste the following code into a file named lambda_function.py.",
                                 {
                                     "code_example": "import boto3\nfrom datetime import datetime, timedelta\nfrom boto3.dynamodb.conditions import Key, Attr\nimport logging\n\nlogger = logging.getLogger()\nlogger.setLevel(\"INFO\")\n\ndef lambda_handler(event, context):\n    # Initialize the DynamoDB client\n    dynamodb = boto3.resource('dynamodb')\n    \n    # Specify the table name\n    table_name = 'MyOrderTable'\n    table = dynamodb.Table(table_name)\n    \n    # Get today's date\n    today = datetime.now()\n    \n    # Calculate the date one year ago\n    one_year_ago = (today - timedelta(days=365)).strftime('%Y-%m-%d')\n    \n    # Scan the table using a global secondary index\n    response = table.scan(\n        IndexName='Date-index',\n        FilterExpression='#date < :one_year_ago',\n        ExpressionAttributeNames={\n            '#date': 'Date'\n        },\n        ExpressionAttributeValues={\n            ':one_year_ago': one_year_ago\n        }\n    )\n    \n     # Delete old items\n    with table.batch_writer() as batch:\n        for item in response['Items']:\n            Order_number = item['Order_number']\n            batch.delete_item(\n                Key={\n                    'Order_number': Order_number,\n                    'Date': item['Date']\n                }\n            )\n            logger.info(f'deleted order number {Order_number}')\n    \n    # Check if there are more items to scan\n    while 'LastEvaluatedKey' in response:\n        response = table.scan(\n            IndexName='DateIndex',\n            FilterExpression='#date < :one_year_ago',\n            ExpressionAttributeNames={\n                '#date': 'Date'\n            },\n            ExpressionAttributeValues={\n                ':one_year_ago': one_year_ago\n            },\n            ExclusiveStartKey=response['LastEvaluatedKey']\n        )\n        \n        # Delete old items\n        with table.batch_writer() as batch:\n            for item in response['Items']:\n                batch.delete_item(\n                    Key={\n                        'Order_number': item['Order_number'],\n                        'Date': item['Date']\n                    }\n                )\n    \n    return {\n        'statusCode': 200,\n        'body': 'Cleanup completed successfully'\n    }"
@@ -7147,111 +6937,49 @@
                                 "The Python function code contains the handler function (lambda_handler) that Lambda runs when your function is     invoked.",
                                 "When the function is invoked by EventBridge Scheduler, it uses the AWS SDK for Python (Boto3) to create a connection to the DynamoDB table on which the scheduled maintenance task is to be performed.     It then uses the Python datetime library to calculate the date one year ago, before scanning the table for items older than this and deleting them.",
                                 "Note that responses from DynamoDB query and scan operations are limited to a maximum of 1 MB in size. If the response is larger than 1 MB, DynamoDB paginates the       data and returns a LastEvaluatedKey element in the response. To ensure that our function processes all the records in the table, we check for the presence of this key       and continue performing table scans from the last evaluated position until the whole table has been scanned.",
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
                                 "Copy and paste the following code into a file named requirements.txt.",
                                 {
                                     "code_example": "boto3"
                                 },
                                 "For this example, your function code has only one dependency that isn't part of the standard Python library -           the SDK for Python (Boto3) that the function uses to scan and delete items from the DynamoDB table.",
                                 "Note",
-                                [],
                                 "A version of the SDK for Python (Boto3) is included as part of the Lambda runtime, so your code would run without adding Boto3 to your             function's deployment package. However, to maintain full control of your function's dependencies and avoid possible issues with             version misalignment, best practice for Python is to include all function dependencies in your function's deployment package.             See Runtime dependencies in Python to learn more.",
-                                [],
-                                [],
-                                [],
                                 "requirements.txt manifest file",
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
                                 "Copy and paste the following code into a file named requirements.txt.",
                                 {
                                     "code_example": "boto3"
                                 },
                                 "For this example, your function code has only one dependency that isn't part of the standard Python library -           the SDK for Python (Boto3) that the function uses to scan and delete items from the DynamoDB table.",
                                 "Note",
-                                [],
                                 "A version of the SDK for Python (Boto3) is included as part of the Lambda runtime, so your code would run without adding Boto3 to your             function's deployment package. However, to maintain full control of your function's dependencies and avoid possible issues with             version misalignment, best practice for Python is to include all function dependencies in your function's deployment package.             See Runtime dependencies in Python to learn more.",
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
                                 "Copy and paste the following code into a file named template.yaml.",
                                 {
                                     "code_example": "AWSTemplateFormatVersion: '2010-09-09'\nTransform: AWS::Serverless-2016-10-31\nDescription: SAM Template for Lambda function and EventBridge Scheduler rule\n\nResources:\n  MyLambdaFunction:\n    Type: AWS::Serverless::Function\n    Properties:\n      FunctionName: ScheduledDBMaintenance\n      CodeUri: ./\n      Handler: lambda_function.lambda_handler\n      Runtime: python3.11\n      Architectures:\n        - x86_64\n      Events:\n        ScheduleEvent:\n          Type: ScheduleV2\n          Properties:\n            ScheduleExpression: cron(0 3 1 * ? *)\n            Description: Run on the first day of every month at 03:00 AM\n      Policies:\n        - CloudWatchLogsFullAccess\n        - Statement:\n            - Effect: Allow\n              Action:\n                - dynamodb:Scan\n                - dynamodb:BatchWriteItem\n              Resource: !Sub 'arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/MyOrderTable'\n\n  LambdaLogGroup:\n    Type: AWS::Logs::LogGroup\n    Properties:\n      LogGroupName: !Sub /aws/lambda/${MyLambdaFunction}\n      RetentionInDays: 30\n\nOutputs:\n  LambdaFunctionName:\n    Description: Lambda Function Name\n    Value: !Ref MyLambdaFunction\n  LambdaFunctionArn:\n    Description: Lambda Function ARN\n    Value: !GetAtt MyLambdaFunction.Arn"
                                 },
                                 "Note",
-                                [],
                                 "AWS SAM templates use a standard naming convention of template.yaml. In this example, you have two template files - one to create the             example database and another to create the app itself. Save them in separate sub-directories in your project folder.",
-                                [],
-                                [],
                                 "This AWS SAM template defines the resources for your app. We define the Lambda function using the AWS::Serverless::Function resource. The EventBridge Scheduler schedule and the           trigger to invoke the Lambda function are created by using the Events property of this resource using a type of ScheduleV2. To learn more about defining EventBridge Scheduler schedules in AWS SAM templates,           see ScheduleV2 in the           AWS Serverless Application Model Developer Guide.",
                                 "In addition to the Lambda function and the EventBridge Scheduler schedule, we also define a CloudWatch log group for your function to send records of deleted items to.",
-                                [],
                                 "AWS SAM template (scheduled-maintenance app)",
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
                                 "Copy and paste the following code into a file named template.yaml.",
                                 {
                                     "code_example": "AWSTemplateFormatVersion: '2010-09-09'\nTransform: AWS::Serverless-2016-10-31\nDescription: SAM Template for Lambda function and EventBridge Scheduler rule\n\nResources:\n  MyLambdaFunction:\n    Type: AWS::Serverless::Function\n    Properties:\n      FunctionName: ScheduledDBMaintenance\n      CodeUri: ./\n      Handler: lambda_function.lambda_handler\n      Runtime: python3.11\n      Architectures:\n        - x86_64\n      Events:\n        ScheduleEvent:\n          Type: ScheduleV2\n          Properties:\n            ScheduleExpression: cron(0 3 1 * ? *)\n            Description: Run on the first day of every month at 03:00 AM\n      Policies:\n        - CloudWatchLogsFullAccess\n        - Statement:\n            - Effect: Allow\n              Action:\n                - dynamodb:Scan\n                - dynamodb:BatchWriteItem\n              Resource: !Sub 'arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/MyOrderTable'\n\n  LambdaLogGroup:\n    Type: AWS::Logs::LogGroup\n    Properties:\n      LogGroupName: !Sub /aws/lambda/${MyLambdaFunction}\n      RetentionInDays: 30\n\nOutputs:\n  LambdaFunctionName:\n    Description: Lambda Function Name\n    Value: !Ref MyLambdaFunction\n  LambdaFunctionArn:\n    Description: Lambda Function ARN\n    Value: !GetAtt MyLambdaFunction.Arn"
                                 },
                                 "Note",
-                                [],
                                 "AWS SAM templates use a standard naming convention of template.yaml. In this example, you have two template files - one to create the             example database and another to create the app itself. Save them in separate sub-directories in your project folder.",
-                                [],
-                                [],
                                 "This AWS SAM template defines the resources for your app. We define the Lambda function using the AWS::Serverless::Function resource. The EventBridge Scheduler schedule and the           trigger to invoke the Lambda function are created by using the Events property of this resource using a type of ScheduleV2. To learn more about defining EventBridge Scheduler schedules in AWS SAM templates,           see ScheduleV2 in the           AWS Serverless Application Model Developer Guide.",
                                 "In addition to the Lambda function and the EventBridge Scheduler schedule, we also define a CloudWatch log group for your function to send records of deleted items to.",
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
                                 "Copy and paste the following code into a file named test_app.py.",
                                 {
                                     "code_example": "import boto3\nfrom datetime import datetime, timedelta\nimport json\n\n# Initialize the DynamoDB client\ndynamodb = boto3.resource('dynamodb')\n\n# Specify your table name\ntable_name = 'YourTableName'\ntable = dynamodb.Table(table_name)\n\n# Get the current date\ncurrent_date = datetime.now()\n\n# Calculate the date one year ago\none_year_ago = current_date - timedelta(days=365)\n\n# Convert the date to string format (assuming the date in DynamoDB is stored as a string)\none_year_ago_str = one_year_ago.strftime('%Y-%m-%d')\n\n# Scan the table\nresponse = table.scan(\n    FilterExpression='#date < :one_year_ago',\n    ExpressionAttributeNames={\n        '#date': 'Date'\n    },\n    ExpressionAttributeValues={\n        ':one_year_ago': one_year_ago_str\n    }\n)\n\n# Process the results\nold_records = response['Items']\n\n# Continue scanning if we have more items (pagination)\nwhile 'LastEvaluatedKey' in response:\n    response = table.scan(\n        FilterExpression='#date < :one_year_ago',\n        ExpressionAttributeNames={\n            '#date': 'Date'\n        },\n        ExpressionAttributeValues={\n            ':one_year_ago': one_year_ago_str\n        },\n        ExclusiveStartKey=response['LastEvaluatedKey']\n    )\n    old_records.extend(response['Items'])\n\nfor record in old_records:\n    print(json.dumps(record))\n\n# The total number of old records should be zero.\nprint(f\"Total number of old records: {len(old_records)}\")\n"
                                 },
                                 "This test script uses the AWS SDK for Python (Boto3) to create a connection to your DynamoDB table and scan for items older than one year. To confirm if the Lambda function           has run successfully, at the end of the test, the function prints the number of records older than one year still in the table. If the Lambda function was successful,           the number of old records in the table should be zero.        ",
-                                [],
                                 "Test script",
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
                                 "Copy and paste the following code into a file named test_app.py.",
                                 {
                                     "code_example": "import boto3\nfrom datetime import datetime, timedelta\nimport json\n\n# Initialize the DynamoDB client\ndynamodb = boto3.resource('dynamodb')\n\n# Specify your table name\ntable_name = 'YourTableName'\ntable = dynamodb.Table(table_name)\n\n# Get the current date\ncurrent_date = datetime.now()\n\n# Calculate the date one year ago\none_year_ago = current_date - timedelta(days=365)\n\n# Convert the date to string format (assuming the date in DynamoDB is stored as a string)\none_year_ago_str = one_year_ago.strftime('%Y-%m-%d')\n\n# Scan the table\nresponse = table.scan(\n    FilterExpression='#date < :one_year_ago',\n    ExpressionAttributeNames={\n        '#date': 'Date'\n    },\n    ExpressionAttributeValues={\n        ':one_year_ago': one_year_ago_str\n    }\n)\n\n# Process the results\nold_records = response['Items']\n\n# Continue scanning if we have more items (pagination)\nwhile 'LastEvaluatedKey' in response:\n    response = table.scan(\n        FilterExpression='#date < :one_year_ago',\n        ExpressionAttributeNames={\n            '#date': 'Date'\n        },\n        ExpressionAttributeValues={\n            ':one_year_ago': one_year_ago_str\n        },\n        ExclusiveStartKey=response['LastEvaluatedKey']\n    )\n    old_records.extend(response['Items'])\n\nfor record in old_records:\n    print(json.dumps(record))\n\n# The total number of old records should be zero.\nprint(f\"Total number of old records: {len(old_records)}\")\n"
                                 },
-                                "This test script uses the AWS SDK for Python (Boto3) to create a connection to your DynamoDB table and scan for items older than one year. To confirm if the Lambda function           has run successfully, at the end of the test, the function prints the number of records older than one year still in the table. If the Lambda function was successful,           the number of old records in the table should be zero.        ",
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                []
+                                "This test script uses the AWS SDK for Python (Boto3) to create a connection to your DynamoDB table and scan for items older than one year. To confirm if the Lambda function           has run successfully, at the end of the test, the function prints the number of records older than one year still in the table. If the Lambda function was successful,           the number of old records in the table should be zero.        "
                             ]
                         },
                         {
@@ -7262,23 +6990,11 @@
                                 "  2.AWS SAM : template.yaml",
                                 "anchor",
                                 "anchor",
-                                [],
-                                [],
-                                [],
                                 "To create the DynamoDB table",
                                 "  1 : Open the Tables page of the DynamoDB console.",
                                 "  2 : Choose Create table.",
                                 "  3 : Create the table by doing the following:Under Table details, for Table name, enter MyOrderTable.For Partition key, enter Order_number and leave the type as String.For Sort key, enter Date and leave the type as String.Leave Table settings set to Default settings and choose Create table.",
                                 "  4 : When your table has finished creating and its Status shows as Active, create a global secondary index (GSI) by doing the               following. Your app will use this GSI to search for items directly by date to determine what to delete.Choose MyOrderTable from the list of tables.Choose the Indexes tab.Under Global secondary indexes, choose Create index.Under Index details, enter Date for the Partition key and leave the                   Data type set to String.For Index name, enter Date-index.Leave all other parameters set to their default values, scroll to the bottom of the page, and choose Create index.",
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
                                 "After you've created your table, you next add some sample data to test your app. The CSV file sample_data.csv you downloaded     earlier contains a number of example entries comprised of order numbers, dates, and customer and order information. Use the provided python script     load_sample_data.py to add this data to your table.",
                                 "To add the sample data to the table",
                                 "  1 : Navigate to the directory containing the sample_data.csv and load_sample_data.py files. If these files are in         separate directories, move them so they're saved in the same location.",
@@ -7314,9 +7030,6 @@
                                 "  2.AWS SAM : template.yaml",
                                 "anchor",
                                 "anchor",
-                                [],
-                                [],
-                                [],
                                 "To create the function using the AWS Management Console",
                                 "First, create a function containing basic starter code. You then                 replace this code with your own function code by either copying and pasting the code directly in the Lambda code editor, or by uploading your code                as a .zip package. For this task, we recommend simply copying and pasting the code.",
                                 "  1 : Open the Functions page of the Lambda console.",
@@ -7325,13 +7038,11 @@
                                 "  4 : Under Basic information, do the following:For Function name, enter ScheduledDBMaintenance.For Runtime choose the latest Python version.For Architecture, choose x86_64.",
                                 "  5 : Choose Create function.",
                                 "  6 : After your function is created, you can configure your function with the provided function code.In the Code source pane, replace the Hello world code that Lambda created with the Python function code from                        the lambda_function.py file that you saved earlier.In the DEPLOY section, choose Deploy to update your function's code:",
-                                [],
                                 "To configure the function memory and timeout (console)",
                                 "  1 : Select the Configuration tab for your function.",
                                 "  2 : In the General configuration pane, choose Edit.",
                                 "  3 : Set Memory to 256 MB and Timeout to 15 seconds.                  If you are processing a large table with many records, for example in the case of a production environment,                  you might consider setting Timeout to a larger number. This gives your function                  more time to scan, and clean the database.",
                                 "  4 : Choose Save.",
-                                [],
                                 "To configure the log format (console)",
                                 "You can configure Lambda functions to output logs in either unstructured text or JSON format. We recommend that you use JSON format for logs to                   make it easier to search and filter log data. To learn more about Lambda log configuration options, see Configuring advanced logging controls for Lambda functions.",
                                 "  1 : Select the Configuration tab for your function.",
@@ -7339,7 +7050,6 @@
                                 "  3 : In the Logging configuration pane, choose Edit.",
                                 "  4 : For Logging configuration, select JSON.",
                                 "  5 : Choose Save.",
-                                [],
                                 "To set Up IAM permissions",
                                 "To give your function the permissions it needs to read and delete DynamoDB items, you need to add a policy to your function's                     execution role defining the necessary permissions.",
                                 "  1 : Open the Configuration tab, then choose                        Permissions from the left navigation bar.",
@@ -7350,7 +7060,6 @@
                                     "code_example": "{\n    \"Version\": \"2012-10-17\",\n    \"Statement\": [\n        {\n            \"Effect\": \"Allow\",\n            \"Action\": [\n                \"dynamodb:Scan\",\n                \"dynamodb:DeleteItem\",\n                \"dynamodb:BatchWriteItem\"\n            ],\n            \"Resource\": \"arn:aws:dynamodb:*:*:table/MyOrderTable\"\n        }\n    ]\n}"
                                 },
                                 "  5 : Name the policy DynamoDBCleanupPolicy, then create it.",
-                                [],
                                 "To set up EventBridge Scheduler as a trigger (console)",
                                 "  1 : Open the EventBridge console.",
                                 "  2 : In the left navigation pane, choose Schedulers under the                        Scheduler section.",
@@ -7358,16 +7067,7 @@
                                 "  4 : Configure the schedule by doing the following:Under Schedule name, enter a name for your schedule (for example, DynamoDBCleanupSchedule).Under Schedule pattern, choose Recurring schedule.For Schedule type leave the default as Cron-based schedule,                          then enter the following schedule details:Minutes: 0Hours: 3Day of month: 1Month: *Day of the week: ?Year: *When evaluated, this cron expression runs on the first day of every month at 03:00 AM.For Flexible time window, select Off.",
                                 "  5 : Choose Next.",
                                 "  6 : Configure the trigger for your Lambda function by doing the following:In the Target detail pane, leave Target API set to Templated targets,                         then select AWS Lambda Invoke.Under Invoke, select your Lambda function (ScheduledDBMaintenance) from the dropdown list.Leave the Payload empty and choose Next.Scroll down to Permissions and select Create a new role for this schedule.                            When you create a new EventBridge Scheduler schedule using the console, EventBridge Scheduler creates a new policy with the required                          permissions the schedule needs to invoke your function. For more information about managing your schedule permissions, see                          Cron-based schedules.                          in the EventBridge Scheduler User Guide.Choose Next.",
-                                "  7 : Review your settings and choose Create schedule to complete creation of the schedule and Lambda trigger.",
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                []
+                                "  7 : Review your settings and choose Create schedule to complete creation of the schedule and Lambda trigger."
                             ]
                         },
                         {
@@ -7431,11 +7131,9 @@
                                 "This example function logs the contents of the event object and returns the location of the        logs. Note the following:",
                                 "  1.Before using this code in a Lambda function, you must add the @types/aws-lambda package as a development dependency. This package contains the type definitions for Lambda. When @types/aws-lambda is installed, the import statement (import ... from 'aws-lambda') imports the type definitions. It does not import the aws-lambda NPM package, which is an unrelated third-party tool. For more information, see aws-lambda in the DefinitelyTyped GitHub repository.",
                                 "  2.The handler in this example is an ES module and must be designated as such in your package.json file or by using the .mjs file extension. For more information, see  see Designating a function handler as an ES module.",
-                                [],
                                 {
                                     "code_example": "import { Handler } from 'aws-lambda';\n\nexport const handler: Handler = async (event, context) => {\n    console.log('EVENT: \\n' + JSON.stringify(event, null, 2));\n    return context.logStreamName;\n};"
                                 },
-                                [],
                                 "The runtime passes arguments to the handler method. The first argument is the event object,      which contains information from the invoker. The invoker passes this information as a JSON-formatted string when it      calls Invoke, and the runtime converts it to an object. When an AWS service invokes your function, the event      structure varies by service. With TypeScript, we recommend using type      annotations for the event object. For more information, see Using types for the event object.",
                                 "The second argument is the context object, which contains information      about the invocation, function, and execution environment. In the preceding example, the function gets the name of      the log stream from the context object and returns it to the invoker.",
                                 "You can also use a callback argument, which is a function that you can call in non-async handlers to send a response.      We recommend that you use async/await instead of callbacks. Async/await provides improved readability, error handling,      and efficiency. For more information about the differences between async/await and callbacks, see      Using callbacks."
@@ -7450,31 +7148,27 @@
                                 "This example uses fetch, which is available in the nodejs18.x runtime. Note the following:",
                                 "  1.Before using this code in a Lambda function, you must add the @types/aws-lambda package as a development dependency. This package contains the type definitions for Lambda. When @types/aws-lambda is installed, the import statement (import ... from 'aws-lambda') imports the type definitions. It does not import the aws-lambda NPM package, which is an unrelated third-party tool. For more information, see aws-lambda in the DefinitelyTyped GitHub repository.",
                                 "  2.The handler in this example is an ES module and must be designated as such in your package.json file or by using the .mjs file extension. For more information, see  see Designating a function handler as an ES module.",
-                                [],
                                 {
                                     "code_example": "import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';\nconst url = 'https://aws.amazon.com/';\nexport const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {\n    try {\n        // fetch is available with Node.js 18\n        const res = await fetch(url);\n        return {\n            statusCode: res.status,\n            body: JSON.stringify({\n                message: await res.text(),\n            }),\n        };\n    } catch (err) {\n        console.log(err);\n        return {\n            statusCode: 500,\n            body: JSON.stringify({\n                message: 'some error happened',\n            }),\n        };\n    }\n};"
-                                },
-                                []
+                                }
                             ]
                         },
                         {
                             "sub_header": "Using callbacks",
                             "content": [
                                 "We recommend that you use async/await to declare the function handler instead of using callbacks. Async/await is a better choice for several reasons:",
-                                "  1.Readability::  Async/await code is easier to read and understand than callback code, which can quickly become difficult to follow and result in callback hell.",
-                                "  2.Debugging and error handling::  Debugging callback-based code can be difficult. The call stack can become hard to follow and errors can easily be swallowed. With async/await, you can use try/catch blocks to handle errors.",
-                                "  3.Efficiency::  Callbacks often require switching between different parts of the code. Async/await can reduce the number of context switches, resulting in more efficient code.",
+                                "  1.Readability: :  Async/await code is easier to read and understand than callback code, which can quickly become difficult to follow and result in callback hell.",
+                                "  2.Debugging and error handling: :  Debugging callback-based code can be difficult. The call stack can become hard to follow and errors can easily be swallowed. With async/await, you can use try/catch blocks to handle errors.",
+                                "  3.Efficiency: :  Callbacks often require switching between different parts of the code. Async/await can reduce the number of context switches, resulting in more efficient code.",
                                 "When you use callbacks in your handler, the function continues to execute until the event loop is empty or the    function times out. The response isn't sent to the invoker until all event loop tasks are finished. If the    function times out, an error is returned instead. You can configure the runtime to send the response immediately    by setting context.callbackWaitsForEmptyEventLoop to false.",
                                 "The callback function takes two      arguments: an Error and a response. The response object must be compatible with        JSON.stringify.",
                                 "Example TypeScript function with callback",
                                 "This sample function receives an event from Amazon API Gateway, logs the event and context objects, and then returns a response to API Gateway. Note the following:",
                                 "  1.Before using this code in a Lambda function, you must add the @types/aws-lambda package as a development dependency. This package contains the type definitions for Lambda. When @types/aws-lambda is installed, the import statement (import ... from 'aws-lambda') imports the type definitions. It does not import the aws-lambda NPM package, which is an unrelated third-party tool. For more information, see aws-lambda in the DefinitelyTyped GitHub repository.",
                                 "  2.The handler in this example is an ES module and must be designated as such in your package.json file or by using the .mjs file extension. For more information, see  see Designating a function handler as an ES module.",
-                                [],
                                 {
                                     "code_example": "import { Context, APIGatewayProxyCallback, APIGatewayEvent } from 'aws-lambda';\n\nexport const lambdaHandler = (event: APIGatewayEvent, context: Context, callback: APIGatewayProxyCallback): void => {\n    console.log(`Event: ${JSON.stringify(event, null, 2)}`);\n    console.log(`Context: ${JSON.stringify(context, null, 2)}`);\n    callback(null, {\n        statusCode: 200,\n        body: JSON.stringify({\n            message: 'hello world',\n        }),\n    });\n};"
-                                },
-                                []
+                                }
                             ]
                         },
                         {
@@ -7509,19 +7203,19 @@
                             "sub_header": "Code best practices for Typescript Lambda functions",
                             "content": [
                                 "Adhere to the guidelines in the following list to use best coding practices when building your Lambda functions:",
-                                "  1.Separate the Lambda handler from your core logic.:  This allows you to make          a more unit-testable function. In Node.js this may look like: exports.myHandler = function(event, context, callback) {\tvar foo = event.foo;\tvar bar = event.bar;\tvar result = MyLambdaFunction (foo, bar);\tcallback(null, result);}function MyLambdaFunction (foo, bar) {\t// MyLambdaFunction logic here}",
+                                "  1.Separate the Lambda handler from your core logic. :  This allows you to make          a more unit-testable function. In Node.js this may look like: exports.myHandler = function(event, context, callback) {\tvar foo = event.foo;\tvar bar = event.bar;\tvar result = MyLambdaFunction (foo, bar);\tcallback(null, result);}function MyLambdaFunction (foo, bar) {\t// MyLambdaFunction logic here}",
                                 {
                                     "code_example": "exports.myHandler = function(event, context, callback) {\n\tvar foo = event.foo;\n\tvar bar = event.bar;\n\tvar result = MyLambdaFunction (foo, bar);\n\n\tcallback(null, result);\n}\n\nfunction MyLambdaFunction (foo, bar) {\n\t// MyLambdaFunction logic here\n}"
                                 },
-                                "  2.Control the dependencies in your function's deployment package. :  The          AWS Lambda execution environment contains a number of libraries. For the Node.js and Python runtimes, these include the AWS SDKs.          To enable the latest set of features and security updates, Lambda will periodically update these libraries.          These updates may introduce subtle changes to the behavior of your Lambda function. To have full control of the          dependencies your function uses, package all of your dependencies with your deployment package. ",
-                                "  3.Minimize the complexity of your dependencies.:  Prefer simpler frameworks          that load quickly on execution environment startup.",
-                                "  4.Minimize your deployment package size to its runtime necessities. :  This          will reduce the amount of time that it takes for your deployment package to be downloaded and unpacked ahead          of invocation.",
-                                "  1.Take advantage of execution environment reuse to improve the performance of your\n        function.:  Initialize SDK clients and database connections outside of the function handler, and        cache static assets locally in the /tmp directory. Subsequent invocations processed by        the same instance of your function can reuse these resources. This saves cost by reducing function run time.To avoid potential data leaks across invocations, don’t use the execution environment to store user data,        events, or other information with security implications. If your function relies on a mutable state that can’t        be stored in memory within the handler, consider creating a separate function or separate versions of a        function for each user.",
-                                "  2.Use a keep-alive directive to maintain persistent connections.:  Lambda purges idle connections over time. Attempting to reuse an idle connection when invoking a function will result in a connection error. To maintain your persistent connection, use the keep-alive directive associated with your runtime. For an example, see Reusing Connections with Keep-Alive in Node.js.",
-                                "  3.Use environment variables to pass operational parameters to your function.:  For example, if        you are writing to an Amazon S3 bucket, instead of hard-coding the bucket name you are writing to, configure the        bucket name as an environment variable.",
-                                "  4.Avoid using recursive invocations:  in your Lambda function, where the function        invokes itself or initiates a process that may invoke the function again. This could lead to unintended volume of        function invocations and escalated costs. If you see an unintended volume of invocations, set the function reserved concurrency        to 0 immediately to throttle all invocations to the function, while you update the        code.",
-                                "  5.Do not use non-documented, non-public APIs:  in your Lambda function code.        For AWS Lambda managed runtimes, Lambda periodically applies security and functional updates to Lambda's internal APIs.        These internal API updates may be backwards-incompatible, leading to unintended consequences such as invocation        failures if your function has a dependency on these non-public APIs. See        the API reference for a list of        publicly available APIs.",
-                                "  6.Write idempotent code.:  Writing idempotent code for your functions ensures that        duplicate events are handled the same way. Your code should properly validate events and gracefully handle        duplicate events. For more information, see        How do I make          my Lambda function idempotent?."
+                                "  2.Control the dependencies in your function's deployment package.  :  The          AWS Lambda execution environment contains a number of libraries. For the Node.js and Python runtimes, these include the AWS SDKs.          To enable the latest set of features and security updates, Lambda will periodically update these libraries.          These updates may introduce subtle changes to the behavior of your Lambda function. To have full control of the          dependencies your function uses, package all of your dependencies with your deployment package. ",
+                                "  3.Minimize the complexity of your dependencies. :  Prefer simpler frameworks          that load quickly on execution environment startup.",
+                                "  4.Minimize your deployment package size to its runtime necessities.  :  This          will reduce the amount of time that it takes for your deployment package to be downloaded and unpacked ahead          of invocation.",
+                                "  1.Take advantage of execution environment reuse to improve the performance of your\n        function. :  Initialize SDK clients and database connections outside of the function handler, and        cache static assets locally in the /tmp directory. Subsequent invocations processed by        the same instance of your function can reuse these resources. This saves cost by reducing function run time.To avoid potential data leaks across invocations, don’t use the execution environment to store user data,        events, or other information with security implications. If your function relies on a mutable state that can’t        be stored in memory within the handler, consider creating a separate function or separate versions of a        function for each user.",
+                                "  2.Use a keep-alive directive to maintain persistent connections. :  Lambda purges idle connections over time. Attempting to reuse an idle connection when invoking a function will result in a connection error. To maintain your persistent connection, use the keep-alive directive associated with your runtime. For an example, see Reusing Connections with Keep-Alive in Node.js.",
+                                "  3.Use environment variables to pass operational parameters to your function. :  For example, if        you are writing to an Amazon S3 bucket, instead of hard-coding the bucket name you are writing to, configure the        bucket name as an environment variable.",
+                                "  4.Avoid using recursive invocations :  in your Lambda function, where the function        invokes itself or initiates a process that may invoke the function again. This could lead to unintended volume of        function invocations and escalated costs. If you see an unintended volume of invocations, set the function reserved concurrency        to 0 immediately to throttle all invocations to the function, while you update the        code.",
+                                "  5.Do not use non-documented, non-public APIs :  in your Lambda function code.        For AWS Lambda managed runtimes, Lambda periodically applies security and functional updates to Lambda's internal APIs.        These internal API updates may be backwards-incompatible, leading to unintended consequences such as invocation        failures if your function has a dependency on these non-public APIs. See        the API reference for a list of        publicly available APIs.",
+                                "  6.Write idempotent code. :  Writing idempotent code for your functions ensures that        duplicate events are handled the same way. Your code should properly validate events and gracefully handle        duplicate events. For more information, see        How do I make          my Lambda function idempotent?."
                             ]
                         }
                     ]
@@ -7541,9 +7235,7 @@
                             "content": [
                                 "Follow the steps below to download, build, and deploy a sample Hello World TypeScript application using the AWS SAM. This application implements a basic API backend. It consists of an Amazon API Gateway endpoint and a Lambda function. When you send a GET request to the API Gateway endpoint, the Lambda function is invoked. The function returns a hello world message.",
                                 "Note",
-                                [],
                                 "AWS SAM uses esbuild to create Node.js Lambda functions from TypeScript code. esbuild support is currently in public preview. During public preview, esbuild support may be subject to backwards incompatible changes.",
-                                [],
                                 "Prerequisites",
                                 "To complete the steps in this section, you must have the following:",
                                 "  1.AWS CLI version 2",
@@ -7682,27 +7374,11 @@
                                 "  1.AWS CLI version 2",
                                 "  2.Docker",
                                 "  3.Node.js 22.x",
-                                [],
-                                [],
                                 "Prerequisites",
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
                                 "To complete the steps in this section, you must have the following:",
                                 "  1.AWS CLI version 2",
                                 "  2.Docker",
                                 "  3.Node.js 22.x",
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
                                 "To create an image from an AWS base image for Lambda",
                                 "  1 : On your local machine, create a project directory for your new function.",
                                 " 2 : Create a new Node.js project with npm or a package manager of your choice. ",
@@ -7729,14 +7405,7 @@
                                 {
                                     "code_example": "docker build --platform linux/amd64 -t docker-image:test ."
                                 },
-                                [],
-                                [],
                                 "Creating an image from a base image",
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
                                 "To create an image from an AWS base image for Lambda",
                                 "  1 : On your local machine, create a project directory for your new function.",
                                 " 2 : Create a new Node.js project with npm or a package manager of your choice. ",
@@ -7763,15 +7432,6 @@
                                 {
                                     "code_example": "docker build --platform linux/amd64 -t docker-image:test ."
                                 },
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
                                 " 1 : Start the Docker image with the docker run command. In this example,              docker-image is the image name and test is the tag. This command runs the image as a container and creates a local endpoint at            localhost:9000/2015-03-31/functions/function/invocations.NoteIf you built the Docker image for the ARM64 instruction set architecture, be sure to use the --platform linux/arm64 option instead of --platform linux/amd64.",
                                 {
                                     "code_example": "docker run --platform linux/amd64 -p 9000:8080 docker-image:test"
@@ -7788,14 +7448,7 @@
                                 {
                                     "code_example": "docker kill 3766c4ab331c"
                                 },
-                                [],
-                                [],
                                 "(Optional) Test the image locally",
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
                                 " 1 : Start the Docker image with the docker run command. In this example,              docker-image is the image name and test is the tag. This command runs the image as a container and creates a local endpoint at            localhost:9000/2015-03-31/functions/function/invocations.NoteIf you built the Docker image for the ARM64 instruction set architecture, be sure to use the --platform linux/arm64 option instead of --platform linux/amd64.",
                                 {
                                     "code_example": "docker run --platform linux/amd64 -p 9000:8080 docker-image:test"
@@ -7812,15 +7465,6 @@
                                 {
                                     "code_example": "docker kill 3766c4ab331c"
                                 },
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
                                 "To upload the image to Amazon ECR and create the Lambda function",
                                 " 1 : Run the get-login-password command to authenticate the Docker CLI to your Amazon ECR registry.Set the --region value to the AWS Region where you want to create the Amazon ECR repository.Replace 111122223333 with your AWS account ID. ",
                                 {
@@ -7849,20 +7493,13 @@
                                     "code_example": "aws lambda invoke --function-name hello-world response.json"
                                 },
                                 "  9 : To see the output of the function, check the response.json file.",
-                                [],
                                 "To update the function code, you must build the image again, upload the new image to the Amazon ECR repository, and then use the update-function-code command to deploy the image to the Lambda function.",
                                 "Lambda resolves the image tag to a specific image digest. This means that if you point the image tag that was used to deploy the function to a new image in Amazon ECR, Lambda doesn't automatically update the function to use the new image.",
                                 "To deploy the new image to the same Lambda function, you must use the update-function-code command, even if the image tag in Amazon ECR remains the same. In the following example, the --publish option creates a new version of the function using the updated container image.",
                                 {
                                     "code_example": "aws lambda update-function-code \\\n  --function-name hello-world \\\n  --image-uri 111122223333.dkr.ecr.us-east-1.amazonaws.com/hello-world:latest \\\n  --publish"
                                 },
-                                [],
                                 "Deploying the image",
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
                                 "To upload the image to Amazon ECR and create the Lambda function",
                                 " 1 : Run the get-login-password command to authenticate the Docker CLI to your Amazon ECR registry.Set the --region value to the AWS Region where you want to create the Amazon ECR repository.Replace 111122223333 with your AWS account ID. ",
                                 {
@@ -7891,21 +7528,12 @@
                                     "code_example": "aws lambda invoke --function-name hello-world response.json"
                                 },
                                 "  9 : To see the output of the function, check the response.json file.",
-                                [],
                                 "To update the function code, you must build the image again, upload the new image to the Amazon ECR repository, and then use the update-function-code command to deploy the image to the Lambda function.",
                                 "Lambda resolves the image tag to a specific image digest. This means that if you point the image tag that was used to deploy the function to a new image in Amazon ECR, Lambda doesn't automatically update the function to use the new image.",
                                 "To deploy the new image to the same Lambda function, you must use the update-function-code command, even if the image tag in Amazon ECR remains the same. In the following example, the --publish option creates a new version of the function using the updated container image.",
                                 {
                                     "code_example": "aws lambda update-function-code \\\n  --function-name hello-world \\\n  --image-uri 111122223333.dkr.ecr.us-east-1.amazonaws.com/hello-world:latest \\\n  --publish"
-                                },
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                [],
-                                []
+                                }
                             ]
                         }
                     ]
@@ -7940,7 +7568,6 @@
                 "You can use the Node.js runtime to run TypeScript code in AWS Lambda. Because Node.js doesn't run TypeScript code natively, you must first     transpile your TypeScript code into JavaScript. Then, use the JavaScript files to deploy your function code to Lambda. Your code runs in an     environment that includes the AWS SDK for JavaScript, with credentials from an AWS Identity and Access Management (IAM) role that you manage. To learn more     about the SDK versions included with the Node.js runtimes, see Runtime-included SDK versions.",
                 "Lambda supports the following Node.js runtimes.",
                 "NameIdentifierOperating systemDeprecation dateBlock function createBlock function updateNode.js 22nodejs22.xAmazon Linux 2023            Not scheduled                        Not scheduled                        Not scheduled            Node.js 20nodejs20.xAmazon Linux 2023            Not scheduled                        Not scheduled                        Not scheduled            Node.js 18nodejs18.xAmazon Linux 2            Jul 31, 2025                        Sep 1, 2025                        Oct 1, 2025            ",
-                [],
                 "Topics",
                 {
                     "sub_header": "Setting up a TypeScript development environment",
@@ -7949,13 +7576,12 @@
                         "To transpile your TypeScript code, set up a compiler such as esbuild or Microsoft's TypeScript compiler (tsc) , which is bundled with the TypeScript distribution. You can use the AWS Serverless Application Model (AWS SAM) or the AWS Cloud Development Kit (AWS CDK) to simplify building and deploying TypeScript code. Both tools use esbuild to transpile TypeScript code into JavaScript.",
                         "When using esbuild, consider the following:",
                         "  1.There are several TypeScript caveats.",
-                        "  2.tsconfig.json: You must configure your TypeScript transpilation settings to match the Node.js runtime that you plan to use. For more information, see Target in the esbuild documentation. For an example of a  file that demonstrates how to target a specific Node.js version supported by Lambda, refer to the TypeScript GitHub repository.",
-                        "  3.tsconfig.json: esbuild doesn’t perform type checks. To check types, use the tsc compiler. Run tsc -noEmit or add a \"noEmit\" parameter to your  file, as shown in the following example. This configures tsc to not emit JavaScript files. After checking types, use esbuild to convert the TypeScript files into JavaScript.",
+                        "  2.tsconfig.json : You must configure your TypeScript transpilation settings to match the Node.js runtime that you plan to use. For more information, see Target in the esbuild documentation. For an example of a  file that demonstrates how to target a specific Node.js version supported by Lambda, refer to the TypeScript GitHub repository.",
+                        "  3.tsconfig.json : esbuild doesn’t perform type checks. To check types, use the tsc compiler. Run tsc -noEmit or add a \"noEmit\" parameter to your  file, as shown in the following example. This configures tsc to not emit JavaScript files. After checking types, use esbuild to convert the TypeScript files into JavaScript.",
                         "Example  tsconfig.json",
                         {
                             "code_example": " {\n  \"compilerOptions\": {\n    \"target\": \"es2020\",\n    \"strict\": true,\n    \"preserveConstEnums\": true,\n    \"noEmit\": true,\n    \"sourceMap\": false,\n    \"module\":\"commonjs\",\n    \"moduleResolution\":\"node\",\n    \"esModuleInterop\": true, \n    \"skipLibCheck\": true,\n    \"forceConsistentCasingInFileNames\": true, \n    \"isolatedModules\": true, \n  },\n  \"exclude\": [\"node_modules\", \"**/*.test.ts\"]\n}"
-                        },
-                        []
+                        }
                     ]
                 }
             ]
