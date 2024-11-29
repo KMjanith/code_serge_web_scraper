@@ -91,7 +91,7 @@ class AwsFunction:
         dd = dl_item.find_all(Aws.DD.value)
         for index, j in enumerate(dt):
             if(dd[index].find(Aws.CODE.value)):
-                stack[-1][Aws.CONTENT.value].append(f"  {index+1}.{dt[index].text} : {dd[index].find(Aws.CODE.value).text}")
+                stack[-1][Aws.CONTENT.value].append({f"{index+1} : {dt[index].text}" : {Aws.CODE_EXAMPLE.value:dd[index].find(Aws.CODE.value).text}})
                 if(stack[-1][Aws.CONTENT.value][-1] == "anchor"):
                     stack[-1][Aws.CONTENT.value].pop()
             else:
@@ -125,7 +125,7 @@ class AwsFunction:
 
             if(i.name == Aws.OL.value):
                 self.ol_handler(i, stack)
-                        
+            
             if(i.name == Aws.DL.value):
                 self.dl_handler(i, stack)
 
@@ -185,9 +185,11 @@ class AwsFunction:
 
                 if(i.name == Aws.DIV.value):
                     self.div_handler(i, stack)
+                    continue
                 
                 if(i.name == Aws.AWSDOCS_TABS.value):
                     self.div_handler(i, stack)
+                    continue
             
                 else:
                     if(i.name == Aws.UL.value or i.name == Aws.OL.value or i.text == "" or i.text == "\n\n" or i.name == Aws.DIV.value or i.name == Aws.AWSDOCS_TABS.value):
