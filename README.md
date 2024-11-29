@@ -1,12 +1,24 @@
 # code_serge_web_scraper
 
+## install the dependencies
+```
+pip install -r requirements.txt
+```
 ## to run the program
 ```
 python drive.py
 ```
-## install the dependencies
+
+## if you get
+ModuleNotFoundError: No module named bs4
+try
 ```
-pip install -r requirements.txt
+pip install beautifulsoup4
+```
+
+## then try again
+```
+python drive.py
 ```
 
 ## you can see 3 .json file swith the output

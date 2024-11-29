@@ -13,7 +13,7 @@ import asyncio
 
 def structure_aws_data():
     aws_data = []
-    with open(Utility.AWS_OUTPUT_FILE.value, 'r') as file:
+    with open(Utility.AWS_OUTPUT_FILE.value, 'r', encoding="UTF-8") as file:
         aws_data = json.load(file)
 
     for i in aws_data:
@@ -34,7 +34,7 @@ def structure_aws_data():
 
 def structure_react_data():
     react_data = []
-    with open(Utility.REACT_OUTPUT_FILE.value, 'r') as file:
+    with open(Utility.REACT_OUTPUT_FILE.value, 'r', encoding='utf-8') as file:
         react_data = json.load(file)
 
     for i in react_data:
