@@ -8,14 +8,17 @@ class React(Enum):
     LI = "li"
     UL = "ul"
     A = "a"
+    OL = "ol"
     DIV = "div"
     HREF = "href"
     TOPIC_LIST = ['h1', 'h2', 'h3', 'h4']
     MAIN = "main"
     SUBHEADER = "sub_header"
-    SECTION = "section"
+    SECTIONS = "sections"
     CODE_ECAMPLE = "code_example"
     CONTENT = "content"
+    SOURCE = "react"
+
 
 
     

@@ -52,11 +52,15 @@ class AwsFunction:
             if(i.name == Aws.LI.value):
                 if(i.find(Aws.PRE.value)):
                     if(i.find(Aws.PRE.value).find(Aws.CODE.value)):
-                        code = i.find(Aws.PRE.value).find(Aws.CODE.value).text
-                        stack[-1][Aws.CONTENT.value].append(f" {index + 1} : {i.text.replace(code, ' ').replace("\n", '')}")
+                        code = i.find(Aws.PRE.value).find(Aws.CODE.value).text.replace("anchor", "")
+                        stack[-1][Aws.CONTENT.value].append(f" {index + 1} : {i.text.replace(code, ' ')}")
+                        if(stack[-1][Aws.CONTENT.value][-1] == ""):
+                            stack[-1][Aws.CONTENT.value].pop()
                         stack[-1][Aws.CONTENT.value].append({Aws.CODE_EXAMPLE.value: code})
                 else:
                     stack[-1][Aws.CONTENT.value].append(f"  {index + 1} : {i.text.replace('\n', '')}")
+                    if(stack[-1][Aws.CONTENT.value][-1] == ""):
+                            stack[-1][Aws.CONTENT.value].pop()
             if(i.name == Aws.OL.value):
                 self.ol_handler(i, stack)
            
@@ -76,6 +80,8 @@ class AwsFunction:
                 if(j.find(Aws.PRE.value).find(Aws.CODE.value)):
                     code = j.find(Aws.PRE.value).find(Aws.CODE.value).text
                     stack[-1][Aws.CONTENT.value].append({Aws.CODE_EXAMPLE.value: code})
+                    if(stack[-1][Aws.CONTENT.value][-1] == "anchor"):
+                            stack[-1][Aws.CONTENT.value].pop()
         return stack
     
     # dl item handler
@@ -85,8 +91,12 @@ class AwsFunction:
         for index, j in enumerate(dt):
             if(dd[index].find(Aws.CODE.value)):
                 stack[-1][Aws.CONTENT.value].append(f"  {index+1}.{dt[index].text} : {dd[index].find(Aws.CODE.value).text}")
+                if(stack[-1][Aws.CONTENT.value][-1] == "anchor"):
+                    stack[-1][Aws.CONTENT.value].pop()
             else:
-                stack[-1][Aws.CONTENT.value].append(f"  {index+1}.{dt[index].text} : {dd[index].text}")
+                stack[-1][Aws.CONTENT.value].append(f"  {index+1}.{dt[index].text} : {dd[index].text. replace('\n', '')}")
+                if(stack[-1][Aws.CONTENT.value][-1] == "anchor"):
+                    stack[-1][Aws.CONTENT.value].pop()
         return stack
 
     # div item handler
@@ -101,12 +111,16 @@ class AwsFunction:
 
             if(i.name == Aws.CODE.value) and (i.name != Aws.OL.value):
                 code = i.find(Aws.CODE.value)
-                stack[-1][Aws.CONTENT.value].append({Aws.CODE_EXAMPLE.value: code.text})
+                stack[-1][Aws.CONTENT.value].append({Aws.CODE_EXAMPLE.value: code.text.replace("\n", "")})
+                if(stack[-1][Aws.CONTENT.value][-1] == "anchor"):
+                    stack[-1][Aws.CONTENT.value].pop()
 
             if(i.name == Aws.PRE.value): 
                 code = i.find(Aws.CODE.value)
                 if(code):
-                    stack[-1][Aws.CONTENT.value].append({Aws.CODE_EXAMPLE.value: code.text})
+                    stack[-1][Aws.CONTENT.value].append({Aws.CODE_EXAMPLE.value: code.text.replace("\n", "")})
+                    if(stack[-1][Aws.CONTENT.value][-1] == "anchor"):
+                        stack[-1][Aws.CONTENT.value].pop()
 
             if(i.name == Aws.OL.value):
                 self.ol_handler(i, stack)
@@ -122,6 +136,8 @@ class AwsFunction:
                     continue
                 else:
                     stack[-1][Aws.CONTENT.value].append(i.text.replace("\n", ""))
+                    if(stack[-1][Aws.CONTENT.value][-1] == "anchor"):
+                        stack[-1][Aws.CONTENT.value].pop()
             
         return stack
             
@@ -157,10 +173,14 @@ class AwsFunction:
             else:
                 if(i.name == Aws.UL.value):
                     for index,j in enumerate(i.find_all(Aws.LI.value)):
-                        stack[-1][Aws.CONTENT.value].append(f"  {index+1}.{j.text}")
+                        stack[-1][Aws.CONTENT.value].append(f"  {index+1}.{j.text.replace('\n', '')}")
+                        if(stack[-1][Aws.CONTENT.value][-1] == "anchor"):
+                            stack[-1][Aws.CONTENT.value].pop()
                 if(i.name == Aws.OL.value):
                     for index,j in enumerate(i.find_all(Aws.LI.value)):
-                        stack[-1][Aws.CONTENT.value].append(f"  {index+1}.{j.text}")
+                        stack[-1][Aws.CONTENT.value].append(f"  {index+1}.{j.text.replace('\n', '')}")
+                        if(stack[-1][Aws.CONTENT.value][-1] == "anchor"):
+                            stack[-1][Aws.CONTENT.value].pop()
 
                 if(i.name == Aws.DIV.value):
                     self.div_handler(i, stack)
@@ -173,6 +193,8 @@ class AwsFunction:
                         continue
                     else:
                         stack[-1][Aws.CONTENT.value].append(i.text.replace("\n", ""))
+                        if(stack[-1][Aws.CONTENT.value][-1] == "anchor"):
+                            stack[-1][Aws.CONTENT.value].pop()
 
         util = Utilities()
         return util.return_data(stack, Aws.CONTENT.value)[-1][Aws.CONTENT.value]
@@ -210,7 +232,7 @@ class AwsFunction:
         async with async_playwright() as p:
             browser = await p.chromium.launch(headless=True)
             page = await browser.new_page()
-            for i in urls[:3]:
+            for i in urls:
                 if(i.get(Aws.CONTENTS.value)):
                     content = await self.getting_inner_content(i[Aws.HREF.value], page)
                     logging.info(f'Main Topic :  {i[Aws.TITLE.value]}')

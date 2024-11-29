@@ -33,7 +33,7 @@ class Aws(Enum):
     CODE_EXAMPLE = "code_example"
     SUB_HEADER = "sub_header"   
    
-    SOURCE_NAME = "Aws"
+    SOURCE_NAME = "aws_lamda"
     MAIN_TOPICS = [
             "What is AWS Lambda?",
             "Example apps",
