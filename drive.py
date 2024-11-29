@@ -1,6 +1,7 @@
 # Make a request to the React website
 import json
 import logging
+import os
 from bs4 import BeautifulSoup
 import requests
 from aws.aws import AwsFunction
@@ -161,4 +162,14 @@ def main():
 
    
 if __name__ == "__main__":  
+
+    # Create the outputs directory
+    os.makedirs("outputs", exist_ok=True)
+
+    # Clear the output files
+    open(Utility.REACT_OUTPUT_FILE.value, 'w').close()  # make json file for react
+    open(Utility.AWS_OUTPUT_FILE.value, 'w').close()  # make json file for aws
+    open(Utility.FINAL_OUTPUT_FILE.value, 'w').close()   # make json file for final output
+
+    # Run the main function
     main()
