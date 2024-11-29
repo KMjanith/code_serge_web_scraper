@@ -135,7 +135,7 @@ def combining_data():
         json_object_list = [Utility.REACT_OUTPUT_FILE.value, Utility.AWS_OUTPUT_FILE.value]
 
         for json_object in json_object_list:
-            with open(json_object, 'r') as file:
+            with open(json_object, 'r', encoding='utf-8') as file:
                 data = json.load(file)
                 combined_data += data
 
