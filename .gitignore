@@ -1,3 +1,4 @@
-content_hierachy.json
-testing/
-output/aws_urls.json
+# Byte-compiled / optimized / DLL files
+__pycache__/
+
+/outputs/*
