@@ -27,8 +27,12 @@ pip install beautifulsoup4
 python drive.py
 ```
 
-## you can see 3 .json file swith the output
+## you can see 3 .json files with the output
 1. react.json
 2. aws.json
 3. final_result.json
+
+### the finl_result.json has the combined result of the both sraped contents
+
+
 
