@@ -51,11 +51,13 @@ class ReactFunction:
                 level = int(i.name[1])
                 current_stack_length = len(stack)
                 if(current_stack_length < level):
-                    stack.append({"sub_header": i.text, "content": []})
+                    sub_url = i.find('a')
+                    stack.append({"sub_header": i.text, "source":"React","url": f"{url}/{sub_url.get('href')}","content": []})
                 elif(current_stack_length == level and current_stack_length != 0):
                     a = stack.pop()
                     stack[-1]["content"].append(a)
-                    stack.append({"sub_header": i.text, "content": []})
+                    sub_url = i.find('a')
+                    stack.append({"sub_header": i.text,"source":"React", "url": f"{url}/{sub_url.get('href')}","content": []})
                 
                 else:
                     while(len(stack) > level):
@@ -64,10 +66,12 @@ class ReactFunction:
                     a = stack.pop()
                     if(len(stack)==0):
                         original.append(a)
-                        stack.append({"sub_header": i.text, "content": []})
+                        sub_url = i.find('a')
+                        stack.append({"sub_header": i.text,"source":"React", "url": f"{url}/{sub_url.get('href')}","content": []})
                     else:
                         stack[-1]["content"].append(a)
-                        stack.append({"sub_header": i.text, "content": []})
+                        sub_url = i.find('a')
+                        stack.append({"sub_header": i.text, "source":"React","url": f"{url}/{sub_url.get('href')}","content": []})
             else:
                 if(i.name == 'ul'):
                     for index,j in enumerate(i.find_all('li')):
@@ -81,16 +85,26 @@ class ReactFunction:
                         code = i.find('code')
                         if(code and (stack[-1]["content"][-1] != {"code_example": code.text})):
                             stack[-1]["content"].append({"code_example": code.text})
-                        elif(i.get('class')[1] == 'sandpack--playground'):
+                        if(i.get('class')[1] == 'sandpack--playground'):
                             code_sandbox = util.remove_redundant(i.text)
                             stack[-1]["content"].append({"code_sandbox": code_sandbox})
                         else:
-                            stack[-1]["content"].append(i.text)
+                            if(i.find('ul')):
+                                for index,j in enumerate(i.find_all('li')):
+                                    stack[-1]["content"].append(f"  {index+1}.{j.text}")
+                            if(i.find('ol')):
+                                for index,j in enumerate(i.find_all('li')):
+                                    stack[-1]["content"].append(f"  {index+1}.{j.text}")
+                            else:
+                                if(i.name == "ul" or i.name == "ol" or i.find('code') or i.find('img')):
+                                    continue
+                                else:
+                                    stack[-1]["content"].append(i.text)
                     except: IndexError
                    
             
                 else:
-                    if(i.name == "ul" or i.name == "ol" or i.name == "div"):
+                    if(i.name == "ul" or i.name == "ol" or i.name == "div" or i.name == "img"):
                         continue
                     else:
                         stack[-1]["content"].append(i.text)
@@ -148,16 +162,26 @@ class ReactFunction:
                         code = i.find('code')
                         if(code and (stack[-1]["sections"][-1] != {"code_example": code.text})):
                             stack[-1]["sections"].append({"code_example": code.text})
-                        elif(i.get('class')[1] == 'sandpack--playground'):
+                        if(i.get('class')[1] == 'sandpack--playground'):
                             code_sandbox = util.remove_redundant(i.text)
                             stack[-1]["sections"].append({"code_sandbox": code_sandbox})
                         else:
-                            stack[-1]["sections"].append(i.text)
+                            if(i.find('ul')):
+                                for index,j in enumerate(i.find_all('li')):
+                                    stack[-1]["sections"].append(f"  {index+1}.{j.text}")
+                            if(i.find('ol')):
+                                for index,j in enumerate(i.find_all('li')):
+                                    stack[-1]["sections"].append(f"  {index+1}.{j.text}")
+                            else:
+                                if(i.name == "ul" or i.name == "ol" or i.find('code') or i.find('img')):
+                                    continue
+                                else:
+                                    stack[-1]["sections"].append(i.text)
                     except: IndexError
                 
             
                 else:
-                    if(i.name == "ul" or i.name == "ol" or i.name == "div"):
+                    if(i.name == "ul" or i.name == "ol" or i.name == "div" or i.name == "img"):
                         continue
                     else:
                         stack[-1]["sections"].append(i.text)

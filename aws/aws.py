@@ -210,7 +210,7 @@ class AwsFunction:
         async with async_playwright() as p:
             browser = await p.chromium.launch(headless=True)
             page = await browser.new_page()
-            for i in urls[:3]:
+            for i in urls:
                 if(i.get(Aws.CONTENTS.value)):
                     content = await self.getting_inner_content(i[Aws.HREF.value], page)
                     logging.info(f'Main Topic :  {i[Aws.TITLE.value]}')
