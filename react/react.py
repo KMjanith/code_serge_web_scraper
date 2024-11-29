@@ -42,64 +42,64 @@ class ReactFunction:
     
     
     def sub_heddings_data_collector(self,l, main_header, url, util):
-        stack = [{"headers":main_header, "url": url,"content": []}]  
+        stack = [{"headers":main_header, "url": url,React.CONTENT.value: []}]  
         original = []
         for i in l:
             if(i.name == None):
                 continue
-            if(i.name in ['h1', 'h2', 'h3', 'h4']):
+            if(i.name in React.TOPIC_LIST.value):
                 level = int(i.name[1])
                 current_stack_length = len(stack)
                 if(current_stack_length < level):
-                    sub_url = i.find('a')
-                    stack.append({"sub_header": i.text, "source":"React","url": f"{url}/{sub_url.get('href')}","content": []})
+                    sub_url = i.find(React.A.value)
+                    stack.append({React.SUBHEADER.value: i.text, "source":React.SOURCE.value,"url": f"{url}/{sub_url.get('href')}",React.CONTENT.value: []})
                 elif(current_stack_length == level and current_stack_length != 0):
                     a = stack.pop()
-                    stack[-1]["content"].append(a)
-                    sub_url = i.find('a')
-                    stack.append({"sub_header": i.text,"source":"React", "url": f"{url}/{sub_url.get('href')}","content": []})
+                    stack[-1][React.CONTENT.value].append(a)
+                    sub_url = i.find(React.A.value)
+                    stack.append({React.SUBHEADER.value: i.text,"source":React.SOURCE.value, "url": f"{url}/{sub_url.get('href')}",React.CONTENT.value: []})
                 
                 else:
                     while(len(stack) > level):
                         a = stack.pop()
-                        stack[-1]["content"].append(a)
+                        stack[-1][React.CONTENT.value].append(a)
                     a = stack.pop()
                     if(len(stack)==0):
                         original.append(a)
-                        sub_url = i.find('a')
-                        stack.append({"sub_header": i.text,"source":"React", "url": f"{url}/{sub_url.get('href')}","content": []})
+                        sub_url = i.find(React.A.value)
+                        stack.append({React.SUBHEADER.value: i.text,"source":React.SOURCE.value, "url": f"{url}/{sub_url.get('href')}",React.CONTENT.value: []})
                     else:
-                        stack[-1]["content"].append(a)
-                        sub_url = i.find('a')
-                        stack.append({"sub_header": i.text, "source":"React","url": f"{url}/{sub_url.get('href')}","content": []})
+                        stack[-1][React.CONTENT.value].append(a)
+                        sub_url = i.find(React.A.value)
+                        stack.append({React.SUBHEADER.value: i.text, "source":React.SOURCE.value,"url": f"{url}/{sub_url.get('href')}",React.CONTENT.value: []})
             else:
-                if(i.name == 'ul'):
-                    for index,j in enumerate(i.find_all('li')):
-                        stack[-1]["content"].append(f"  {index+1}.{j.text}")
-                if(i.name == 'ol'):
-                    for index,j in enumerate(i.find_all('li')):
-                        stack[-1]["content"].append(f"  {index+1}.{j.text}")
+                if(i.name == React.UL.value):
+                    for index,j in enumerate(i.find_all(React.LI.value)):
+                        stack[-1][React.CONTENT.value].append(f"  {index+1}.{j.text}")
+                if(i.name == React.OL.value):
+                    for index,j in enumerate(i.find_all(React.LI.value)):
+                        stack[-1][React.CONTENT.value].append(f"  {index+1}.{j.text}")
                 
-                if(i.name == 'div'):
+                if(i.name == React.DIV.value):
                     try:
                         code = i.find('code')
-                        if(code and (stack[-1]["content"][-1] != {"code_example": code.text})):
-                            stack[-1]["content"].append({"code_example": code.text})
+                        if(code and (stack[-1][React.CONTENT.value][-1] != {"code_example": code.text})):
+                            stack[-1][React.CONTENT.value].append({"code_example": code.text})
                         if(i.get('class')[1] == 'sandpack--playground'):
                             code_sandbox = util.remove_redundant(i.text)
-                            stack[-1]["content"].append({"code_sandbox": code_sandbox})
+                            stack[-1][React.CONTENT.value].append({"code_sandbox": code_sandbox})
                         else:
-                            if(i.find('ul')):
-                                for index,j in enumerate(i.find_all('li')):
-                                    stack[-1]["content"].append(f"  {index+1}.{j.text}")
-                            if(i.find('ol')):
-                                for index,j in enumerate(i.find_all('li')):
-                                    stack[-1]["content"].append(f"  {index+1}.{j.text}")
+                            if(i.find(React.UL.value)):
+                                for index,j in enumerate(i.find_all(React.LI.value)):
+                                    stack[-1][React.CONTENT.value].append(f"  {index+1}.{j.text}")
+                            if(i.find(React.OL.value)):
+                                for index,j in enumerate(i.find_all(React.LI.value)):
+                                    stack[-1][React.CONTENT.value].append(f"  {index+1}.{j.text}")
                             else:
                                 if(i.name == "ul" or i.name == "ol" or i.find('code') or i.find('img')):
                                     continue
                                 else:
-                                    stack[-1]["content"].append(i.text)
+                                    stack[-1][React.CONTENT.value].append(i.text)
                     except: IndexError
                    
             
@@ -107,14 +107,14 @@ class ReactFunction:
                     if(i.name == "ul" or i.name == "ol" or i.name == "div" or i.name == "img"):
                         continue
                     else:
-                        stack[-1]["content"].append(i.text)
+                        stack[-1][React.CONTENT.value].append(i.text)
 
-        return util.return_data(stack, "content")
+        return util.return_data(stack, React.CONTENT.value)
     
     
     def main_heading_data_collector(self, page_item_list, main_header, url, util):
 
-        stack = [{"title": main_header,"source": "react" ,"url": url,"sections": [], "subTopics": []}]
+        stack = [{"title": main_header,"source": React.SOURCE.value ,"url": url,React.SECTIONS.value: [], "subTopics": []}]
         original = []
         for i in page_item_list:
             if(i.name == None):
@@ -123,60 +123,60 @@ class ReactFunction:
                 level = int(i.name[1])
                 current_stack_length = len(stack)
                 if(current_stack_length < level):
-                    sub_url = i.find('a')
+                    sub_url = i.find(React.A.value)
                     if(sub_url):
-                        stack.append({"subHeader": i.text, "url": f"{url}/{sub_url.get('href')}","sections": [] })
+                        stack.append({"subHeader": i.text, "url": f"{url}/{sub_url.get('href')}",React.SECTIONS.value: [] })
                 elif(current_stack_length == level and current_stack_length != 0):
                     a = stack.pop()
-                    stack[-1]["sections"].append(a)
-                    sub_url = i.find('a')
+                    stack[-1][React.SECTIONS.value].append(a)
+                    sub_url = i.find(React.A.value)
                     if(sub_url):
-                        stack.append({"subHeader": i.text, "url": f"{url}/{sub_url.get('href')}","sections": [] })
+                        stack.append({"subHeader": i.text, "url": f"{url}/{sub_url.get('href')}",React.SECTIONS.value: [] })
                 
                 else:
                     while(len(stack) > level):
                         a = stack.pop()
-                        stack[-1]["sections"].append(a)
+                        stack[-1][React.SECTIONS.value].append(a)
                     a = stack.pop()
                     if(len(stack)==0):
                         original.append(a)
-                        sub_url = i.find('a')
+                        sub_url = i.find(React.A.value)
                     if(sub_url):
-                        stack.append({"subHeader": i.text, "url": f"{url}/{sub_url.get('href')}","sections": [] })
+                        stack.append({"subHeader": i.text, "url": f"{url}/{sub_url.get('href')}",React.SECTIONS.value: [] })
                     else:
-                        stack[-1]["sections"].append(a)
-                        sub_url = i.find('a')
+                        stack[-1][React.SECTIONS.value].append(a)
+                        sub_url = i.find(React.A.value)
                     if(sub_url):
-                        stack.append({"subHeader": i.text, "url": f"{url}/{sub_url.get('href')}","sections": [] })
+                        stack.append({"subHeader": i.text, "url": f"{url}/{sub_url.get('href')}",React.SECTIONS.value: [] })
             else:
-                if(i.name == 'ul'):
-                    for index,j in enumerate(i.find_all('li')):
-                        stack[-1]["sections"].append(f"  {index+1}.{j.text}")
-                if(i.name == 'ol'):
-                    for index,j in enumerate(i.find_all('li')):
-                        stack[-1]["sections"].append(f"  {index+1}.{j.text}")
+                if(i.name == React.UL.value):
+                    for index,j in enumerate(i.find_all(React.LI.value)):
+                        stack[-1][React.SECTIONS.value].append(f"  {index+1}.{j.text}")
+                if(i.name == React.OL.value):
+                    for index,j in enumerate(i.find_all(React.LI.value)):
+                        stack[-1][React.SECTIONS.value].append(f"  {index+1}.{j.text}")
 
                 if(i.name == 'div'):
                     
                     try:
                         code = i.find('code')
-                        if(code and (stack[-1]["sections"][-1] != {"code_example": code.text})):
-                            stack[-1]["sections"].append({"code_example": code.text})
+                        if(code and (stack[-1][React.SECTIONS.value][-1] != {"code_example": code.text})):
+                            stack[-1][React.SECTIONS.value].append({"code_example": code.text})
                         if(i.get('class')[1] == 'sandpack--playground'):
                             code_sandbox = util.remove_redundant(i.text)
-                            stack[-1]["sections"].append({"code_sandbox": code_sandbox})
+                            stack[-1][React.SECTIONS.value].append({"code_sandbox": code_sandbox})
                         else:
-                            if(i.find('ul')):
-                                for index,j in enumerate(i.find_all('li')):
-                                    stack[-1]["sections"].append(f"  {index+1}.{j.text}")
-                            if(i.find('ol')):
-                                for index,j in enumerate(i.find_all('li')):
-                                    stack[-1]["sections"].append(f"  {index+1}.{j.text}")
+                            if(i.find(React.UL.value)):
+                                for index,j in enumerate(i.find_all(React.LI.value)):
+                                    stack[-1][React.SECTIONS.value].append(f"  {index+1}.{j.text}")
+                            if(i.find(React.OL.value)):
+                                for index,j in enumerate(i.find_all(React.LI.value)):
+                                    stack[-1][React.SECTIONS.value].append(f"  {index+1}.{j.text}")
                             else:
                                 if(i.name == "ul" or i.name == "ol" or i.find('code') or i.find('img')):
                                     continue
                                 else:
-                                    stack[-1]["sections"].append(i.text)
+                                    stack[-1][React.SECTIONS.value].append(i.text)
                     except: IndexError
                 
             
@@ -184,9 +184,9 @@ class ReactFunction:
                     if(i.name == "ul" or i.name == "ol" or i.name == "div" or i.name == "img"):
                         continue
                     else:
-                        stack[-1]["sections"].append(i.text)
+                        stack[-1][React.SECTIONS.value].append(i.text)
 
-        return util.return_data(stack, "sections")
+        return util.return_data(stack, React.SECTIONS.value)
 
 
     #function to get the inner content of the urls

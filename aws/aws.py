@@ -52,11 +52,11 @@ class AwsFunction:
             if(i.name == Aws.LI.value):
                 if(i.find(Aws.PRE.value)):
                     if(i.find(Aws.PRE.value).find(Aws.CODE.value)):
-                        code = i.find(Aws.PRE.value).find(Aws.CODE.value).text
-                        stack[-1][Aws.CONTENT.value].append(f" {index + 1} : {i.text.replace(code, ' ').replace("\n", '')}")
+                        code = i.find(Aws.PRE.value).find(Aws.CODE.value).text.replace("anchor", "")
+                        stack[-1][Aws.CONTENT.value].append(f" {index + 1} : {i.text.replace(code, ' ').replace("\n", '').replace("anchor", "")}")
                         stack[-1][Aws.CONTENT.value].append({Aws.CODE_EXAMPLE.value: code})
                 else:
-                    stack[-1][Aws.CONTENT.value].append(f"  {index + 1} : {i.text.replace('\n', '')}")
+                    stack[-1][Aws.CONTENT.value].append(f"  {index + 1} : {i.text.replace('\n', '').replace("anchor", "")}")
             if(i.name == Aws.OL.value):
                 self.ol_handler(i, stack)
            
@@ -74,7 +74,7 @@ class AwsFunction:
                     stack[-1][Aws.CONTENT.value].append(f"  {index+1}.{j.text.replace("\n", '')}")    
             if(j.find(Aws.PRE.value)): 
                 if(j.find(Aws.PRE.value).find(Aws.CODE.value)):
-                    code = j.find(Aws.PRE.value).find(Aws.CODE.value).text
+                    code = j.find(Aws.PRE.value).find(Aws.CODE.value).text.replace("anchor", "")
                     stack[-1][Aws.CONTENT.value].append({Aws.CODE_EXAMPLE.value: code})
         return stack
     
@@ -84,9 +84,9 @@ class AwsFunction:
         dd = dl_item.find_all(Aws.DD.value)
         for index, j in enumerate(dt):
             if(dd[index].find(Aws.CODE.value)):
-                stack[-1][Aws.CONTENT.value].append(f"  {index+1}.{dt[index].text} : {dd[index].find(Aws.CODE.value).text}")
+                stack[-1][Aws.CONTENT.value].append(f"  {index+1}.{dt[index].text.replace("anchor", "")} : {dd[index].find(Aws.CODE.value).text.replace("anchor", "")}")
             else:
-                stack[-1][Aws.CONTENT.value].append(f"  {index+1}.{dt[index].text} : {dd[index].text}")
+                stack[-1][Aws.CONTENT.value].append(f"  {index+1}.{dt[index].text.replace("anchor", "")} : {dd[index].text.replace("anchor", "")}")
         return stack
 
     # div item handler
@@ -101,12 +101,12 @@ class AwsFunction:
 
             if(i.name == Aws.CODE.value) and (i.name != Aws.OL.value):
                 code = i.find(Aws.CODE.value)
-                stack[-1][Aws.CONTENT.value].append({Aws.CODE_EXAMPLE.value: code.text})
+                stack[-1][Aws.CONTENT.value].append({Aws.CODE_EXAMPLE.value: code.text.replace("anchor", "")})
 
             if(i.name == Aws.PRE.value): 
                 code = i.find(Aws.CODE.value)
                 if(code):
-                    stack[-1][Aws.CONTENT.value].append({Aws.CODE_EXAMPLE.value: code.text})
+                    stack[-1][Aws.CONTENT.value].append({Aws.CODE_EXAMPLE.value: code.text.replace("anchor", "")})
 
             if(i.name == Aws.OL.value):
                 self.ol_handler(i, stack)
@@ -121,7 +121,7 @@ class AwsFunction:
                 if((i.name in Aws.ITEM_LIST.value) or (i.text in Aws.ITEM_LIST.value) or (i.name in Aws.DIV_MATCHING_ELEMENST.value)):
                     continue
                 else:
-                    stack[-1][Aws.CONTENT.value].append(i.text.replace("\n", ""))
+                    stack[-1][Aws.CONTENT.value].append(i.text.replace("\n", "").replace("anchor", ""))
             
         return stack
             
@@ -157,10 +157,10 @@ class AwsFunction:
             else:
                 if(i.name == Aws.UL.value):
                     for index,j in enumerate(i.find_all(Aws.LI.value)):
-                        stack[-1][Aws.CONTENT.value].append(f"  {index+1}.{j.text}")
+                        stack[-1][Aws.CONTENT.value].append(f"  {index+1}.{j.text.replace("anchor", "")}")
                 if(i.name == Aws.OL.value):
                     for index,j in enumerate(i.find_all(Aws.LI.value)):
-                        stack[-1][Aws.CONTENT.value].append(f"  {index+1}.{j.text}")
+                        stack[-1][Aws.CONTENT.value].append(f"  {index+1}.{j.text.replace("anchor", "")}")
 
                 if(i.name == Aws.DIV.value):
                     self.div_handler(i, stack)
@@ -172,7 +172,7 @@ class AwsFunction:
                     if(i.name == Aws.UL.value or i.name == Aws.OL.value or i.text == "" or i.text == "\n\n" or i.name == Aws.DIV.value or i.name == Aws.AWSDOCS_TABS.value):
                         continue
                     else:
-                        stack[-1][Aws.CONTENT.value].append(i.text.replace("\n", ""))
+                        stack[-1][Aws.CONTENT.value].append(i.text.replace("\n", "").replace("anchor", ""))
 
         util = Utilities()
         return util.return_data(stack, Aws.CONTENT.value)[-1][Aws.CONTENT.value]

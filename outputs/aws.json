@@ -2,8 +2,8 @@
     {
         "title": "What is AWS Lambda?",
         "href": "https://docs.aws.amazon.com/lambda/latest/dg/welcome.html",
-        "source": "Aws",
-        "parent_content": [
+        "source": "aws_lamda",
+        "sections": [
             "You can use AWS Lambda to run code without provisioning or managing servers.",
             " Lambda runs your code    on a high-availability compute infrastructure and performs all of the administration of the compute resources,    including server and operating system maintenance, capacity provisioning and automatic scaling, and    logging. With Lambda, all you need to do is supply your code in one of the language runtimes that Lambda supports.",
             "You organize your code into Lambda functions. The Lambda service runs your function only when needed and scales automatically. You only pay for the compute time that you consume—there is no charge when your code is not running. For more information, see AWS Lambda Pricing.",
@@ -44,11 +44,23 @@
     {
         "title": "Example apps",
         "href": "https://docs.aws.amazon.com/lambda/latest/dg/example-apps.html",
-        "contents": [
+        "source": "aws_lamda",
+        "sections": [
+            "The following examples provide function code and  infrastructure as code (IaC) templates to quickly create and deploy serverless apps that implement some common Lambda uses cases. The  examples also include code examples and instructions to test the apps after you deploy them.",
+            "For each of the example apps, we provide instructions to either create and configure resources manually using the AWS Management Console, or to   use the AWS Serverless Application Model to deploy the resources using IaC. Follow the console intructions to learn more about configuring the individual AWS   resources for each app, or use to AWS SAM to quickly deploy resources as you would in a production environment.",
+            "You can use the provided examples as a basis for your own serverless applications by modifying the provided function code and templates   for your own use case.",
+            "We're continuing to create new examples, so check back again to find more severless apps for common Lambda use cases.",
+            {
+                "sub_header": "Example apps",
+                "content": [
+                    "  1.Example serverless file-processing appCreate a serverless app to automatically perform a file-processing task when an object is uploaded to an Amazon S3 bucket. In this         example, when a PDF file is uploaded, the app encrypts the file and saves it to another S3 bucket.",
+                    "  2.Example scheduled cron task appCreate an app to perform a scheduled task using a cron schedule. In this example, the app performs maintenance on a         Amazon DynamoDB table by deleting entries more than 12 months old."
+                ]
+            },
             {
                 "title": "File-processing app",
                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/file-processing-app.html",
-                "source": "Aws",
+                "source": "aws_lamda",
                 "parent_content": [
                     "One of the most common use cases for Lambda is to perform file processing tasks. For example, you might use a Lambda function     to automatically create PDF files from HTML files or images, or to create thumbnails when a user uploads an image.",
                     "In this example, you create an app which automatically encrypts PDF files when they are uploaded to an Amazon Simple Storage Service (Amazon S3) bucket.     To implement this app, you create the following resources:",
@@ -362,7 +374,7 @@
             {
                 "title": "Scheduled-maintenance app",
                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/scheduled-task-app.html",
-                "source": "Aws",
+                "source": "aws_lamda",
                 "parent_content": [
                     "You can use AWS Lambda to replace scheduled processes such as automated system backups, file conversions, and maintenance tasks.   In this example, you create a serverless application that performs regular scheduled maintenance on a DynamoDB table by deleting old entries. The app uses EventBridge Scheduler to invoke a   Lambda function on a cron schedule. When invoked, the function queries the table for items older than one year, and deletes them. The function logs each deleted item  in CloudWatch Logs.",
                     "To implement this example, first create a DynamoDB table and populate it with some test data for your function to query. Then, create a Python Lambda function with   an EventBridge Scheduler trigger and an IAM execution role that gives the function permission to read, and delete, items from your table.",
@@ -609,30 +621,36 @@
                     }
                 ]
             }
-        ],
-        "source": "Aws",
-        "parent_content": [
-            "The following examples provide function code and  infrastructure as code (IaC) templates to quickly create and deploy serverless apps that implement some common Lambda uses cases. The  examples also include code examples and instructions to test the apps after you deploy them.",
-            "For each of the example apps, we provide instructions to either create and configure resources manually using the AWS Management Console, or to   use the AWS Serverless Application Model to deploy the resources using IaC. Follow the console intructions to learn more about configuring the individual AWS   resources for each app, or use to AWS SAM to quickly deploy resources as you would in a production environment.",
-            "You can use the provided examples as a basis for your own serverless applications by modifying the provided function code and templates   for your own use case.",
-            "We're continuing to create new examples, so check back again to find more severless apps for common Lambda use cases.",
-            {
-                "sub_header": "Example apps",
-                "content": [
-                    "  1.Example serverless file-processing appCreate a serverless app to automatically perform a file-processing task when an object is uploaded to an Amazon S3 bucket. In this         example, when a PDF file is uploaded, the app encrypts the file and saves it to another S3 bucket.",
-                    "  2.Example scheduled cron task appCreate an app to perform a scheduled task using a cron schedule. In this example, the app performs maintenance on a         Amazon DynamoDB table by deleting entries more than 12 months old."
-                ]
-            }
         ]
     },
     {
         "title": "Building with TypeScript",
         "href": "https://docs.aws.amazon.com/lambda/latest/dg/lambda-typescript.html",
-        "contents": [
+        "source": "aws_lamda",
+        "sections": [
+            "You can use the Node.js runtime to run TypeScript code in AWS Lambda. Because Node.js doesn't run TypeScript code natively, you must first     transpile your TypeScript code into JavaScript. Then, use the JavaScript files to deploy your function code to Lambda. Your code runs in an     environment that includes the AWS SDK for JavaScript, with credentials from an AWS Identity and Access Management (IAM) role that you manage. To learn more     about the SDK versions included with the Node.js runtimes, see Runtime-included SDK versions.",
+            "Lambda supports the following Node.js runtimes.",
+            "NameIdentifierOperating systemDeprecation dateBlock function createBlock function updateNode.js 22nodejs22.xAmazon Linux 2023            Not scheduled                        Not scheduled                        Not scheduled            Node.js 20nodejs20.xAmazon Linux 2023            Not scheduled                        Not scheduled                        Not scheduled            Node.js 18nodejs18.xAmazon Linux 2            Jul 31, 2025                        Sep 1, 2025                        Oct 1, 2025            ",
+            "Topics",
+            {
+                "sub_header": "Setting up a TypeScript development environment",
+                "content": [
+                    "Use a local integrated development environment (IDE), text editor, or AWS Cloud9 to write your TypeScript function code. You can’t create TypeScript code on the Lambda console.",
+                    "To transpile your TypeScript code, set up a compiler such as esbuild or Microsoft's TypeScript compiler (tsc) , which is bundled with the TypeScript distribution. You can use the AWS Serverless Application Model (AWS SAM) or the AWS Cloud Development Kit (AWS CDK) to simplify building and deploying TypeScript code. Both tools use esbuild to transpile TypeScript code into JavaScript.",
+                    "When using esbuild, consider the following:",
+                    "  1.There are several TypeScript caveats.",
+                    "  2.tsconfig.json : You must configure your TypeScript transpilation settings to match the Node.js runtime that you plan to use. For more information, see Target in the esbuild documentation. For an example of a  file that demonstrates how to target a specific Node.js version supported by Lambda, refer to the TypeScript GitHub repository.",
+                    "  3.tsconfig.json : esbuild doesn’t perform type checks. To check types, use the tsc compiler. Run tsc -noEmit or add a \"noEmit\" parameter to your  file, as shown in the following example. This configures tsc to not emit JavaScript files. After checking types, use esbuild to convert the TypeScript files into JavaScript.",
+                    "Example  tsconfig.json",
+                    {
+                        "code_example": " {\n  \"compilerOptions\": {\n    \"target\": \"es2020\",\n    \"strict\": true,\n    \"preserveConstEnums\": true,\n    \"noEmit\": true,\n    \"sourceMap\": false,\n    \"module\":\"commonjs\",\n    \"moduleResolution\":\"node\",\n    \"esModuleInterop\": true, \n    \"skipLibCheck\": true,\n    \"forceConsistentCasingInFileNames\": true, \n    \"isolatedModules\": true, \n  },\n  \"exclude\": [\"node_modules\", \"**/*.test.ts\"]\n}"
+                    }
+                ]
+            },
             {
                 "title": "Handler",
                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/typescript-handler.html",
-                "source": "Aws",
+                "source": "aws_lamda",
                 "parent_content": [
                     "The Lambda function handler is the method in your function code that processes events. When your function is  invoked, Lambda runs the handler method. Your function runs until the handler returns a response, exits, or times out.",
                     "Topics",
@@ -735,7 +753,7 @@
             {
                 "title": "Deploy .zip file archives",
                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/typescript-package.html",
-                "source": "Aws",
+                "source": "aws_lamda",
                 "parent_content": [
                     "Before you can deploy TypeScript code to AWS Lambda, you need to transpile it into JavaScript. This page explains three ways to build and deploy TypeScript code to Lambda with .zip file archives:",
                     "  1.Using AWS Serverless Application Model (AWS SAM)",
@@ -874,7 +892,7 @@
             {
                 "title": "Deploy container images",
                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/typescript-image.html",
-                "source": "Aws",
+                "source": "aws_lamda",
                 "parent_content": [
                     "You can deploy your TypeScript code to an AWS Lambda function as a Node.js container image. AWS provides base images for Node.js to help you build the container image. These base images are preloaded with a language runtime and other components that are required to run the image on Lambda. AWS provides a Dockerfile for each of the base images to help with building your container image.",
                     "If you use a community or private enterprise base image, you must add the Node.js runtime interface client (RIC) to the base image to make it compatible with Lambda.",
@@ -1053,7 +1071,7 @@
             {
                 "title": "Layers",
                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/typescript-layers.html",
-                "source": "Aws",
+                "source": "aws_lamda",
                 "parent_content": [
                     "A Lambda layer is a .zip  file archive that contains supplementary code or data. Layers usually contain library dependencies, a  custom runtime, or configuration files. Creating a layer involves  three general steps:",
                     "  1 : Package your layer content. This means creating a .zip file archive that contains the dependencies        you want to use in your functions.",
@@ -1196,7 +1214,7 @@
             {
                 "title": "Context",
                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/typescript-context.html",
-                "source": "Aws",
+                "source": "aws_lamda",
                 "parent_content": [
                     "When Lambda runs your function, it passes a context object to the handler.    This object provides methods and properties that provide information about the invocation, function, and execution    environment.",
                     "Context methods",
@@ -1238,7 +1256,7 @@
             {
                 "title": "Logging",
                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/typescript-logging.html",
-                "source": "Aws",
+                "source": "aws_lamda",
                 "parent_content": [
                     "AWS Lambda automatically monitors Lambda functions and sends log entries to Amazon CloudWatch. Your Lambda function     comes with a CloudWatch Logs log group and a log stream for each instance of your function. The Lambda runtime environment     sends details about each invocation and other output from your function's     code to the log stream. For more information about CloudWatch Logs, see Using CloudWatch Logs with Lambda.",
                     "To output logs from your function code, you can use methods on the console object. For more detailed logging, you can use any logging library that writes to stdout or stderr.",
@@ -1391,7 +1409,7 @@
             {
                 "title": "Tracing",
                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/typescript-tracing.html",
-                "source": "Aws",
+                "source": "aws_lamda",
                 "parent_content": [
                     "Lambda integrates with AWS X-Ray to help you trace, debug, and optimize Lambda applications. You can use X-Ray    to trace a request as it traverses resources in your application, which may include Lambda functions and other AWS    services.",
                     "To send tracing data to X-Ray, you can use one of three SDK libraries:",
@@ -1514,34 +1532,38 @@
                     }
                 ]
             }
-        ],
-        "source": "Aws",
-        "parent_content": [
-            "You can use the Node.js runtime to run TypeScript code in AWS Lambda. Because Node.js doesn't run TypeScript code natively, you must first     transpile your TypeScript code into JavaScript. Then, use the JavaScript files to deploy your function code to Lambda. Your code runs in an     environment that includes the AWS SDK for JavaScript, with credentials from an AWS Identity and Access Management (IAM) role that you manage. To learn more     about the SDK versions included with the Node.js runtimes, see Runtime-included SDK versions.",
-            "Lambda supports the following Node.js runtimes.",
-            "NameIdentifierOperating systemDeprecation dateBlock function createBlock function updateNode.js 22nodejs22.xAmazon Linux 2023            Not scheduled                        Not scheduled                        Not scheduled            Node.js 20nodejs20.xAmazon Linux 2023            Not scheduled                        Not scheduled                        Not scheduled            Node.js 18nodejs18.xAmazon Linux 2            Jul 31, 2025                        Sep 1, 2025                        Oct 1, 2025            ",
-            "Topics",
-            {
-                "sub_header": "Setting up a TypeScript development environment",
-                "content": [
-                    "Use a local integrated development environment (IDE), text editor, or AWS Cloud9 to write your TypeScript function code. You can’t create TypeScript code on the Lambda console.",
-                    "To transpile your TypeScript code, set up a compiler such as esbuild or Microsoft's TypeScript compiler (tsc) , which is bundled with the TypeScript distribution. You can use the AWS Serverless Application Model (AWS SAM) or the AWS Cloud Development Kit (AWS CDK) to simplify building and deploying TypeScript code. Both tools use esbuild to transpile TypeScript code into JavaScript.",
-                    "When using esbuild, consider the following:",
-                    "  1.There are several TypeScript caveats.",
-                    "  2.tsconfig.json : You must configure your TypeScript transpilation settings to match the Node.js runtime that you plan to use. For more information, see Target in the esbuild documentation. For an example of a  file that demonstrates how to target a specific Node.js version supported by Lambda, refer to the TypeScript GitHub repository.",
-                    "  3.tsconfig.json : esbuild doesn’t perform type checks. To check types, use the tsc compiler. Run tsc -noEmit or add a \"noEmit\" parameter to your  file, as shown in the following example. This configures tsc to not emit JavaScript files. After checking types, use esbuild to convert the TypeScript files into JavaScript.",
-                    "Example  tsconfig.json",
-                    {
-                        "code_example": " {\n  \"compilerOptions\": {\n    \"target\": \"es2020\",\n    \"strict\": true,\n    \"preserveConstEnums\": true,\n    \"noEmit\": true,\n    \"sourceMap\": false,\n    \"module\":\"commonjs\",\n    \"moduleResolution\":\"node\",\n    \"esModuleInterop\": true, \n    \"skipLibCheck\": true,\n    \"forceConsistentCasingInFileNames\": true, \n    \"isolatedModules\": true, \n  },\n  \"exclude\": [\"node_modules\", \"**/*.test.ts\"]\n}"
-                    }
-                ]
-            }
         ]
     },
     {
         "title": "Integrating other services",
         "href": "https://docs.aws.amazon.com/lambda/latest/dg/lambda-services.html",
-        "contents": [
+        "source": "aws_lamda",
+        "sections": [
+            "Some AWS services can directly invoke Lambda functions using triggers. These services push events to Lambda, and the function is invoked immediately when the specified event occurs. Triggers are suitable for discrete events and real-time processing. When you create a trigger using the Lambda console, the console interacts with the corresponding AWS service to configure the event notification on that service. The trigger is actually stored and managed by the service that generates the events, not by Lambda.",
+            "The events are data structured in JSON format. The JSON structure varies depending on the service that    generates it and the event type, but they all contain the data that the function needs to process the    event.",
+            "A function can have multiple triggers. Each trigger acts as a client invoking your function independently, and each event that    Lambda passes to your function has data from only one trigger. Lambda converts the event document into an object and passes it to your function handler.",
+            "Depending on the service, the event-driven invocation can be synchronous or asynchronous.",
+            "  1.For synchronous invocation, the service that generates the event waits for the response from your        function. That service defines the data that the function needs to return in the response. The service        controls the error strategy, such as whether to retry on errors.",
+            "  2.For asynchronous invocation, Lambda queues the event before passing it to your function. When Lambda        queues the event, it immediately sends a success response to the service that generated the event. After the        function processes the event, Lambda doesn’t return a response to the event-generating service.",
+            {
+                "sub_header": "Creating a trigger",
+                "content": [
+                    "The easiest way to create a trigger is to use the Lambda console. When you create a trigger using the console, Lambda automatically adds the required permissions to the function's resource-based policy.",
+                    "To create a trigger using the Lambda console",
+                    "  1 : Open the Functions page of the Lambda console.",
+                    "  2 : Select the function you want to create a trigger for.",
+                    "  3 : In the Function overview pane, choose          Add trigger.",
+                    "  4 : Select the AWS service you want to invoke your function.",
+                    "  5 : Fill out the options in the Trigger configuration pane          and choose Add. Depending on the AWS service you choose to          invoke your function, the trigger configuration options will be different."
+                ]
+            },
+            {
+                "sub_header": "Services that can invoke Lambda functions",
+                "content": [
+                    "The following table lists services that can invoke Lambda functions.",
+                    "ServiceMethod of invocationAmazon Managed Streaming for Apache KafkaEvent source mappingSelf-managed Apache KafkaEvent source mappingAmazon API GatewayEvent-driven; synchronous invocationAWS CloudFormationEvent-driven; asynchronous invocationAmazon CloudWatch LogsEvent-driven; asynchronous invocationAWS CodeCommitEvent-driven; asynchronous invocationAWS CodePipelineEvent-driven; asynchronous invocationAmazon CognitoEvent-driven; synchronous invocationAWS ConfigEvent-driven; asynchronous invocationAmazon ConnectEvent-driven; synchronous invocationAmazon DynamoDBEvent source mappingAmazon Elastic File SystemSpecial integrationElastic Load Balancing (Application Load Balancer)Event-driven; synchronous invocationAmazon EventBridge (CloudWatch Events)Event-driven; asynchronous invocation (event buses), synchronous or asynchronous invocation (pipes and schedules)AWS IoTEvent-driven; asynchronous invocationAmazon KinesisEvent source mappingAmazon Data FirehoseEvent-driven; synchronous invocationAmazon LexEvent-driven; synchronous invocationAmazon MQEvent source mappingAmazon Simple Email ServiceEvent-driven; asynchronous invocationAmazon Simple Notification ServiceEvent-driven; asynchronous invocationAmazon Simple Queue ServiceEvent source mappingAmazon Simple Storage Service (Amazon S3)Event-driven; asynchronous invocationAmazon Simple Storage Service BatchEvent-driven; synchronous invocationSecrets ManagerSpecial integrationAWS Step FunctionsEvent-driven; synchronous or asynchronous invocationAmazon VPC LatticeEvent-driven; synchronous invocationAWS X-RaySpecial integration"
+                ]
+            },
             {
                 "title": "Apache Kafka",
                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-kafka.html",
@@ -1549,7 +1571,7 @@
                     {
                         "title": "Configure event source",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-kafka-configure.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "Before you create an event source mapping for your self-managed Apache Kafka cluster, you need to ensure that your cluster and the VPC     it resides in are correctly configured. You also need to make sure that your Lambda function's execution role has     the necessary IAM permissions.",
                             "Follow the instructions in the following sections to configure your self-managed Apache Kafka cluster and Lambda function. To learn how to     create the event source mapping, see Adding a Kafka cluster as an event source.",
@@ -1705,7 +1727,7 @@
                     {
                         "title": "Process messages",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-kafka-process.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "Note",
                             "If you want to send data to a target other than a Lambda function or enrich the data before sending it, see     Amazon EventBridge Pipes.",
@@ -1860,7 +1882,7 @@
                     {
                         "title": "Event filtering",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-kafka-filtering.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "You can use event filtering to control which records from a stream or queue Lambda sends to your function.    For general information about how event filtering works, see Control which events Lambda sends to your function.",
                             "This section focuses on event filtering for self-managed Apache Kafka event sources.",
@@ -1911,7 +1933,7 @@
                     {
                         "title": "On-failure destinations",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-kafka-on-failure.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "To retain records of failed event source mapping invocations, add a destination to your function's event source mapping. Each record sent to the destination is a JSON document containing metadata about the failed invocation. For Amazon S3 destinations, Lambda also sends the entire invocation record along with the metadata. You can configure any Amazon SNS topic, Amazon SQS queue, or S3 bucket as a destination.",
                             "With Amazon S3 destinations, you can use the Amazon S3 Event Notifications feature to receive notifications when objects are uploaded to your destination S3 bucket. You can also configure S3 Event Notifications to invoke another Lambda function to perform automated processing on failed batches.",
@@ -1987,7 +2009,7 @@
                     {
                         "title": "Troubleshooting",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-kafka-troubleshoot.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "The following topics provide troubleshooting advice for errors and issues that you might encounter when using    self-managed Apache Kafka with Lambda. If you find an issue that is not listed here, you can use the    Feedback button on this page to report it.",
                             "For more help with troubleshooting, visit the AWS Knowledge Center.",
@@ -2057,7 +2079,7 @@
                         ]
                     }
                 ],
-                "source": "Aws",
+                "source": "aws_lamda",
                 "parent_content": [
                     "Note",
                     "If you want to send data to a target other than a Lambda function or enrich the data before sending it, see     Amazon EventBridge Pipes.",
@@ -2087,7 +2109,7 @@
                     {
                         "title": "Tutorial",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-apigateway-tutorial.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "In this tutorial, you create a REST API through which you invoke a Lambda function using an HTTP request.   Your Lambda function will perform create, read, update, and delete (CRUD) operations on a DynamoDB table.   This function is provided here for demonstration, but you will learn to configure an API Gateway REST API that can   invoke any Lambda function.",
                             "Using API Gateway provides users with a secure HTTP endpoint to invoke your Lambda function and can help manage   large volumes of calls to your function by throttling traffic and automatically validating and authorizing API   calls. API Gateway also provides flexible security controls using AWS Identity and Access Management (IAM) and Amazon Cognito. This is useful for use cases where   advance authorization is required for calls to your application.",
@@ -2372,7 +2394,7 @@
                     {
                         "title": "Errors",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-apigateway-errors.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "API Gateway treats all invocation and function errors as internal errors. If the Lambda API rejects the invocation        request, API Gateway returns a 500 error code. If the function runs but returns an error, or returns a response in the        wrong format, API Gateway returns a 502. In both cases, the body of the response from API Gateway is {\"message\":            \"Internal server error\"}.",
                             "Note",
@@ -2389,7 +2411,7 @@
                     {
                         "title": "Select an HTTP invoke method for Lambda",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/apig-http-invoke-decision.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "Many common use cases for Lambda involve invoking your function using an HTTP request. For example, you might want to invoke a function     directly from a web browser, or to use a tool like curl or Postman.",
                             "The following sections explain what your choices are for invoking Lambda through HTTP and provide information to help you make the right decision for your particular use case.",
@@ -2473,7 +2495,7 @@
                         ]
                     }
                 ],
-                "source": "Aws",
+                "source": "aws_lamda",
                 "parent_content": [
                     "You can create a web API with an HTTP endpoint for your Lambda function by using Amazon API Gateway. API Gateway provides tools    for creating and documenting web APIs that route HTTP requests to Lambda functions. You can secure access to your API    with authentication and authorization controls. Your APIs can serve traffic over the internet or can be accessible    only within your VPC.",
                     "Resources in your API define one or more methods, such as GET or POST. Methods have an integration that routes    requests to a Lambda function or another integration type. You can define each resource and method individually, or    use special resource and method types to match all requests that fit a pattern. A proxy      resource catches all paths beneath a resource. The ANY method catches all HTTP    methods.",
@@ -2587,7 +2609,7 @@
             {
                 "title": "Infrastructure Composer",
                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-appcomposer.html",
-                "source": "Aws",
+                "source": "aws_lamda",
                 "parent_content": [
                     "AWS Infrastructure Composer is a visual builder for desiging modern applications on AWS. You design your application architecture by dragging, grouping, and   connecting AWS services in a visual canvas. Infrastructure Composer creates infrastructure as code (IaC) templates from your design that you can deploy using     AWS SAM or     AWS CloudFormation.",
                     {
@@ -2647,7 +2669,7 @@
             {
                 "title": "CloudFormation",
                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-cloudformation.html",
-                "source": "Aws",
+                "source": "aws_lamda",
                 "parent_content": [
                     "In an AWS CloudFormation template, you can specify a Lambda function as the target of a custom resource. Use custom    resources to process parameters, retrieve configuration values, or call other AWS services during stack lifecycle    events.",
                     "The following example invokes a function that's defined elsewhere in the template.",
@@ -2685,7 +2707,7 @@
                     {
                         "title": "Tutorial",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-documentdb-tutorial.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "    In this tutorial, you create a basic Lambda function that consumes events from an Amazon DocumentDB (with MongoDB compatibility) change stream.    To complete this tutorial, you will go through the following stages:  ",
                             "  1.Set up your Amazon DocumentDB cluster, connect to it, and activate change streams on it.",
@@ -3027,7 +3049,7 @@
                         ]
                     }
                 ],
-                "source": "Aws",
+                "source": "aws_lamda",
                 "parent_content": [
                     "You can use a Lambda function to process events in an Amazon DocumentDB (with MongoDB compatibility) change stream by configuring an    Amazon DocumentDB cluster as an event source. Then, you can automate event-driven workloads by invoking your Lambda function    each time that data changes with your Amazon DocumentDB cluster.",
                     "Note",
@@ -3195,7 +3217,7 @@
                     {
                         "title": "Create mapping",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-dynamodb-eventsourcemapping.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "Create an event source mapping to tell Lambda to send records from your stream to a Lambda function. You can        create multiple event source mappings to process the same data with multiple Lambda functions, or to process items        from multiple streams with a single function.",
                             "To configure your function to read from DynamoDB Streams, attach the AWSLambdaDynamoDBExecutionRole AWS managed policy to your execution role and then create a DynamoDB        trigger.",
@@ -3231,7 +3253,7 @@
                     {
                         "title": "Batch item failures",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-ddb-batchfailurereporting.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "When consuming and processing streaming data from an event source, by default Lambda checkpoints to the highest    sequence number of a batch only when the batch is a complete success. Lambda treats all other results as a complete    failure and retries processing the batch up to the retry limit. To allow for partial successes while processing    batches from a stream, turn on ReportBatchItemFailures. Allowing partial successes can help to reduce    the number of retries on a record, though it doesn’t entirely prevent the possibility of retries in a successful record.",
                             "To turn on ReportBatchItemFailures, include the enum value    ReportBatchItemFailures in the FunctionResponseTypes list. This list indicates    which response types are enabled for your function. You can configure this list when you create or update an event source mapping.",
@@ -3297,7 +3319,7 @@
                     {
                         "title": "Error handling",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-dynamodb-errors.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "Error handling for DynamoDB event source mappings depends on whether the error occurs before the function is invoked or during function invocation:",
                             "  1.Before invocation: :  If a Lambda event source mapping is unable to invoke the function due to throttling or other issues, it retries until the records expire or exceed the maximum age configured on the event source mapping (MaximumRecordAgeInSeconds).",
@@ -3375,7 +3397,7 @@
                     {
                         "title": "Stateful processing",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-ddb-windows.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "Lambda functions can run continuous stream processing applications. A stream represents unbounded data that flows    continuously through your application. To analyze information from this continuously updating input, you can bound    the included records using a window defined in terms of time.",
                             "Tumbling windows are distinct time windows that open and close at regular intervals. By default, Lambda invocations    are stateless—you cannot use them for processing data across multiple continuous invocations without an external database.    However, with tumbling windows, you can maintain your state across invocations. This state contains the aggregate result    of the messages previously processed for the current window. Your state can be a maximum of 1 MB per shard. If it exceeds    that size, Lambda terminates the window early.",
@@ -3418,7 +3440,7 @@
                     {
                         "title": "Parameters",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-ddb-params.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "All Lambda event source types share the same CreateEventSourceMapping and UpdateEventSourceMapping      API operations. However, only some of the parameters apply to DynamoDB Streams.",
                             "ParameterRequiredDefaultNotesBatchSizeN100Maximum: 10,000BisectBatchOnFunctionErrorNfalsenoneDestinationConfigNN/AStandard Amazon SQS queue or standard Amazon SNS topic destination for discarded recordsEnabledNtruenoneEventSourceArnYN/AARN of the data stream or a stream consumerFilterCriteriaNN/AControl which events Lambda sends to your functionFunctionNameYN/AnoneFunctionResponseTypesNN/ATo let your function report specific failures in a batch, include the value                ReportBatchItemFailures in FunctionResponseTypes. For more information, see                Configuring partial batch response with DynamoDB and Lambda.MaximumBatchingWindowInSecondsN0noneMaximumRecordAgeInSecondsN-1-1 means infinite: failed records are retried until the record expires. The data retention limit for DynamoDB Streams is 24 hours.Minimum: -1Maximum: 604,800MaximumRetryAttemptsN-1-1 means infinite: failed records are retried until the record expiresMinimum: 0Maximum: 10,000ParallelizationFactorN1Maximum: 10StartingPositionYN/ATRIM_HORIZON or LATESTTumblingWindowInSecondsNN/AMinimum: 0Maximum: 900"
@@ -3427,7 +3449,7 @@
                     {
                         "title": "Event filtering",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-ddb-filtering.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "You can use event filtering to control which records from a stream or queue Lambda sends to your function.    For general information about how event filtering works, see Control which events Lambda sends to your function.",
                             "This section focuses on event filtering for DynamoDB event sources.",
@@ -3525,7 +3547,7 @@
                     {
                         "title": "Tutorial",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-ddb-example.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             " In this tutorial, you create a Lambda function to consume events from an Amazon DynamoDB stream.",
                             {
@@ -3677,7 +3699,7 @@
                         ]
                     }
                 ],
-                "source": "Aws",
+                "source": "aws_lamda",
                 "parent_content": [
                     "Note",
                     "If you want to send data to a target other than a Lambda function or enrich the data before sending it, see     Amazon EventBridge Pipes.",
@@ -3722,7 +3744,7 @@
             {
                 "title": "EC2",
                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-ec2.html",
-                "source": "Aws",
+                "source": "aws_lamda",
                 "parent_content": [
                     "You can use AWS Lambda to process lifecycle events from Amazon Elastic Compute Cloud and manage Amazon EC2 resources. Amazon EC2 sends events    to Amazon EventBridge (CloudWatch Events) for    lifecycle events    such as when an instance changes state, when an Amazon Elastic Block Store volume snapshot completes, or when a spot instance    is scheduled to be terminated. You configure EventBridge (CloudWatch Events) to forward those events to a Lambda function for processing.",
                     "EventBridge (CloudWatch Events) invokes your Lambda function asynchronously with the event document from Amazon EC2.",
@@ -3750,7 +3772,7 @@
             {
                 "title": "Elastic Load Balancing (Application Load Balancer)",
                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-alb.html",
-                "source": "Aws",
+                "source": "aws_lamda",
                 "parent_content": [
                     "You can use a Lambda function to process requests from an Application Load Balancer. Elastic Load Balancing supports Lambda functions as a target for    an Application Load Balancer. Use load balancer rules to route HTTP requests to a function, based on path or header values. Process the    request and return an HTTP response from your Lambda function.",
                     "Elastic Load Balancing invokes your Lambda function synchronously with an event that contains the request body and    metadata.",
@@ -3774,7 +3796,7 @@
             {
                 "title": "Invoke using an EventBridge Scheduler",
                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-eventbridge-scheduler.html",
-                "source": "Aws",
+                "source": "aws_lamda",
                 "parent_content": [
                     "Amazon EventBridge Scheduler is a serverless scheduler that allows you to create, run, and manage tasks    from one central, managed service. With EventBridge Scheduler, you can create schedules using cron and rate expressions for recurring patterns, or configure one-time invocations. You can set    up flexible time windows for delivery, define retry limits, and set the maximum retention time for unprocessed events.",
                     "When you set up EventBridge Scheduler with Lambda, EventBridge Scheduler invokes your Lambda function asynchronously.      This page explains how to use EventBridge Scheduler to invoke a Lambda function on a schedule.",
@@ -3818,7 +3840,7 @@
             {
                 "title": "IoT",
                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-iot.html",
-                "source": "Aws",
+                "source": "aws_lamda",
                 "parent_content": [
                     "AWS IoT provides secure communication between internet-connected devices (such as sensors) and the AWS Cloud.    This makes it possible for you to collect, store, and analyze telemetry data from multiple devices.",
                     "You can create AWS IoT rules for your devices to interact with AWS services. The AWS IoT Rules Engine provides a SQL-based language to select data    from message payloads and send the data to other services, such as Amazon S3, Amazon DynamoDB, and AWS Lambda. You define a rule    to invoke a Lambda function when you want to invoke another AWS service or a third-party service. ",
@@ -3843,7 +3865,7 @@
                     {
                         "title": "Create mapping",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-kinesis-create.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "To process Amazon Kinesis Data Streams records with Lambda, create a consumer for your stream and then create a Lambda event source mapping.",
                             {
@@ -3926,7 +3948,7 @@
                     {
                         "title": "Batch item failures",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-kinesis-batchfailurereporting.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "When consuming and processing streaming data from an event source, by default Lambda checkpoints to the highest    sequence number of a batch only when the batch is a complete success. Lambda treats all other results as a complete    failure and retries processing the batch up to the retry limit. To allow for partial successes while processing    batches from a stream, turn on ReportBatchItemFailures. Allowing partial successes can help to reduce    the number of retries on a record, though it doesn’t entirely prevent the possibility of retries in a successful record.",
                             "To turn on ReportBatchItemFailures, include the enum value    ReportBatchItemFailures in the FunctionResponseTypes list. This list indicates    which response types are enabled for your function. You can configure this list when you create or update an event source mapping.",
@@ -3992,7 +4014,7 @@
                     {
                         "title": "Error handling",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/kinesis-on-failure-destination.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "Error handling for Kinesis event source mappings depends on whether the error occurs before the function is invoked or during function invocation:",
                             "  1.Before invocation: :  If a Lambda event source mapping is unable to invoke the function due to throttling or other issues, it retries until the records expire or exceed the maximum age configured on the event source mapping (MaximumRecordAgeInSeconds).",
@@ -4070,7 +4092,7 @@
                     {
                         "title": "Stateful processing",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-kinesis-windows.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "Lambda functions can run continuous stream processing applications. A stream represents unbounded data that flows    continuously through your application. To analyze information from this continuously updating input, you can bound    the included records using a window defined in terms of time.",
                             "Tumbling windows are distinct time windows that open and close at regular intervals. By default, Lambda invocations    are stateless—you cannot use them for processing data across multiple continuous invocations without an external database.    However, with tumbling windows, you can maintain your state across invocations. This state contains the aggregate result    of the messages previously processed for the current window. Your state can be a maximum of 1 MB per shard. If it exceeds    that size, Lambda terminates the window early.",
@@ -4113,7 +4135,7 @@
                     {
                         "title": "Parameters",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-kinesis-parameters.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "All Lambda event source mappings share the same CreateEventSourceMapping and UpdateEventSourceMapping        API operations. However, only some of the parameters apply to Kinesis.",
                             "ParameterRequiredDefaultNotesBatchSizeN100Maximum: 10,000BisectBatchOnFunctionErrorNfalse noneDestinationConfigNN/AAmazon SQS queue or Amazon SNS topic destination for discarded records. For more information, see Configuring destinations for failed invocations.EnabledNtrue noneEventSourceArnYN/AARN of the data stream or a stream consumerFunctionNameYN/A noneFunctionResponseTypesN N/ATo let your function report specific failures in a batch, include the value                            ReportBatchItemFailures in FunctionResponseTypes. For more information, see                            Configuring partial batch response with Kinesis Data Streams and Lambda.MaximumBatchingWindowInSecondsN0 noneMaximumRecordAgeInSecondsN-1-1 means infinite: Lambda doesn't discard records (Kinesis Data Streams data retention settings still apply)Minimum: -1Maximum: 604,800MaximumRetryAttemptsN-1-1 means infinite: failed records are retried until the record expiresMinimum: -1Maximum: 10,000ParallelizationFactorN1Maximum: 10StartingPositionY N/AAT_TIMESTAMP, TRIM_HORIZON, or LATESTStartingPositionTimestampN N/AOnly valid if StartingPosition is set to AT_TIMESTAMP. The time from which to start reading, in Unix time secondsTumblingWindowInSecondsN N/AMinimum: 0Maximum: 900"
@@ -4122,7 +4144,7 @@
                     {
                         "title": "Event filtering",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-kinesis-filtering.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "You can use event filtering to control which records from a stream or queue Lambda sends to your function.    For general information about how event filtering works, see Control which events Lambda sends to your function.",
                             "This section focuses on event filtering for Kinesis event sources.",
@@ -4165,7 +4187,7 @@
                     {
                         "title": "Tutorial",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-kinesis-example.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "In this tutorial, you create a Lambda function to consume events from a Amazon Kinesis data stream. ",
                             "  1 : Custom app writes records to the stream.",
@@ -4312,7 +4334,7 @@
                         ]
                     }
                 ],
-                "source": "Aws",
+                "source": "aws_lamda",
                 "parent_content": [
                     "You can use a Lambda function to process records in an Amazon Kinesis data stream. You can map a Lambda function to a Kinesis Data Streams shared-throughput consumer (standard iterator), or to a    dedicated-throughput consumer with enhanced fan-out. For standard iterators, Lambda polls each shard in your Kinesis stream for records using HTTP protocol. The event source mapping shares read throughput with other consumers of the shard.",
                     " For details about Kinesis data streams, see Reading Data from      Amazon Kinesis Data Streams.",
@@ -4351,7 +4373,7 @@
                     {
                         "title": "Configure event source",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/process-mq-messages-with-lambda.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "Topics",
                             {
@@ -4438,7 +4460,7 @@
                     {
                         "title": "Parameters",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-mq-params.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "All Lambda event source types share the same CreateEventSourceMapping and UpdateEventSourceMapping        API operations. However, only some of the parameters apply to Amazon MQ and RabbitMQ.",
                             "ParameterRequiredDefaultNotesBatchSizeN100Maximum: 10,000EnabledNtruenoneFunctionNameYN/A noneFilterCriteriaNN/A Control which events Lambda sends to your functionMaximumBatchingWindowInSecondsN500 msBatching behaviorQueuesNN/AThe name of the Amazon MQ broker destination queue to consume.SourceAccessConfigurationsNN/A For ActiveMQ, BASIC_AUTH credentials. For RabbitMQ, can contain both BASIC_AUTH credentials and VIRTUAL_HOST information."
@@ -4447,7 +4469,7 @@
                     {
                         "title": "Event filtering",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-mq-filtering.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "You can use event filtering to control which records from a stream or queue Lambda sends to your function.    For general information about how event filtering works, see Control which events Lambda sends to your function.",
                             "This section focuses on event filtering for Amazon MQ event sources.",
@@ -4504,7 +4526,7 @@
                     {
                         "title": "Troubleshoot",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-mq-errors.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "When a Lambda function encounters an unrecoverable error, your Amazon MQ consumer stops processing records. Any        other consumers can continue processing, provided that they do not encounter the same error. To determine the        potential cause of a stopped consumer, check the StateTransitionReason field in the return details of        your EventSourceMapping for one of the following codes:",
                             "  1.ESM_CONFIG_NOT_VALID : \nThe event source mapping configuration is not valid.\n",
@@ -4517,7 +4539,7 @@
                         ]
                     }
                 ],
-                "source": "Aws",
+                "source": "aws_lamda",
                 "parent_content": [
                     "Note",
                     "If you want to send data to a target other than a Lambda function or enrich the data before sending it, see     Amazon EventBridge Pipes.",
@@ -4571,7 +4593,7 @@
                     {
                         "title": "Configure event source",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-msk-configure.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "Before you create an event source mapping for your Amazon MSK cluster, you need to ensure that        your cluster and the VPC it resides in are correctly configured. You also need to make sure        that your Lambda function's execution role has         the necessary IAM permissions.",
                             "Follow the instructions in the following sections to configure your Amazon MSK cluster, VPC, and Lambda        function. To learn how to create the event source mapping, see        Adding Amazon MSK as an event source.",
@@ -4805,7 +4827,7 @@
                     {
                         "title": "Process messages",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-msk-process.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "Note",
                             "If you want to send data to a target other than a Lambda function or enrich the data before sending it, see     Amazon EventBridge Pipes.",
@@ -4995,7 +5017,7 @@
                     {
                         "title": "Event filtering",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-msk-filtering.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "You can use event filtering to control which records from a stream or queue Lambda sends to your function.    For general information about how event filtering works, see Control which events Lambda sends to your function.",
                             "This section focuses on event filtering for Amazon MSK event sources.",
@@ -5046,7 +5068,7 @@
                     {
                         "title": "On-failure destinations",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-msk-on-failure.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "To retain records of failed event source mapping invocations, add a destination to your function's event source mapping. Each record sent to the destination is a JSON document containing metadata about the failed invocation. For Amazon S3 destinations, Lambda also sends the entire invocation record along with the metadata. You can configure any Amazon SNS topic, Amazon SQS queue, or S3 bucket as a destination.",
                             "With Amazon S3 destinations, you can use the Amazon S3 Event Notifications feature to receive notifications when objects are uploaded to your destination S3 bucket. You can also configure S3 Event Notifications to invoke another Lambda function to perform automated processing on failed batches.",
@@ -5122,7 +5144,7 @@
                     {
                         "title": "Tutorial",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-msk-tutorial.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "In this tutorial, you will perform the following:",
                             "  1.Create a Lambda function in the same AWS account as an existing Amazon MSK cluster.",
@@ -5294,7 +5316,7 @@
                         ]
                     }
                 ],
-                "source": "Aws",
+                "source": "aws_lamda",
                 "parent_content": [
                     "Note",
                     "If you want to send data to a target other than a Lambda function or enrich the data before sending it, see     Amazon EventBridge Pipes.",
@@ -5317,7 +5339,7 @@
             {
                 "title": "RDS",
                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-rds.html",
-                "source": "Aws",
+                "source": "aws_lamda",
                 "parent_content": [
                     "You can connect a Lambda function to an Amazon Relational Database Service (Amazon RDS) database directly and through    an Amazon RDS Proxy. Direct connections are useful in simple scenarios, and proxies are recommended    for production. A database proxy manages a pool of shared database connections which enables    your function to reach high concurrency levels without exhausting database connections.",
                     "We recommend using Amazon RDS Proxy for Lambda functions that make frequent short database    connections, or open and close large numbers of database connections. For more information,    see     Automatically connecting a Lambda function and a DB instance in the Amazon Relational Database Service Developer Guide.",
@@ -5393,7 +5415,7 @@
                     {
                         "title": "Tutorial: Use an S3 trigger",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-s3-example.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "In this tutorial, you use the console to create a Lambda function and configure a trigger for an Amazon Simple Storage Service (Amazon S3) bucket. Every time that you     add an object to your Amazon S3 bucket, your function runs and outputs the object type to Amazon CloudWatch Logs.",
                             "This tutorial demonstrates how to:",
@@ -5614,7 +5636,7 @@
                     {
                         "title": "Tutorial: Use an Amazon S3 trigger to create thumbnails",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-s3-tutorial.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "In this tutorial, you create and configure a Lambda function that resizes images added to an Amazon Simple Storage Service (Amazon S3) bucket. When you add an image     file to your bucket, Amazon S3 invokes your Lambda function. The function then creates a thumbnail version of the image and outputs it to a different     Amazon S3 bucket.",
                             "To complete this tutorial, you carry out the following steps:",
@@ -5876,7 +5898,7 @@
                         ]
                     }
                 ],
-                "source": "Aws",
+                "source": "aws_lamda",
                 "parent_content": [
                     "You can use Lambda to process event notifications from    Amazon Simple Storage Service. Amazon S3 can send an event to a Lambda function when an object is created or deleted. You configure    notification settings on a bucket, and grant Amazon S3 permission to invoke a function on the function's resource-based    permissions policy.",
                     "Warning",
@@ -5898,7 +5920,7 @@
                     {
                         "title": "Create mapping",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-sqs-configure.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "To process Amazon SQS messages with Lambda, configure your queue with the appropriate settings,        then create a Lambda event source mapping.",
                             {
@@ -5946,7 +5968,7 @@
                     {
                         "title": "Scaling behavior",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-sqs-scaling.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "For standard queues, Lambda uses         long polling to poll a queue until it becomes active. When messages are available,        Lambda starts processing five batches at a time with five concurrent invocations of your function.        If messages are still available, Lambda increases the number of processes that are reading batches by up to 300 more instances per minute. The maximum number of batches that an event source mapping can process simultaneously is 1,000.",
                             "For FIFO queues, Lambda sends messages to your function in the order that it receives them. When you send a        message to a FIFO queue, you specify a message group            ID. Amazon SQS ensures that messages in the same group are delivered to Lambda in order. When Lambda reads         your messages into batches, each batch may contain messages from more than one message group, but the order         of the messages is maintained. If your function returns an error, the function attempts all retries on the         affected messages before Lambda receives additional messages from the same        group.",
@@ -5989,7 +6011,7 @@
                     {
                         "title": "Error handling",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-sqs-errorhandling.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "To handle errors related to an SQS event source, Lambda automatically uses a retry strategy with a        backoff strategy. You can also customize error handling behavior by configuring your SQS event        source mapping to return partial batch responses.",
                             {
@@ -6052,7 +6074,7 @@
                     {
                         "title": "Parameters",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-sqs-parameters.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "All Lambda event source types share the same CreateEventSourceMapping and UpdateEventSourceMapping        API operations. However, only some of the parameters apply to Amazon SQS.",
                             "ParameterRequiredDefaultNotesBatchSizeN10For standard queues, the maximum is 10,000. For FIFO queues, the maximum is 10.EnabledNtruenone EventSourceArnYN/AThe ARN of the data stream or a stream consumerFunctionNameYN/A none FilterCriteriaNN/A Control which events Lambda sends to your functionFunctionResponseTypesNN/A To let your function report specific failures in a batch, include the value                            ReportBatchItemFailures in FunctionResponseTypes. For more information, see                            Implementing partial batch responses.MaximumBatchingWindowInSecondsN0none ScalingConfigNN/A Configuring maximum concurrency for Amazon SQS event sources"
@@ -6061,7 +6083,7 @@
                     {
                         "title": "Event filtering",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-sqs-filtering.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "You can use event filtering to control which records from a stream or queue Lambda sends to your function.    For general information about how event filtering works, see Control which events Lambda sends to your function.",
                             "This section focuses on event filtering for Amazon MSK event sources.",
@@ -6113,7 +6135,7 @@
                     {
                         "title": "Tutorial",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-sqs-example.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "In this tutorial, you create a Lambda function that consumes messages from an Amazon Simple Queue Service (Amazon SQS) queue. The Lambda function runs whenever a new message is added to the queue. The function writes the messages to an Amazon CloudWatch Logs stream. The following diagram shows the AWS     resources you use to complete the tutorial.",
                             "To complete this tutorial, you carry out the following steps:",
@@ -6328,7 +6350,7 @@
                     {
                         "title": "SQS cross-account tutorial",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-sqs-cross-account-example.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "In this tutorial, you create a Lambda function that consumes messages from an Amazon Simple Queue Service (Amazon SQS) queue in a    different AWS account. This tutorial involves two AWS accounts: Account A refers to the    account that contains your Lambda function, and Account B refers to the account that contains    the Amazon SQS queue.",
                             {
@@ -6457,7 +6479,7 @@
                         ]
                     }
                 ],
-                "source": "Aws",
+                "source": "aws_lamda",
                 "parent_content": [
                     "Note",
                     "If you want to send data to a target other than a Lambda function or enrich the data before sending it, see     Amazon EventBridge Pipes.",
@@ -6502,7 +6524,7 @@
             {
                 "title": "S3 Batch",
                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/services-s3-batch.html",
-                "source": "Aws",
+                "source": "aws_lamda",
                 "parent_content": [
                     "You can use Amazon S3 batch operations to invoke a Lambda function on a large set of Amazon S3 objects. Amazon S3    tracks the progress of batch operations, sends notifications, and stores a completion report that shows the status    of each action. ",
                     "To run a batch operation, you create an Amazon S3 batch operations job. When you create    the job, you provide a manifest (the list of objects) and configure the action to perform on those objects. ",
@@ -6540,7 +6562,7 @@
                     {
                         "title": "Tutorial",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/with-sns-example.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "In this tutorial, you use a Lambda function in one AWS account to subscribe to an Amazon Simple Notification Service (Amazon SNS) topic in a separate AWS account. When     you publish messages to your Amazon SNS topic, your Lambda function reads the contents of the message and outputs it to Amazon CloudWatch Logs. To complete this     tutorial, you use the AWS Command Line Interface (AWS CLI).",
                             "To complete this tutorial, you perform the following steps:",
@@ -6757,7 +6779,7 @@
                         ]
                     }
                 ],
-                "source": "Aws",
+                "source": "aws_lamda",
                 "parent_content": [
                     "You can use a Lambda function to process Amazon Simple Notification Service (Amazon SNS) notifications. Amazon SNS supports Lambda functions as a    target for messages sent to a topic. You can subscribe your function to topics in the same account or in other AWS    accounts. For a detailed walkthrough, see Tutorial: Using AWS Lambda with Amazon Simple Notification Service.",
                     "Lambda supports SNS triggers for standard SNS topics only. FIFO topics aren't supported.",
@@ -6802,40 +6824,59 @@
                     }
                 ]
             }
-        ],
-        "source": "Aws",
-        "parent_content": [
-            "Some AWS services can directly invoke Lambda functions using triggers. These services push events to Lambda, and the function is invoked immediately when the specified event occurs. Triggers are suitable for discrete events and real-time processing. When you create a trigger using the Lambda console, the console interacts with the corresponding AWS service to configure the event notification on that service. The trigger is actually stored and managed by the service that generates the events, not by Lambda.",
-            "The events are data structured in JSON format. The JSON structure varies depending on the service that    generates it and the event type, but they all contain the data that the function needs to process the    event.",
-            "A function can have multiple triggers. Each trigger acts as a client invoking your function independently, and each event that    Lambda passes to your function has data from only one trigger. Lambda converts the event document into an object and passes it to your function handler.",
-            "Depending on the service, the event-driven invocation can be synchronous or asynchronous.",
-            "  1.For synchronous invocation, the service that generates the event waits for the response from your        function. That service defines the data that the function needs to return in the response. The service        controls the error strategy, such as whether to retry on errors.",
-            "  2.For asynchronous invocation, Lambda queues the event before passing it to your function. When Lambda        queues the event, it immediately sends a success response to the service that generated the event. After the        function processes the event, Lambda doesn’t return a response to the event-generating service.",
-            {
-                "sub_header": "Creating a trigger",
-                "content": [
-                    "The easiest way to create a trigger is to use the Lambda console. When you create a trigger using the console, Lambda automatically adds the required permissions to the function's resource-based policy.",
-                    "To create a trigger using the Lambda console",
-                    "  1 : Open the Functions page of the Lambda console.",
-                    "  2 : Select the function you want to create a trigger for.",
-                    "  3 : In the Function overview pane, choose          Add trigger.",
-                    "  4 : Select the AWS service you want to invoke your function.",
-                    "  5 : Fill out the options in the Trigger configuration pane          and choose Add. Depending on the AWS service you choose to          invoke your function, the trigger configuration options will be different."
-                ]
-            },
-            {
-                "sub_header": "Services that can invoke Lambda functions",
-                "content": [
-                    "The following table lists services that can invoke Lambda functions.",
-                    "ServiceMethod of invocationAmazon Managed Streaming for Apache KafkaEvent source mappingSelf-managed Apache KafkaEvent source mappingAmazon API GatewayEvent-driven; synchronous invocationAWS CloudFormationEvent-driven; asynchronous invocationAmazon CloudWatch LogsEvent-driven; asynchronous invocationAWS CodeCommitEvent-driven; asynchronous invocationAWS CodePipelineEvent-driven; asynchronous invocationAmazon CognitoEvent-driven; synchronous invocationAWS ConfigEvent-driven; asynchronous invocationAmazon ConnectEvent-driven; synchronous invocationAmazon DynamoDBEvent source mappingAmazon Elastic File SystemSpecial integrationElastic Load Balancing (Application Load Balancer)Event-driven; synchronous invocationAmazon EventBridge (CloudWatch Events)Event-driven; asynchronous invocation (event buses), synchronous or asynchronous invocation (pipes and schedules)AWS IoTEvent-driven; asynchronous invocationAmazon KinesisEvent source mappingAmazon Data FirehoseEvent-driven; synchronous invocationAmazon LexEvent-driven; synchronous invocationAmazon MQEvent source mappingAmazon Simple Email ServiceEvent-driven; asynchronous invocationAmazon Simple Notification ServiceEvent-driven; asynchronous invocationAmazon Simple Queue ServiceEvent source mappingAmazon Simple Storage Service (Amazon S3)Event-driven; asynchronous invocationAmazon Simple Storage Service BatchEvent-driven; synchronous invocationSecrets ManagerSpecial integrationAWS Step FunctionsEvent-driven; synchronous or asynchronous invocationAmazon VPC LatticeEvent-driven; synchronous invocationAWS X-RaySpecial integration"
-                ]
-            }
         ]
     },
     {
         "title": "Code examples",
         "href": "https://docs.aws.amazon.com/lambda/latest/dg/service_code_examples.html",
-        "contents": [
+        "source": "aws_lamda",
+        "sections": [
+            "The following code examples show how to use Lambda with an AWS software development kit (SDK).        ",
+            "Basics are code examples that show you how to perform the essential operations within a service.",
+            "Actions are code excerpts from larger programs and must be run in context. While actions    show you how to call individual service functions, you can see actions in context in their related scenarios.",
+            "Scenarios are code examples that show you how to accomplish specific tasks by    calling multiple functions within a service or combined with other AWS services.",
+            "For a complete list of AWS SDK developer guides and code examples, see    Using Lambda with an AWS SDK.    This topic also includes information about getting started and details about previous SDK versions.",
+            "Get started",
+            "The following code examples show how to get started using Lambda.",
+            "  1..NET : namespace LambdaActions;\n\nusing Amazon.Lambda;\n\npublic class HelloLambda\n{\n    static async Task Main(string[] args)\n    {\n        var lambdaClient = new AmazonLambdaClient();\n\n        Console.WriteLine(\"Hello AWS Lambda\");\n        Console.WriteLine(\"Let's get started with AWS Lambda by listing your existing Lambda functions:\");\n\n        var response = await lambdaClient.ListFunctionsAsync();\n        response.Functions.ForEach(function =>\n        {\n            Console.WriteLine($\"{function.FunctionName}\\t{function.Description}\");\n        });\n    }\n}\n\n\n",
+            "  2.AWS SDK for .NET : namespace LambdaActions;\n\nusing Amazon.Lambda;\n\npublic class HelloLambda\n{\n    static async Task Main(string[] args)\n    {\n        var lambdaClient = new AmazonLambdaClient();\n\n        Console.WriteLine(\"Hello AWS Lambda\");\n        Console.WriteLine(\"Let's get started with AWS Lambda by listing your existing Lambda functions:\");\n\n        var response = await lambdaClient.ListFunctionsAsync();\n        response.Functions.ForEach(function =>\n        {\n            Console.WriteLine($\"{function.FunctionName}\\t{function.Description}\");\n        });\n    }\n}\n\n\n",
+            "  3.C++ : # Set the minimum required version of CMake for this project.\ncmake_minimum_required(VERSION 3.13)\n\n# Set the AWS service components used by this project.\nset(SERVICE_COMPONENTS lambda)\n\n# Set this project's name.\nproject(\"hello_lambda\")\n\n# Set the C++ standard to use to build this target.\n# At least C++ 11 is required for the AWS SDK for C++.\nset(CMAKE_CXX_STANDARD 11)\n\n# Use the MSVC variable to determine if this is a Windows build.\nset(WINDOWS_BUILD ${MSVC})\n\nif (WINDOWS_BUILD) # Set the location where CMake can find the installed libraries for the AWS SDK.\n    string(REPLACE \";\" \"/aws-cpp-sdk-all;\" SYSTEM_MODULE_PATH \"${CMAKE_SYSTEM_PREFIX_PATH}/aws-cpp-sdk-all\")\n    list(APPEND CMAKE_PREFIX_PATH ${SYSTEM_MODULE_PATH})\nendif ()\n\n# Find the AWS SDK for C++ package.\nfind_package(AWSSDK REQUIRED COMPONENTS ${SERVICE_COMPONENTS})\n\nif (WINDOWS_BUILD AND AWSSDK_INSTALL_AS_SHARED_LIBS)\n     # Copy relevant AWS SDK for C++ libraries into the current binary directory for running and debugging.\n\n     # set(BIN_SUB_DIR \"/Debug\") # if you are building from the command line you may need to uncomment this \n                                    # and set the proper subdirectory to the executables' location.\n\n     AWSSDK_CPY_DYN_LIBS(SERVICE_COMPONENTS \"\" ${CMAKE_CURRENT_BINARY_DIR}${BIN_SUB_DIR})\nendif ()\n\nadd_executable(${PROJECT_NAME}\n        hello_lambda.cpp)\n\ntarget_link_libraries(${PROJECT_NAME}\n        ${AWSSDK_LINK_LIBRARIES})\n\n",
+            "  4.SDK for C++ : # Set the minimum required version of CMake for this project.\ncmake_minimum_required(VERSION 3.13)\n\n# Set the AWS service components used by this project.\nset(SERVICE_COMPONENTS lambda)\n\n# Set this project's name.\nproject(\"hello_lambda\")\n\n# Set the C++ standard to use to build this target.\n# At least C++ 11 is required for the AWS SDK for C++.\nset(CMAKE_CXX_STANDARD 11)\n\n# Use the MSVC variable to determine if this is a Windows build.\nset(WINDOWS_BUILD ${MSVC})\n\nif (WINDOWS_BUILD) # Set the location where CMake can find the installed libraries for the AWS SDK.\n    string(REPLACE \";\" \"/aws-cpp-sdk-all;\" SYSTEM_MODULE_PATH \"${CMAKE_SYSTEM_PREFIX_PATH}/aws-cpp-sdk-all\")\n    list(APPEND CMAKE_PREFIX_PATH ${SYSTEM_MODULE_PATH})\nendif ()\n\n# Find the AWS SDK for C++ package.\nfind_package(AWSSDK REQUIRED COMPONENTS ${SERVICE_COMPONENTS})\n\nif (WINDOWS_BUILD AND AWSSDK_INSTALL_AS_SHARED_LIBS)\n     # Copy relevant AWS SDK for C++ libraries into the current binary directory for running and debugging.\n\n     # set(BIN_SUB_DIR \"/Debug\") # if you are building from the command line you may need to uncomment this \n                                    # and set the proper subdirectory to the executables' location.\n\n     AWSSDK_CPY_DYN_LIBS(SERVICE_COMPONENTS \"\" ${CMAKE_CURRENT_BINARY_DIR}${BIN_SUB_DIR})\nendif ()\n\nadd_executable(${PROJECT_NAME}\n        hello_lambda.cpp)\n\ntarget_link_libraries(${PROJECT_NAME}\n        ${AWSSDK_LINK_LIBRARIES})\n\n",
+            "  5.Go : \npackage main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\n\t\"github.com/aws/aws-sdk-go-v2/aws\"\n\t\"github.com/aws/aws-sdk-go-v2/config\"\n\t\"github.com/aws/aws-sdk-go-v2/service/lambda\"\n)\n\n// main uses the AWS SDK for Go (v2) to create an AWS Lambda client and list up to 10\n// functions in your account.\n// This example uses the default settings specified in your shared credentials\n// and config files.\nfunc main() {\n\tctx := context.Background()\n\tsdkConfig, err := config.LoadDefaultConfig(ctx)\n\tif err != nil {\n\t\tfmt.Println(\"Couldn't load default configuration. Have you set up your AWS account?\")\n\t\tfmt.Println(err)\n\t\treturn\n\t}\n\tlambdaClient := lambda.NewFromConfig(sdkConfig)\n\n\tmaxItems := 10\n\tfmt.Printf(\"Let's list up to %v functions for your account.\\n\", maxItems)\n\tresult, err := lambdaClient.ListFunctions(ctx, &lambda.ListFunctionsInput{\n\t\tMaxItems: aws.Int32(int32(maxItems)),\n\t})\n\tif err != nil {\n\t\tfmt.Printf(\"Couldn't list functions for your account. Here's why: %v\\n\", err)\n\t\treturn\n\t}\n\tif len(result.Functions) == 0 {\n\t\tfmt.Println(\"You don't have any functions!\")\n\t} else {\n\t\tfor _, function := range result.Functions {\n\t\t\tfmt.Printf(\"\\t%v\\n\", *function.FunctionName)\n\t\t}\n\t}\n}\n\n\n",
+            "  6.SDK for Go V2 : \npackage main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\n\t\"github.com/aws/aws-sdk-go-v2/aws\"\n\t\"github.com/aws/aws-sdk-go-v2/config\"\n\t\"github.com/aws/aws-sdk-go-v2/service/lambda\"\n)\n\n// main uses the AWS SDK for Go (v2) to create an AWS Lambda client and list up to 10\n// functions in your account.\n// This example uses the default settings specified in your shared credentials\n// and config files.\nfunc main() {\n\tctx := context.Background()\n\tsdkConfig, err := config.LoadDefaultConfig(ctx)\n\tif err != nil {\n\t\tfmt.Println(\"Couldn't load default configuration. Have you set up your AWS account?\")\n\t\tfmt.Println(err)\n\t\treturn\n\t}\n\tlambdaClient := lambda.NewFromConfig(sdkConfig)\n\n\tmaxItems := 10\n\tfmt.Printf(\"Let's list up to %v functions for your account.\\n\", maxItems)\n\tresult, err := lambdaClient.ListFunctions(ctx, &lambda.ListFunctionsInput{\n\t\tMaxItems: aws.Int32(int32(maxItems)),\n\t})\n\tif err != nil {\n\t\tfmt.Printf(\"Couldn't list functions for your account. Here's why: %v\\n\", err)\n\t\treturn\n\t}\n\tif len(result.Functions) == 0 {\n\t\tfmt.Println(\"You don't have any functions!\")\n\t} else {\n\t\tfor _, function := range result.Functions {\n\t\t\tfmt.Printf(\"\\t%v\\n\", *function.FunctionName)\n\t\t}\n\t}\n}\n\n\n",
+            "  7.Java :     /**\n     * Lists the AWS Lambda functions associated with the current AWS account.\n     *\n     * @param awsLambda an instance of the {@link LambdaClient} class, which is used to interact with the AWS Lambda service\n     *\n     * @throws LambdaException if an error occurs while interacting with the AWS Lambda service\n     */\n    public static void listFunctions(LambdaClient awsLambda) {\n        try {\n            ListFunctionsResponse functionResult = awsLambda.listFunctions();\n            List<FunctionConfiguration> list = functionResult.functions();\n            for (FunctionConfiguration config : list) {\n                System.out.println(\"The function name is \" + config.functionName());\n            }\n\n        } catch (LambdaException e) {\n            System.err.println(e.getMessage());\n            System.exit(1);\n        }\n    }\n\n",
+            "  8.SDK for Java 2.x :     /**\n     * Lists the AWS Lambda functions associated with the current AWS account.\n     *\n     * @param awsLambda an instance of the {@link LambdaClient} class, which is used to interact with the AWS Lambda service\n     *\n     * @throws LambdaException if an error occurs while interacting with the AWS Lambda service\n     */\n    public static void listFunctions(LambdaClient awsLambda) {\n        try {\n            ListFunctionsResponse functionResult = awsLambda.listFunctions();\n            List<FunctionConfiguration> list = functionResult.functions();\n            for (FunctionConfiguration config : list) {\n                System.out.println(\"The function name is \" + config.functionName());\n            }\n\n        } catch (LambdaException e) {\n            System.err.println(e.getMessage());\n            System.exit(1);\n        }\n    }\n\n",
+            "  9.JavaScript : import { LambdaClient, paginateListFunctions } from \"@aws-sdk/client-lambda\";\n\nconst client = new LambdaClient({});\n\nexport const helloLambda = async () => {\n  const paginator = paginateListFunctions({ client }, {});\n  const functions = [];\n\n  for await (const page of paginator) {\n    const funcNames = page.Functions.map((f) => f.FunctionName);\n    functions.push(...funcNames);\n  }\n\n  console.log(\"Functions:\");\n  console.log(functions.join(\"\\n\"));\n  return functions;\n};\n\n",
+            "  10.SDK for JavaScript (v3) : import { LambdaClient, paginateListFunctions } from \"@aws-sdk/client-lambda\";\n\nconst client = new LambdaClient({});\n\nexport const helloLambda = async () => {\n  const paginator = paginateListFunctions({ client }, {});\n  const functions = [];\n\n  for await (const page of paginator) {\n    const funcNames = page.Functions.map((f) => f.FunctionName);\n    functions.push(...funcNames);\n  }\n\n  console.log(\"Functions:\");\n  console.log(functions.join(\"\\n\"));\n  return functions;\n};\n\n",
+            "  11.Python : \nimport boto3\n\n\ndef main():\n    \"\"\"\n    List the Lambda functions in your AWS account.\n    \"\"\"\n    # Create the Lambda client\n    lambda_client = boto3.client(\"lambda\")\n\n    # Use the paginator to list the functions\n    paginator = lambda_client.get_paginator(\"list_functions\")\n    response_iterator = paginator.paginate()\n\n    print(\"Here are the Lambda functions in your account:\")\n    for page in response_iterator:\n        for function in page[\"Functions\"]:\n            print(f\"  {function['FunctionName']}\")\n\n\nif __name__ == \"__main__\":\n    main()\n\n\n",
+            "  12.SDK for Python (Boto3) : \nimport boto3\n\n\ndef main():\n    \"\"\"\n    List the Lambda functions in your AWS account.\n    \"\"\"\n    # Create the Lambda client\n    lambda_client = boto3.client(\"lambda\")\n\n    # Use the paginator to list the functions\n    paginator = lambda_client.get_paginator(\"list_functions\")\n    response_iterator = paginator.paginate()\n\n    print(\"Here are the Lambda functions in your account:\")\n    for page in response_iterator:\n        for function in page[\"Functions\"]:\n            print(f\"  {function['FunctionName']}\")\n\n\nif __name__ == \"__main__\":\n    main()\n\n\n",
+            "  13.Ruby : \nrequire 'aws-sdk-lambda'\n\n# Creates an AWS Lambda client using the default credentials and configuration\ndef lambda_client\n  Aws::Lambda::Client.new\nend\n\n# Lists the Lambda functions in your AWS account, paginating the results if necessary\ndef list_lambda_functions\n  lambda = lambda_client\n\n  # Use a pagination iterator to list all functions\n  functions = []\n  lambda.list_functions.each_page do |page|\n    functions.concat(page.functions)\n  end\n\n  # Print the name and ARN of each function\n  functions.each do |function|\n    puts \"Function name: #{function.function_name}\"\n    puts \"Function ARN: #{function.function_arn}\"\n    puts\n  end\n\n  puts \"Total functions: #{functions.count}\"\nend\n\nlist_lambda_functions if __FILE__ == $PROGRAM_NAME\n\n\n",
+            "  14.SDK for Ruby : \nrequire 'aws-sdk-lambda'\n\n# Creates an AWS Lambda client using the default credentials and configuration\ndef lambda_client\n  Aws::Lambda::Client.new\nend\n\n# Lists the Lambda functions in your AWS account, paginating the results if necessary\ndef list_lambda_functions\n  lambda = lambda_client\n\n  # Use a pagination iterator to list all functions\n  functions = []\n  lambda.list_functions.each_page do |page|\n    functions.concat(page.functions)\n  end\n\n  # Print the name and ARN of each function\n  functions.each do |function|\n    puts \"Function name: #{function.function_name}\"\n    puts \"Function ARN: #{function.function_arn}\"\n    puts\n  end\n\n  puts \"Total functions: #{functions.count}\"\nend\n\nlist_lambda_functions if __FILE__ == $PROGRAM_NAME\n\n\n",
+            "Hello Lambda",
+            "The following code examples show how to get started using Lambda.",
+            "  1..NET : namespace LambdaActions;\n\nusing Amazon.Lambda;\n\npublic class HelloLambda\n{\n    static async Task Main(string[] args)\n    {\n        var lambdaClient = new AmazonLambdaClient();\n\n        Console.WriteLine(\"Hello AWS Lambda\");\n        Console.WriteLine(\"Let's get started with AWS Lambda by listing your existing Lambda functions:\");\n\n        var response = await lambdaClient.ListFunctionsAsync();\n        response.Functions.ForEach(function =>\n        {\n            Console.WriteLine($\"{function.FunctionName}\\t{function.Description}\");\n        });\n    }\n}\n\n\n",
+            "  2.AWS SDK for .NET : namespace LambdaActions;\n\nusing Amazon.Lambda;\n\npublic class HelloLambda\n{\n    static async Task Main(string[] args)\n    {\n        var lambdaClient = new AmazonLambdaClient();\n\n        Console.WriteLine(\"Hello AWS Lambda\");\n        Console.WriteLine(\"Let's get started with AWS Lambda by listing your existing Lambda functions:\");\n\n        var response = await lambdaClient.ListFunctionsAsync();\n        response.Functions.ForEach(function =>\n        {\n            Console.WriteLine($\"{function.FunctionName}\\t{function.Description}\");\n        });\n    }\n}\n\n\n",
+            "  3.C++ : # Set the minimum required version of CMake for this project.\ncmake_minimum_required(VERSION 3.13)\n\n# Set the AWS service components used by this project.\nset(SERVICE_COMPONENTS lambda)\n\n# Set this project's name.\nproject(\"hello_lambda\")\n\n# Set the C++ standard to use to build this target.\n# At least C++ 11 is required for the AWS SDK for C++.\nset(CMAKE_CXX_STANDARD 11)\n\n# Use the MSVC variable to determine if this is a Windows build.\nset(WINDOWS_BUILD ${MSVC})\n\nif (WINDOWS_BUILD) # Set the location where CMake can find the installed libraries for the AWS SDK.\n    string(REPLACE \";\" \"/aws-cpp-sdk-all;\" SYSTEM_MODULE_PATH \"${CMAKE_SYSTEM_PREFIX_PATH}/aws-cpp-sdk-all\")\n    list(APPEND CMAKE_PREFIX_PATH ${SYSTEM_MODULE_PATH})\nendif ()\n\n# Find the AWS SDK for C++ package.\nfind_package(AWSSDK REQUIRED COMPONENTS ${SERVICE_COMPONENTS})\n\nif (WINDOWS_BUILD AND AWSSDK_INSTALL_AS_SHARED_LIBS)\n     # Copy relevant AWS SDK for C++ libraries into the current binary directory for running and debugging.\n\n     # set(BIN_SUB_DIR \"/Debug\") # if you are building from the command line you may need to uncomment this \n                                    # and set the proper subdirectory to the executables' location.\n\n     AWSSDK_CPY_DYN_LIBS(SERVICE_COMPONENTS \"\" ${CMAKE_CURRENT_BINARY_DIR}${BIN_SUB_DIR})\nendif ()\n\nadd_executable(${PROJECT_NAME}\n        hello_lambda.cpp)\n\ntarget_link_libraries(${PROJECT_NAME}\n        ${AWSSDK_LINK_LIBRARIES})\n\n",
+            "  4.SDK for C++ : # Set the minimum required version of CMake for this project.\ncmake_minimum_required(VERSION 3.13)\n\n# Set the AWS service components used by this project.\nset(SERVICE_COMPONENTS lambda)\n\n# Set this project's name.\nproject(\"hello_lambda\")\n\n# Set the C++ standard to use to build this target.\n# At least C++ 11 is required for the AWS SDK for C++.\nset(CMAKE_CXX_STANDARD 11)\n\n# Use the MSVC variable to determine if this is a Windows build.\nset(WINDOWS_BUILD ${MSVC})\n\nif (WINDOWS_BUILD) # Set the location where CMake can find the installed libraries for the AWS SDK.\n    string(REPLACE \";\" \"/aws-cpp-sdk-all;\" SYSTEM_MODULE_PATH \"${CMAKE_SYSTEM_PREFIX_PATH}/aws-cpp-sdk-all\")\n    list(APPEND CMAKE_PREFIX_PATH ${SYSTEM_MODULE_PATH})\nendif ()\n\n# Find the AWS SDK for C++ package.\nfind_package(AWSSDK REQUIRED COMPONENTS ${SERVICE_COMPONENTS})\n\nif (WINDOWS_BUILD AND AWSSDK_INSTALL_AS_SHARED_LIBS)\n     # Copy relevant AWS SDK for C++ libraries into the current binary directory for running and debugging.\n\n     # set(BIN_SUB_DIR \"/Debug\") # if you are building from the command line you may need to uncomment this \n                                    # and set the proper subdirectory to the executables' location.\n\n     AWSSDK_CPY_DYN_LIBS(SERVICE_COMPONENTS \"\" ${CMAKE_CURRENT_BINARY_DIR}${BIN_SUB_DIR})\nendif ()\n\nadd_executable(${PROJECT_NAME}\n        hello_lambda.cpp)\n\ntarget_link_libraries(${PROJECT_NAME}\n        ${AWSSDK_LINK_LIBRARIES})\n\n",
+            "  5.Go : \npackage main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\n\t\"github.com/aws/aws-sdk-go-v2/aws\"\n\t\"github.com/aws/aws-sdk-go-v2/config\"\n\t\"github.com/aws/aws-sdk-go-v2/service/lambda\"\n)\n\n// main uses the AWS SDK for Go (v2) to create an AWS Lambda client and list up to 10\n// functions in your account.\n// This example uses the default settings specified in your shared credentials\n// and config files.\nfunc main() {\n\tctx := context.Background()\n\tsdkConfig, err := config.LoadDefaultConfig(ctx)\n\tif err != nil {\n\t\tfmt.Println(\"Couldn't load default configuration. Have you set up your AWS account?\")\n\t\tfmt.Println(err)\n\t\treturn\n\t}\n\tlambdaClient := lambda.NewFromConfig(sdkConfig)\n\n\tmaxItems := 10\n\tfmt.Printf(\"Let's list up to %v functions for your account.\\n\", maxItems)\n\tresult, err := lambdaClient.ListFunctions(ctx, &lambda.ListFunctionsInput{\n\t\tMaxItems: aws.Int32(int32(maxItems)),\n\t})\n\tif err != nil {\n\t\tfmt.Printf(\"Couldn't list functions for your account. Here's why: %v\\n\", err)\n\t\treturn\n\t}\n\tif len(result.Functions) == 0 {\n\t\tfmt.Println(\"You don't have any functions!\")\n\t} else {\n\t\tfor _, function := range result.Functions {\n\t\t\tfmt.Printf(\"\\t%v\\n\", *function.FunctionName)\n\t\t}\n\t}\n}\n\n\n",
+            "  6.SDK for Go V2 : \npackage main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\n\t\"github.com/aws/aws-sdk-go-v2/aws\"\n\t\"github.com/aws/aws-sdk-go-v2/config\"\n\t\"github.com/aws/aws-sdk-go-v2/service/lambda\"\n)\n\n// main uses the AWS SDK for Go (v2) to create an AWS Lambda client and list up to 10\n// functions in your account.\n// This example uses the default settings specified in your shared credentials\n// and config files.\nfunc main() {\n\tctx := context.Background()\n\tsdkConfig, err := config.LoadDefaultConfig(ctx)\n\tif err != nil {\n\t\tfmt.Println(\"Couldn't load default configuration. Have you set up your AWS account?\")\n\t\tfmt.Println(err)\n\t\treturn\n\t}\n\tlambdaClient := lambda.NewFromConfig(sdkConfig)\n\n\tmaxItems := 10\n\tfmt.Printf(\"Let's list up to %v functions for your account.\\n\", maxItems)\n\tresult, err := lambdaClient.ListFunctions(ctx, &lambda.ListFunctionsInput{\n\t\tMaxItems: aws.Int32(int32(maxItems)),\n\t})\n\tif err != nil {\n\t\tfmt.Printf(\"Couldn't list functions for your account. Here's why: %v\\n\", err)\n\t\treturn\n\t}\n\tif len(result.Functions) == 0 {\n\t\tfmt.Println(\"You don't have any functions!\")\n\t} else {\n\t\tfor _, function := range result.Functions {\n\t\t\tfmt.Printf(\"\\t%v\\n\", *function.FunctionName)\n\t\t}\n\t}\n}\n\n\n",
+            "  7.Java :     /**\n     * Lists the AWS Lambda functions associated with the current AWS account.\n     *\n     * @param awsLambda an instance of the {@link LambdaClient} class, which is used to interact with the AWS Lambda service\n     *\n     * @throws LambdaException if an error occurs while interacting with the AWS Lambda service\n     */\n    public static void listFunctions(LambdaClient awsLambda) {\n        try {\n            ListFunctionsResponse functionResult = awsLambda.listFunctions();\n            List<FunctionConfiguration> list = functionResult.functions();\n            for (FunctionConfiguration config : list) {\n                System.out.println(\"The function name is \" + config.functionName());\n            }\n\n        } catch (LambdaException e) {\n            System.err.println(e.getMessage());\n            System.exit(1);\n        }\n    }\n\n",
+            "  8.SDK for Java 2.x :     /**\n     * Lists the AWS Lambda functions associated with the current AWS account.\n     *\n     * @param awsLambda an instance of the {@link LambdaClient} class, which is used to interact with the AWS Lambda service\n     *\n     * @throws LambdaException if an error occurs while interacting with the AWS Lambda service\n     */\n    public static void listFunctions(LambdaClient awsLambda) {\n        try {\n            ListFunctionsResponse functionResult = awsLambda.listFunctions();\n            List<FunctionConfiguration> list = functionResult.functions();\n            for (FunctionConfiguration config : list) {\n                System.out.println(\"The function name is \" + config.functionName());\n            }\n\n        } catch (LambdaException e) {\n            System.err.println(e.getMessage());\n            System.exit(1);\n        }\n    }\n\n",
+            "  9.JavaScript : import { LambdaClient, paginateListFunctions } from \"@aws-sdk/client-lambda\";\n\nconst client = new LambdaClient({});\n\nexport const helloLambda = async () => {\n  const paginator = paginateListFunctions({ client }, {});\n  const functions = [];\n\n  for await (const page of paginator) {\n    const funcNames = page.Functions.map((f) => f.FunctionName);\n    functions.push(...funcNames);\n  }\n\n  console.log(\"Functions:\");\n  console.log(functions.join(\"\\n\"));\n  return functions;\n};\n\n",
+            "  10.SDK for JavaScript (v3) : import { LambdaClient, paginateListFunctions } from \"@aws-sdk/client-lambda\";\n\nconst client = new LambdaClient({});\n\nexport const helloLambda = async () => {\n  const paginator = paginateListFunctions({ client }, {});\n  const functions = [];\n\n  for await (const page of paginator) {\n    const funcNames = page.Functions.map((f) => f.FunctionName);\n    functions.push(...funcNames);\n  }\n\n  console.log(\"Functions:\");\n  console.log(functions.join(\"\\n\"));\n  return functions;\n};\n\n",
+            "  11.Python : \nimport boto3\n\n\ndef main():\n    \"\"\"\n    List the Lambda functions in your AWS account.\n    \"\"\"\n    # Create the Lambda client\n    lambda_client = boto3.client(\"lambda\")\n\n    # Use the paginator to list the functions\n    paginator = lambda_client.get_paginator(\"list_functions\")\n    response_iterator = paginator.paginate()\n\n    print(\"Here are the Lambda functions in your account:\")\n    for page in response_iterator:\n        for function in page[\"Functions\"]:\n            print(f\"  {function['FunctionName']}\")\n\n\nif __name__ == \"__main__\":\n    main()\n\n\n",
+            "  12.SDK for Python (Boto3) : \nimport boto3\n\n\ndef main():\n    \"\"\"\n    List the Lambda functions in your AWS account.\n    \"\"\"\n    # Create the Lambda client\n    lambda_client = boto3.client(\"lambda\")\n\n    # Use the paginator to list the functions\n    paginator = lambda_client.get_paginator(\"list_functions\")\n    response_iterator = paginator.paginate()\n\n    print(\"Here are the Lambda functions in your account:\")\n    for page in response_iterator:\n        for function in page[\"Functions\"]:\n            print(f\"  {function['FunctionName']}\")\n\n\nif __name__ == \"__main__\":\n    main()\n\n\n",
+            "  13.Ruby : \nrequire 'aws-sdk-lambda'\n\n# Creates an AWS Lambda client using the default credentials and configuration\ndef lambda_client\n  Aws::Lambda::Client.new\nend\n\n# Lists the Lambda functions in your AWS account, paginating the results if necessary\ndef list_lambda_functions\n  lambda = lambda_client\n\n  # Use a pagination iterator to list all functions\n  functions = []\n  lambda.list_functions.each_page do |page|\n    functions.concat(page.functions)\n  end\n\n  # Print the name and ARN of each function\n  functions.each do |function|\n    puts \"Function name: #{function.function_name}\"\n    puts \"Function ARN: #{function.function_arn}\"\n    puts\n  end\n\n  puts \"Total functions: #{functions.count}\"\nend\n\nlist_lambda_functions if __FILE__ == $PROGRAM_NAME\n\n\n",
+            "  14.SDK for Ruby : \nrequire 'aws-sdk-lambda'\n\n# Creates an AWS Lambda client using the default credentials and configuration\ndef lambda_client\n  Aws::Lambda::Client.new\nend\n\n# Lists the Lambda functions in your AWS account, paginating the results if necessary\ndef list_lambda_functions\n  lambda = lambda_client\n\n  # Use a pagination iterator to list all functions\n  functions = []\n  lambda.list_functions.each_page do |page|\n    functions.concat(page.functions)\n  end\n\n  # Print the name and ARN of each function\n  functions.each do |function|\n    puts \"Function name: #{function.function_name}\"\n    puts \"Function ARN: #{function.function_arn}\"\n    puts\n  end\n\n  puts \"Total functions: #{functions.count}\"\nend\n\nlist_lambda_functions if __FILE__ == $PROGRAM_NAME\n\n\n",
+            "anchor",
+            "anchor",
+            "anchor",
+            "anchor",
+            "anchor",
+            "anchor",
+            "anchor",
+            "  1.AWS SDK for .NET : namespace LambdaActions;\n\nusing Amazon.Lambda;\n\npublic class HelloLambda\n{\n    static async Task Main(string[] args)\n    {\n        var lambdaClient = new AmazonLambdaClient();\n\n        Console.WriteLine(\"Hello AWS Lambda\");\n        Console.WriteLine(\"Let's get started with AWS Lambda by listing your existing Lambda functions:\");\n\n        var response = await lambdaClient.ListFunctionsAsync();\n        response.Functions.ForEach(function =>\n        {\n            Console.WriteLine($\"{function.FunctionName}\\t{function.Description}\");\n        });\n    }\n}\n\n\n",
+            "Code examples",
             {
                 "title": "Basics",
                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/service_code_examples_basics.html",
@@ -6843,7 +6884,7 @@
                     {
                         "title": "Hello Lambda",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_Hello_section.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "The following code examples show how to get started using Lambda.",
                             "  1..NET : namespace LambdaActions;\n\nusing Amazon.Lambda;\n\npublic class HelloLambda\n{\n    static async Task Main(string[] args)\n    {\n        var lambdaClient = new AmazonLambdaClient();\n\n        Console.WriteLine(\"Hello AWS Lambda\");\n        Console.WriteLine(\"Let's get started with AWS Lambda by listing your existing Lambda functions:\");\n\n        var response = await lambdaClient.ListFunctionsAsync();\n        response.Functions.ForEach(function =>\n        {\n            Console.WriteLine($\"{function.FunctionName}\\t{function.Description}\");\n        });\n    }\n}\n\n\n",
@@ -6874,7 +6915,7 @@
                     {
                         "title": "Learn the basics",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_Scenario_GettingStartedFunctions_section.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "The following code examples show how to:",
                             "  1.Create an IAM role and Lambda function, then upload handler code.",
@@ -6927,7 +6968,7 @@
                             {
                                 "title": "CreateAlias",
                                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_CreateAlias_section.html",
-                                "source": "Aws",
+                                "source": "aws_lamda",
                                 "parent_content": [
                                     "The following code examples show how to use CreateAlias.",
                                     "  1.CLI : create-alias",
@@ -6943,7 +6984,7 @@
                             {
                                 "title": "CreateFunction",
                                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_CreateFunction_section.html",
-                                "source": "Aws",
+                                "source": "aws_lamda",
                                 "parent_content": [
                                     "The following code examples show how to use CreateFunction.",
                                     "Action examples are code excerpts from larger programs and must be run in context. You can see this action in            context in the following code example:            ",
@@ -6994,7 +7035,7 @@
                             {
                                 "title": "DeleteAlias",
                                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_DeleteAlias_section.html",
-                                "source": "Aws",
+                                "source": "aws_lamda",
                                 "parent_content": [
                                     "The following code examples show how to use DeleteAlias.",
                                     "  1.CLI : delete-alias",
@@ -7010,7 +7051,7 @@
                             {
                                 "title": "DeleteFunction",
                                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_DeleteFunction_section.html",
-                                "source": "Aws",
+                                "source": "aws_lamda",
                                 "parent_content": [
                                     "The following code examples show how to use DeleteFunction.",
                                     "Action examples are code excerpts from larger programs and must be run in context. You can see this action in            context in the following code example:            ",
@@ -7061,7 +7102,7 @@
                             {
                                 "title": "DeleteFunctionConcurrency",
                                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_DeleteFunctionConcurrency_section.html",
-                                "source": "Aws",
+                                "source": "aws_lamda",
                                 "parent_content": [
                                     "The following code examples show how to use DeleteFunctionConcurrency.",
                                     "  1.CLI : delete-function-concurrency",
@@ -7077,7 +7118,7 @@
                             {
                                 "title": "DeleteProvisionedConcurrencyConfig",
                                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_DeleteProvisionedConcurrencyConfig_section.html",
-                                "source": "Aws",
+                                "source": "aws_lamda",
                                 "parent_content": [
                                     "The following code examples show how to use DeleteProvisionedConcurrencyConfig.",
                                     "  1.CLI : delete-provisioned-concurrency-config",
@@ -7093,7 +7134,7 @@
                             {
                                 "title": "GetAccountSettings",
                                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_GetAccountSettings_section.html",
-                                "source": "Aws",
+                                "source": "aws_lamda",
                                 "parent_content": [
                                     "The following code examples show how to use GetAccountSettings.",
                                     "  1.CLI : get-account-settings",
@@ -7109,7 +7150,7 @@
                             {
                                 "title": "GetAlias",
                                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_GetAlias_section.html",
-                                "source": "Aws",
+                                "source": "aws_lamda",
                                 "parent_content": [
                                     "The following code examples show how to use GetAlias.",
                                     "  1.CLI : get-alias",
@@ -7125,7 +7166,7 @@
                             {
                                 "title": "GetFunction",
                                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_GetFunction_section.html",
-                                "source": "Aws",
+                                "source": "aws_lamda",
                                 "parent_content": [
                                     "The following code examples show how to use GetFunction.",
                                     "Action examples are code excerpts from larger programs and must be run in context. You can see this action in            context in the following code example:            ",
@@ -7170,7 +7211,7 @@
                             {
                                 "title": "GetFunctionConcurrency",
                                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_GetFunctionConcurrency_section.html",
-                                "source": "Aws",
+                                "source": "aws_lamda",
                                 "parent_content": [
                                     "The following code examples show how to use GetFunctionConcurrency.",
                                     "  1.CLI : get-function-concurrency",
@@ -7186,7 +7227,7 @@
                             {
                                 "title": "GetFunctionConfiguration",
                                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_GetFunctionConfiguration_section.html",
-                                "source": "Aws",
+                                "source": "aws_lamda",
                                 "parent_content": [
                                     "The following code examples show how to use GetFunctionConfiguration.",
                                     "  1.CLI : get-function-configuration",
@@ -7202,7 +7243,7 @@
                             {
                                 "title": "GetPolicy",
                                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_GetPolicy_section.html",
-                                "source": "Aws",
+                                "source": "aws_lamda",
                                 "parent_content": [
                                     "The following code examples show how to use GetPolicy.",
                                     "  1.CLI : get-policy",
@@ -7218,7 +7259,7 @@
                             {
                                 "title": "GetProvisionedConcurrencyConfig",
                                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_GetProvisionedConcurrencyConfig_section.html",
-                                "source": "Aws",
+                                "source": "aws_lamda",
                                 "parent_content": [
                                     "The following code examples show how to use GetProvisionedConcurrencyConfig.",
                                     "  1.CLI : get-provisioned-concurrency-config",
@@ -7234,7 +7275,7 @@
                             {
                                 "title": "Invoke",
                                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_Invoke_section.html",
-                                "source": "Aws",
+                                "source": "aws_lamda",
                                 "parent_content": [
                                     "The following code examples show how to use Invoke.",
                                     "Action examples are code excerpts from larger programs and must be run in context. You can see this action in            context in the following code example:            ",
@@ -7282,7 +7323,7 @@
                             {
                                 "title": "ListFunctions",
                                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_ListFunctions_section.html",
-                                "source": "Aws",
+                                "source": "aws_lamda",
                                 "parent_content": [
                                     "The following code examples show how to use ListFunctions.",
                                     "Action examples are code excerpts from larger programs and must be run in context. You can see this action in            context in the following code example:            ",
@@ -7327,7 +7368,7 @@
                             {
                                 "title": "ListProvisionedConcurrencyConfigs",
                                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_ListProvisionedConcurrencyConfigs_section.html",
-                                "source": "Aws",
+                                "source": "aws_lamda",
                                 "parent_content": [
                                     "The following code examples show how to use ListProvisionedConcurrencyConfigs.",
                                     "  1.CLI : list-provisioned-concurrency-configs",
@@ -7343,7 +7384,7 @@
                             {
                                 "title": "ListTags",
                                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_ListTags_section.html",
-                                "source": "Aws",
+                                "source": "aws_lamda",
                                 "parent_content": [
                                     "The following code examples show how to use ListTags.",
                                     "  1.CLI : list-tags",
@@ -7359,7 +7400,7 @@
                             {
                                 "title": "ListVersionsByFunction",
                                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_ListVersionsByFunction_section.html",
-                                "source": "Aws",
+                                "source": "aws_lamda",
                                 "parent_content": [
                                     "The following code examples show how to use ListVersionsByFunction.",
                                     "  1.CLI : list-versions-by-function",
@@ -7375,7 +7416,7 @@
                             {
                                 "title": "PublishVersion",
                                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_PublishVersion_section.html",
-                                "source": "Aws",
+                                "source": "aws_lamda",
                                 "parent_content": [
                                     "The following code examples show how to use PublishVersion.",
                                     "  1.CLI : publish-version",
@@ -7391,7 +7432,7 @@
                             {
                                 "title": "PutFunctionConcurrency",
                                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_PutFunctionConcurrency_section.html",
-                                "source": "Aws",
+                                "source": "aws_lamda",
                                 "parent_content": [
                                     "The following code examples show how to use PutFunctionConcurrency.",
                                     "  1.CLI : put-function-concurrency",
@@ -7407,7 +7448,7 @@
                             {
                                 "title": "PutProvisionedConcurrencyConfig",
                                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_PutProvisionedConcurrencyConfig_section.html",
-                                "source": "Aws",
+                                "source": "aws_lamda",
                                 "parent_content": [
                                     "The following code examples show how to use PutProvisionedConcurrencyConfig.",
                                     "  1.CLI : put-provisioned-concurrency-config",
@@ -7423,7 +7464,7 @@
                             {
                                 "title": "RemovePermission",
                                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_RemovePermission_section.html",
-                                "source": "Aws",
+                                "source": "aws_lamda",
                                 "parent_content": [
                                     "The following code examples show how to use RemovePermission.",
                                     "  1.CLI : remove-permission",
@@ -7439,7 +7480,7 @@
                             {
                                 "title": "TagResource",
                                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_TagResource_section.html",
-                                "source": "Aws",
+                                "source": "aws_lamda",
                                 "parent_content": [
                                     "The following code examples show how to use TagResource.",
                                     "  1.CLI : tag-resource",
@@ -7455,7 +7496,7 @@
                             {
                                 "title": "UntagResource",
                                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_UntagResource_section.html",
-                                "source": "Aws",
+                                "source": "aws_lamda",
                                 "parent_content": [
                                     "The following code examples show how to use UntagResource.",
                                     "  1.CLI : untag-resource",
@@ -7471,7 +7512,7 @@
                             {
                                 "title": "UpdateAlias",
                                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_UpdateAlias_section.html",
-                                "source": "Aws",
+                                "source": "aws_lamda",
                                 "parent_content": [
                                     "The following code examples show how to use UpdateAlias.",
                                     "  1.CLI : update-alias",
@@ -7487,7 +7528,7 @@
                             {
                                 "title": "UpdateFunctionCode",
                                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_UpdateFunctionCode_section.html",
-                                "source": "Aws",
+                                "source": "aws_lamda",
                                 "parent_content": [
                                     "The following code examples show how to use UpdateFunctionCode.",
                                     "Action examples are code excerpts from larger programs and must be run in context. You can see this action in            context in the following code example:            ",
@@ -7535,7 +7576,7 @@
                             {
                                 "title": "UpdateFunctionConfiguration",
                                 "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_lambda_UpdateFunctionConfiguration_section.html",
-                                "source": "Aws",
+                                "source": "aws_lamda",
                                 "parent_content": [
                                     "The following code examples show how to use UpdateFunctionConfiguration.",
                                     "Action examples are code excerpts from larger programs and must be run in context. You can see this action in            context in the following code example:            ",
@@ -7581,7 +7622,7 @@
                                 ]
                             }
                         ],
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "The following code examples demonstrate how to perform individual Lambda        actions with AWS SDKs. Each example includes        a link to GitHub, where you can find instructions for setting up and running the code.    ",
                             "These excerpts call the Lambda API and        are code excerpts from larger programs that must be run in context.        You can see actions in context in        Scenarios for            Lambda using AWS SDKs        .    ",
@@ -7590,7 +7631,7 @@
                         ]
                     }
                 ],
-                "source": "Aws",
+                "source": "aws_lamda",
                 "parent_content": [
                     "The following code examples show how to use the basics of AWS Lambda with AWS    SDKs.",
                     "Examples"
@@ -7603,7 +7644,7 @@
                     {
                         "title": "Automatically confirm known users with a Lambda function",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_cross_CognitoAutoConfirmUser_section.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "The following code examples show how to automatically confirm known Amazon Cognito users with a Lambda function.",
                             "  1.Configure a user pool to call a Lambda function for the PreSignUp trigger.",
@@ -7623,7 +7664,7 @@
                     {
                         "title": "Automatically migrate known users with a Lambda function",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_cross_CognitoAutoMigrateUser_section.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "The following code example shows how to automatically migrate known Amazon Cognito users with a Lambda function.",
                             "  1.Configure a user pool to call a Lambda function for the MigrateUser trigger.",
@@ -7641,7 +7682,7 @@
                     {
                         "title": "Create a REST API to track COVID-19 data",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_cross_ApiGatewayDataTracker_section.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "The following code example shows how to create a REST API that simulates a system to track daily cases of COVID-19 in the United States, using fictional data.",
                             "  1.Python : \n\n\nSDK for Python (Boto3)\n\n\n        Shows how to use AWS Chalice with the AWS SDK for Python (Boto3) to\n        create a serverless REST API that uses Amazon API Gateway, AWS Lambda, and\n        Amazon DynamoDB. The REST API simulates a system that tracks daily cases\n        of COVID-19 in the United States, using fictional data. Learn how to:\n    \n\nUse AWS Chalice to define routes in Lambda functions that\n        are called to handle REST requests that come through API Gateway.Use Lambda functions to retrieve and store data in a DynamoDB\n        table to serve REST requests.Define table structure and security role resources in an AWS CloudFormation template.Use AWS Chalice and CloudFormation to package and deploy all necessary resources.Use CloudFormation to clean up all created resources.\n\n        For complete source code and instructions on how to set up and run, see the full example on\n        GitHub.\n    \n\nServices used in this example\nAPI GatewayAWS CloudFormationDynamoDBLambda\n\n\n",
@@ -7654,7 +7695,7 @@
                     {
                         "title": "Create a lending library REST API",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_cross_AuroraRestLendingLibrary_section.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "The following code example shows how to create a lending library where patrons can borrow and return books by using a REST API backed by an Amazon Aurora database.",
                             "  1.Python : \n\n\nSDK for Python (Boto3)\n\n\n        Shows how to use the AWS SDK for Python (Boto3) with the Amazon Relational Database Service (Amazon RDS) API and AWS Chalice to create a REST API\n        backed by an Amazon Aurora database. The web service is fully serverless and represents\n        a simple lending library where patrons can borrow and return books. Learn how to:\n    \n\nCreate and manage a serverless Aurora database cluster.Use AWS Secrets Manager to manage database credentials.Implement a data storage layer that uses Amazon RDS to move data into\n            and out of the database.Use AWS Chalice to deploy a serverless REST API to Amazon API Gateway and AWS Lambda.Use the Requests package to send requests to the web service.\n\n        For complete source code and instructions on how to set up and run, see the full example on\n        GitHub.\n    \n\nServices used in this example\nAPI GatewayAuroraLambdaSecrets Manager\n\n\n",
@@ -7667,7 +7708,7 @@
                     {
                         "title": "Create a messenger application",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_cross_StepFunctionsMessenger_section.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "The following code example shows how to create an AWS Step Functions messenger application that retrieves message records from a database table.",
                             "  1.Python : \n\n\nSDK for Python (Boto3)\n\n\n        Shows how to use the AWS SDK for Python (Boto3) with AWS Step Functions to create a messenger application that\n        retrieves message records from an Amazon DynamoDB table and sends them with Amazon Simple Queue Service (Amazon SQS).\n        The state machine integrates with an AWS Lambda function to scan the database for unsent messages.\n    \n\nCreate a state machine that retrieves and updates message records from an Amazon DynamoDB table.Update the state machine definition to also send messages to Amazon Simple Queue Service (Amazon SQS).Start and stop state machine runs.Connect to Lambda, DynamoDB, and Amazon SQS from a state machine by using service integrations.\n\n        For complete source code and instructions on how to set up and run, see the full example on\n        GitHub.\n    \n\nServices used in this example\nDynamoDBLambdaAmazon SQSStep Functions\n\n\n",
@@ -7680,7 +7721,7 @@
                     {
                         "title": "Create a serverless application to manage photos",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_cross_PAM_section.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "The following code examples show how to create a serverless application that lets users manage photos using labels.",
                             "  1..NET : \n\n\nAWS SDK for .NET\n\n\n        Shows how to develop a photo asset management application that detects labels in images\n        using Amazon Rekognition and stores them for later retrieval.\n    \nFor complete source code and instructions on how to set up and run, see the full example\n        on \n        GitHub.\nFor a deep dive into the origin of this example see the post on AWS Community.\n\nServices used in this example\nAPI GatewayDynamoDBLambdaAmazon RekognitionAmazon S3Amazon SNS\n\n\n",
@@ -7711,7 +7752,7 @@
                     {
                         "title": "Create a websocket chat application",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_cross_ApiGatewayWebsocketChat_section.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "The following code example shows how to create a chat application that is served by a websocket API built on Amazon API Gateway.",
                             "  1.Python : \n\n\nSDK for Python (Boto3)\n\n\n        Shows how to use the AWS SDK for Python (Boto3) with Amazon API Gateway V2 to\n        create a websocket API that integrates with AWS Lambda and Amazon DynamoDB.\n    \n\nCreate a websocket API served by API Gateway.Define a Lambda handler that stores connections in DynamoDB and posts messages to\n        other chat participants.Connect to the websocket chat application and send messages with the Websockets\n        package.\n\n        For complete source code and instructions on how to set up and run, see the full example on\n        GitHub.\n    \n\nServices used in this example\nAPI GatewayDynamoDBLambda\n\n\n",
@@ -7724,7 +7765,7 @@
                     {
                         "title": "Create an application to analyze customer feedback",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_cross_FSA_section.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "The following code examples show how to create an application that analyzes customer comment cards, translates them from their original language, determines their sentiment, and generates an audio file from the translated text.",
                             "  1..NET : \n\n\nAWS SDK for .NET\n\n\n    This example application analyzes and stores customer feedback cards. Specifically,\n    it fulfills the need of a fictitious hotel in New York City. The hotel receives feedback\n    from guests in various languages in the form of physical comment cards. That feedback\n    is uploaded into the app through a web client.\n\n    After an image of a comment card is uploaded, the following steps occur:\n  \n\n\nText is extracted from the image using Amazon Textract.\n\nAmazon Comprehend determines the sentiment of the extracted text and its language.\n\nThe extracted text is translated to English using Amazon Translate.\n\nAmazon Polly synthesizes an audio file from the extracted text.\n\n The full app can be deployed with the AWS CDK. For source code and deployment\n    instructions, see the project in \n    GitHub. \n\nServices used in this example\nAmazon ComprehendLambdaAmazon PollyAmazon TextractAmazon Translate\n\n\n",
@@ -7746,7 +7787,7 @@
                     {
                         "title": "Invoke a Lambda function from a browser",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_cross_LambdaForBrowser_section.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "The following code example shows how to invoke an AWS Lambda function from a browser.",
                             "  1.JavaScript : \n\n\nSDK for JavaScript (v2)\n\n\n        You can create a browser-based application that uses an AWS Lambda function to update an Amazon DynamoDB\n        table with user selections.\n    \n\n        For complete source code and instructions on how to set up and run, see the full example on\n        GitHub.\n    \n\nServices used in this example\nDynamoDBLambda\n\nSDK for JavaScript (v3)\n\n\n        You can create a browser-based application that uses an AWS Lambda function to update an Amazon DynamoDB\n        table with user selections. This app uses AWS SDK for JavaScript v3.\n    \n\n        For complete source code and instructions on how to set up and run, see the full example on\n        GitHub.\n\n    \n\nServices used in this example\nDynamoDBLambda\n\n\n",
@@ -7761,7 +7802,7 @@
                     {
                         "title": "Transform data with S3 Object Lambda",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_cross_ServerlessS3DataTransformation_section.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "The following code example shows how to transform data for your application with S3 Object Lambda.",
                             "  1..NET : \n\n\nAWS SDK for .NET\n\n\n        Shows how to add custom code to standard S3 GET requests to modify the requested object retrieved from S3 so that the object suit the needs of the requesting client or application.\n    \n\n        For complete source code and instructions on how to set up and run, see the full example on\n        GitHub.\n    \n\nServices used in this example\nLambdaAmazon S3\n\n\n",
@@ -7774,7 +7815,7 @@
                     {
                         "title": "Use API Gateway to invoke a Lambda function",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_cross_LambdaAPIGateway_section.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "The following code examples show how to create an AWS Lambda function invoked by Amazon API Gateway.",
                             "  1.Java : \n\n\nSDK for Java 2.x\n\n\n        Shows how to create an AWS Lambda function by using the Lambda Java runtime API.\n        This example invokes different AWS services to perform a specific use case. This example demonstrates how to\n        create a Lambda function invoked by Amazon API Gateway that scans an Amazon DynamoDB table for work anniversaries\n        and uses Amazon Simple Notification Service (Amazon SNS) to send a text message to your employees that congratulates\n        them at their one year anniversary date.\n    \n\n        For complete source code and instructions on how to set up and run, see the full example on\n        GitHub.\n    \n\nServices used in this example\nAPI GatewayDynamoDBLambdaAmazon SNS\n\n\n",
@@ -7793,7 +7834,7 @@
                     {
                         "title": "Use Step Functions to invoke Lambda functions",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_cross_ServerlessWorkflows_section.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "The following code example shows how to create an AWS Step Functions state machine that invokes AWS Lambda functions in sequence.",
                             "  1.Java : \n\n\nSDK for Java 2.x\n\n\n        Shows how to create an AWS serverless workflow by using AWS Step Functions and the AWS SDK for Java 2.x.\n        Each workflow step is implemented using an AWS Lambda function.\n    \n\n        For complete source code and instructions on how to set up and run, see the full example on\n        GitHub.\n    \n\nServices used in this example\nDynamoDBLambdaAmazon SESStep Functions\n\n\n",
@@ -7806,7 +7847,7 @@
                     {
                         "title": "Use scheduled events to invoke a Lambda function",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_cross_LambdaScheduledEvents_section.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "The following code examples show how to create an AWS Lambda function invoked by an Amazon EventBridge scheduled event.",
                             "  1.Java : \n\n\nSDK for Java 2.x\n\n\n        Shows how to create an Amazon EventBridge scheduled event that invokes an AWS Lambda function.\n        Configure EventBridge to use a cron expression to schedule when the Lambda function is invoked.\n        In this example, you create a Lambda function by using the Lambda Java runtime API.\n        This example invokes different AWS services to perform a specific use case. This example demonstrates how to\n        create an app that sends a mobile text message to your employees that congratulates \n        them at the one year anniversary date. \n    \n\n        For complete source code and instructions on how to set up and run, see the full example on\n        GitHub.\n    \n\nServices used in this example\nDynamoDBEventBridgeLambdaAmazon SNS\n\n\n",
@@ -7825,7 +7866,7 @@
                     {
                         "title": "Write custom activity data with a Lambda function after Amazon Cognito user authentication",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_cross_CognitoCustomActivityLog_section.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "The following code example shows how to write custom activity data with a Lambda function after Amazon Cognito user authentication.",
                             "  1.Use administrator functions to add a user to a user pool.",
@@ -7841,7 +7882,7 @@
                         ]
                     }
                 ],
-                "source": "Aws",
+                "source": "aws_lamda",
                 "parent_content": [
                     "The following code examples show you how to implement common scenarios in Lambda        with AWS SDKs. These scenarios show you how to accomplish specific tasks by calling multiple functions        within Lambda or combined with other AWS services.        Each scenario includes a link to the complete source code, where you can find instructions on how to set up and run the code.    ",
                     "Scenarios target an intermediate level of experience to help you understand service actions in context.",
@@ -7855,7 +7896,7 @@
                     {
                         "title": "Connecting to an Amazon RDS database in a Lambda function",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_serverless_connect_RDS_Lambda_section.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "The following code examples show how to implement a Lambda function that connects to an RDS database. The function makes a simple database request and returns the result.",
                             "  1.Go : /*\nGolang v2 code here.\n*/\n\npackage main\n\nimport (\n\t\"context\"\n\t\"database/sql\"\n\t\"encoding/json\"\n\t\"fmt\"\n\t\"os\"\n\n\t\"github.com/aws/aws-lambda-go/lambda\"\n\t\"github.com/aws/aws-sdk-go-v2/config\"\n\t\"github.com/aws/aws-sdk-go-v2/feature/rds/auth\"\n\t_ \"github.com/go-sql-driver/mysql\"\n)\n\ntype MyEvent struct {\n\tName string `json:\"name\"`\n}\n\nfunc HandleRequest(event *MyEvent) (map[string]interface{}, error) {\n\n\tvar dbName string = os.Getenv(\"DatabaseName\")\n\tvar dbUser string = os.Getenv(\"DatabaseUser\")\n\tvar dbHost string = os.Getenv(\"DBHost\") // Add hostname without https\n\tvar dbPort int = os.Getenv(\"Port\")      // Add port number\n\tvar dbEndpoint string = fmt.Sprintf(\"%s:%d\", dbHost, dbPort)\n\tvar region string = os.Getenv(\"AWS_REGION\")\n\n\tcfg, err := config.LoadDefaultConfig(context.TODO())\n\tif err != nil {\n\t\tpanic(\"configuration error: \" + err.Error())\n\t}\n\n\tauthenticationToken, err := auth.BuildAuthToken(\n\t\tcontext.TODO(), dbEndpoint, region, dbUser, cfg.Credentials)\n\tif err != nil {\n\t\tpanic(\"failed to create authentication token: \" + err.Error())\n\t}\n\n\tdsn := fmt.Sprintf(\"%s:%s@tcp(%s)/%s?tls=true&allowCleartextPasswords=true\",\n\t\tdbUser, authenticationToken, dbEndpoint, dbName,\n\t)\n\n\tdb, err := sql.Open(\"mysql\", dsn)\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\n\tdefer db.Close()\n\n\tvar sum int\n\terr = db.QueryRow(\"SELECT ?+? AS sum\", 3, 2).Scan(&sum)\n\tif err != nil {\n\t\tpanic(err)\n\t}\n\ts := fmt.Sprint(sum)\n\tmessage := fmt.Sprintf(\"The selected sum is: %s\", s)\n\n\tmessageBytes, err := json.Marshal(message)\n\tif err != nil {\n\t\treturn nil, err\n\t}\n\n\tmessageString := string(messageBytes)\n\treturn map[string]interface{}{\n\t\t\"statusCode\": 200,\n\t\t\"headers\":    map[string]string{\"Content-Type\": \"application/json\"},\n\t\t\"body\":       messageString,\n\t}, nil\n}\n\nfunc main() {\n\tlambda.Start(HandleRequest)\n}\n\n",
@@ -7886,7 +7927,7 @@
                     {
                         "title": "Invoke a Lambda function from a Kinesis trigger",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_serverless_Kinesis_Lambda_section.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "The following code examples show how to implement a Lambda function that receives an event triggered by receiving records from a Kinesis stream. The function retrieves the Kinesis payload, decodes from Base64, and logs the record contents.",
                             "  1..NET : // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.\n// SPDX-License-Identifier: Apache-2.0\n﻿using System.Text;\nusing Amazon.Lambda.Core;\nusing Amazon.Lambda.KinesisEvents;\nusing AWS.Lambda.Powertools.Logging;\n\n// Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.\n[assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]\n\nnamespace KinesisIntegrationSampleCode;\n\npublic class Function\n{\n    // Powertools Logger requires an environment variables against your function\n    // POWERTOOLS_SERVICE_NAME\n    [Logging(LogEvent = true)]\n    public async Task FunctionHandler(KinesisEvent evnt, ILambdaContext context)\n    {\n        if (evnt.Records.Count == 0)\n        {\n            Logger.LogInformation(\"Empty Kinesis Event received\");\n            return;\n        }\n\n        foreach (var record in evnt.Records)\n        {\n            try\n            {\n                Logger.LogInformation($\"Processed Event with EventId: {record.EventId}\");\n                string data = await GetRecordDataAsync(record.Kinesis, context);\n                Logger.LogInformation($\"Data: {data}\");\n                // TODO: Do interesting work based on the new data\n            }\n            catch (Exception ex)\n            {\n                Logger.LogError($\"An error occurred {ex.Message}\");\n                throw;\n            }\n        }\n        Logger.LogInformation($\"Successfully processed {evnt.Records.Count} records.\");\n    }\n\n    private async Task<string> GetRecordDataAsync(KinesisEvent.Record record, ILambdaContext context)\n    {\n        byte[] bytes = record.Data.ToArray();\n        string data = Encoding.UTF8.GetString(bytes);\n        await Task.CompletedTask; //Placeholder for actual async work\n        return data;\n    }\n}\n",
@@ -7920,7 +7961,7 @@
                     {
                         "title": "Invoke a Lambda function from a DynamoDB trigger",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_serverless_DynamoDB_Lambda_section.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "The following code examples show how to implement a Lambda function that receives an event triggered by receiving records from a DynamoDB stream. The function retrieves the DynamoDB payload and logs the record contents.",
                             "  1..NET : // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.\n// SPDX-License-Identifier: Apache-2.0\nusing System.Text.Json;\nusing System.Text;\nusing Amazon.Lambda.Core;\nusing Amazon.Lambda.DynamoDBEvents;\n\n// Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.\n[assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]\n\nnamespace AWSLambda_DDB;\n\npublic class Function\n{\n    public void FunctionHandler(DynamoDBEvent dynamoEvent, ILambdaContext context)\n    {\n        context.Logger.LogInformation($\"Beginning to process {dynamoEvent.Records.Count} records...\");\n\n        foreach (var record in dynamoEvent.Records)\n        {\n            context.Logger.LogInformation($\"Event ID: {record.EventID}\");\n            context.Logger.LogInformation($\"Event Name: {record.EventName}\");\n\n            context.Logger.LogInformation(JsonSerializer.Serialize(record));\n        }\n\n        context.Logger.LogInformation(\"Stream processing complete.\");\n    }\n}\n\n",
@@ -7954,7 +7995,7 @@
                     {
                         "title": "Invoke a Lambda function from a Amazon DocumentDB trigger",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_serverless_DocumentDB_Lambda_section.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "The following code examples show how to implement a Lambda function that receives an event triggered by receiving records from a DocumentDB change stream. The function retrieves the DocumentDB payload and logs the record contents.",
                             "  1..NET : using Amazon.Lambda.Core;\nusing System.Text.Json;\nusing System;\nusing System.Collections.Generic;\nusing System.Text.Json.Serialization;\n//Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.\n[assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]\n\nnamespace LambdaDocDb;\n\npublic class Function\n{\n    \n     /// <summary>\n    /// Lambda function entry point to process Amazon DocumentDB events.\n    /// </summary>\n    /// <param name=\"event\">The Amazon DocumentDB event.</param>\n    /// <param name=\"context\">The Lambda context object.</param>\n    /// <returns>A string to indicate successful processing.</returns>\n    public string FunctionHandler(Event evnt, ILambdaContext context)\n    {\n        \n        foreach (var record in evnt.Events)\n        {\n            ProcessDocumentDBEvent(record, context);\n        }\n\n        return \"OK\";\n    }\n\n     private void ProcessDocumentDBEvent(DocumentDBEventRecord record, ILambdaContext context)\n    {\n        \n        var eventData = record.Event;\n        var operationType = eventData.OperationType;\n        var databaseName = eventData.Ns.Db;\n        var collectionName = eventData.Ns.Coll;\n        var fullDocument = JsonSerializer.Serialize(eventData.FullDocument, new JsonSerializerOptions { WriteIndented = true });\n\n        context.Logger.LogLine($\"Operation type: {operationType}\");\n        context.Logger.LogLine($\"Database: {databaseName}\");\n        context.Logger.LogLine($\"Collection: {collectionName}\");\n        context.Logger.LogLine($\"Full document:\\n{fullDocument}\");\n    }\n\n\n\n    public class Event\n    {\n        [JsonPropertyName(\"eventSourceArn\")]\n        public string EventSourceArn { get; set; }\n\n        [JsonPropertyName(\"events\")]\n        public List<DocumentDBEventRecord> Events { get; set; }\n\n        [JsonPropertyName(\"eventSource\")]\n        public string EventSource { get; set; }\n    }\n\n    public class DocumentDBEventRecord\n    {\n        [JsonPropertyName(\"event\")]\n        public EventData Event { get; set; }\n    }\n\n    public class EventData\n    {\n        [JsonPropertyName(\"_id\")]\n        public IdData Id { get; set; }\n\n        [JsonPropertyName(\"clusterTime\")]\n        public ClusterTime ClusterTime { get; set; }\n\n        [JsonPropertyName(\"documentKey\")]\n        public DocumentKey DocumentKey { get; set; }\n\n        [JsonPropertyName(\"fullDocument\")]\n        public Dictionary<string, object> FullDocument { get; set; }\n\n        [JsonPropertyName(\"ns\")]\n        public Namespace Ns { get; set; }\n\n        [JsonPropertyName(\"operationType\")]\n        public string OperationType { get; set; }\n    }\n\n    public class IdData\n    {\n        [JsonPropertyName(\"_data\")]\n        public string Data { get; set; }\n    }\n\n    public class ClusterTime\n    {\n        [JsonPropertyName(\"$timestamp\")]\n        public Timestamp Timestamp { get; set; }\n    }\n\n    public class Timestamp\n    {\n        [JsonPropertyName(\"t\")]\n        public long T { get; set; }\n\n        [JsonPropertyName(\"i\")]\n        public int I { get; set; }\n    }\n\n    public class DocumentKey\n    {\n        [JsonPropertyName(\"_id\")]\n        public Id Id { get; set; }\n    }\n\n    public class Id\n    {\n        [JsonPropertyName(\"$oid\")]\n        public string Oid { get; set; }\n    }\n\n    public class Namespace\n    {\n        [JsonPropertyName(\"db\")]\n        public string Db { get; set; }\n\n        [JsonPropertyName(\"coll\")]\n        public string Coll { get; set; }\n    }\n}\n\n",
@@ -7985,7 +8026,7 @@
                     {
                         "title": "Invoke a Lambda function from an Amazon MSK trigger",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_serverless_MSK_Lambda_section.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "The following code examples show how to implement a Lambda function that receives an event triggered by receiving records from an Amazon MSK cluster. The function retrieves the MSK payload and logs the record contents.",
                             "  1..NET : using System.Text;\nusing Amazon.Lambda.Core;\nusing Amazon.Lambda.KafkaEvents;\n\n\n// Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.\n[assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]\n\nnamespace MSKLambda;\n\npublic class Function\n{\n    \n    \n    /// <param name=\"input\">The event for the Lambda function handler to process.</param>\n    /// <param name=\"context\">The ILambdaContext that provides methods for logging and describing the Lambda environment.</param>\n    /// <returns></returns>\n    public void FunctionHandler(KafkaEvent evnt, ILambdaContext context)\n    {\n\n        foreach (var record in evnt.Records)\n        {\n            Console.WriteLine(\"Key:\" + record.Key); \n            foreach (var eventRecord in record.Value)\n            {\n                var valueBytes = eventRecord.Value.ToArray();    \n                var valueText = Encoding.UTF8.GetString(valueBytes);\n                \n                Console.WriteLine(\"Message:\" + valueText);\n            }\n        }\n    }\n    \n\n}\n\n",
@@ -8016,7 +8057,7 @@
                     {
                         "title": "Invoke a Lambda function from an Amazon S3 trigger",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_serverless_S3_Lambda_section.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "The following code examples show how to implement a Lambda function that receives an event triggered by uploading an object to an S3 bucket. The function retrieves the S3 bucket name and object key from the event parameter and calls the Amazon S3 API to retrieve and log the content type of the object.",
                             "  1..NET : // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.\n// SPDX-License-Identifier: Apache-2.0\n﻿using System.Threading.Tasks;\nusing Amazon.Lambda.Core;\nusing Amazon.S3;\nusing System;\nusing Amazon.Lambda.S3Events;\nusing System.Web;\n\n// Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.\n[assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]\n\nnamespace S3Integration\n{\n    public class Function\n    {\n        private static AmazonS3Client _s3Client;\n        public Function() : this(null)\n        {\n        }\n\n        internal Function(AmazonS3Client s3Client)\n        {\n            _s3Client = s3Client ?? new AmazonS3Client();\n        }\n\n        public async Task<string> Handler(S3Event evt, ILambdaContext context)\n        {\n            try\n            {\n                if (evt.Records.Count <= 0)\n                {\n                    context.Logger.LogLine(\"Empty S3 Event received\");\n                    return string.Empty;\n                }\n\n                var bucket = evt.Records[0].S3.Bucket.Name;\n                var key = HttpUtility.UrlDecode(evt.Records[0].S3.Object.Key);\n\n                context.Logger.LogLine($\"Request is for {bucket} and {key}\");\n\n                var objectResult = await _s3Client.GetObjectAsync(bucket, key);\n\n                context.Logger.LogLine($\"Returning {objectResult.Key}\");\n\n                return objectResult.Key;\n            }\n            catch (Exception e)\n            {\n                context.Logger.LogLine($\"Error processing request - {e.Message}\");\n\n                return string.Empty;\n            }\n        }\n    }\n}\n",
@@ -8050,7 +8091,7 @@
                     {
                         "title": "Invoke a Lambda function from an Amazon SNS trigger",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_serverless_SNS_Lambda_section.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "The following code examples show how to implement a Lambda function that receives an event triggered by receiving messages from an SNS topic. The function retrieves the messages from the event parameter and logs the content of each message.",
                             "  1..NET : // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.\n// SPDX-License-Identifier: Apache-2.0\nusing Amazon.Lambda.Core;\nusing Amazon.Lambda.SNSEvents;\n\n\n// Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.\n[assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]\n\nnamespace SnsIntegration;\n\npublic class Function\n{\n    public async Task FunctionHandler(SNSEvent evnt, ILambdaContext context)\n    {\n        foreach (var record in evnt.Records)\n        {\n            await ProcessRecordAsync(record, context);\n        }\n        context.Logger.LogInformation(\"done\");\n    }\n\n    private async Task ProcessRecordAsync(SNSEvent.SNSRecord record, ILambdaContext context)\n    {\n        try\n        {\n            context.Logger.LogInformation($\"Processed record {record.Sns.Message}\");\n\n            // TODO: Do interesting work based on the new message\n            await Task.CompletedTask;\n        }\n        catch (Exception e)\n        {\n            //You can use Dead Letter Queue to handle failures. By configuring a Lambda DLQ.\n            context.Logger.LogError($\"An error occurred\");\n            throw;\n        }\n    }\n}\n",
@@ -8084,7 +8125,7 @@
                     {
                         "title": "Invoke a Lambda function from an Amazon SQS trigger",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_serverless_SQS_Lambda_section.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "The following code examples show how to implement a Lambda function that receives an event triggered by receiving messages from an SQS queue. The function retrieves the messages from the event parameter and logs the content of each message.",
                             "  1..NET : // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.\n// SPDX-License-Identifier: Apache-2.0\n﻿using Amazon.Lambda.Core;\nusing Amazon.Lambda.SQSEvents;\n\n\n// Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.\n[assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]\n\nnamespace SqsIntegrationSampleCode\n{\n    public async Task FunctionHandler(SQSEvent evnt, ILambdaContext context)\n    {\n        foreach (var message in evnt.Records)\n        {\n            await ProcessMessageAsync(message, context);\n        }\n\n        context.Logger.LogInformation(\"done\");\n    }\n\n    private async Task ProcessMessageAsync(SQSEvent.SQSMessage message, ILambdaContext context)\n    {\n        try\n        {\n            context.Logger.LogInformation($\"Processed message {message.Body}\");\n\n            // TODO: Do interesting work based on the new message\n            await Task.CompletedTask;\n        }\n        catch (Exception e)\n        {\n            //You can use Dead Letter Queue to handle failures. By configuring a Lambda DLQ.\n            context.Logger.LogError($\"An error occurred\");\n            throw;\n        }\n\n    }\n}\n\n",
@@ -8118,7 +8159,7 @@
                     {
                         "title": "Reporting batch item failures for Lambda functions with a Kinesis trigger",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_serverless_Kinesis_Lambda_batch_item_failures_section.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "The following code examples show how to implement partial batch response for Lambda functions that receive events from a Kinesis stream. The function reports the batch item failures in the response, signaling to Lambda to retry those messages later.",
                             "  1..NET : // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.\n// SPDX-License-Identifier: Apache-2.0\n﻿using System.Text;\nusing System.Text.Json.Serialization;\nusing Amazon.Lambda.Core;\nusing Amazon.Lambda.KinesisEvents;\nusing AWS.Lambda.Powertools.Logging;\n\n// Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.\n[assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]\n\nnamespace KinesisIntegration;\n\npublic class Function\n{\n    // Powertools Logger requires an environment variables against your function\n    // POWERTOOLS_SERVICE_NAME\n    [Logging(LogEvent = true)]\n    public async Task<StreamsEventResponse> FunctionHandler(KinesisEvent evnt, ILambdaContext context)\n    {\n        if (evnt.Records.Count == 0)\n        {\n            Logger.LogInformation(\"Empty Kinesis Event received\");\n            return new StreamsEventResponse();\n        }\n\n        foreach (var record in evnt.Records)\n        {\n            try\n            {\n                Logger.LogInformation($\"Processed Event with EventId: {record.EventId}\");\n                string data = await GetRecordDataAsync(record.Kinesis, context);\n                Logger.LogInformation($\"Data: {data}\");\n                // TODO: Do interesting work based on the new data\n            }\n            catch (Exception ex)\n            {\n                Logger.LogError($\"An error occurred {ex.Message}\");\n                /* Since we are working with streams, we can return the failed item immediately.\n                   Lambda will immediately begin to retry processing from this failed item onwards. */\n                return new StreamsEventResponse\n                {\n                    BatchItemFailures = new List<StreamsEventResponse.BatchItemFailure>\n                    {\n                        new StreamsEventResponse.BatchItemFailure { ItemIdentifier = record.Kinesis.SequenceNumber }\n                    }\n                };\n            }\n        }\n        Logger.LogInformation($\"Successfully processed {evnt.Records.Count} records.\");\n        return new StreamsEventResponse();\n    }\n\n    private async Task<string> GetRecordDataAsync(KinesisEvent.Record record, ILambdaContext context)\n    {\n        byte[] bytes = record.Data.ToArray();\n        string data = Encoding.UTF8.GetString(bytes);\n        await Task.CompletedTask; //Placeholder for actual async work\n        return data;\n    }\n}\n\npublic class StreamsEventResponse\n{\n    [JsonPropertyName(\"batchItemFailures\")]\n    public IList<BatchItemFailure> BatchItemFailures { get; set; }\n    public class BatchItemFailure\n    {\n        [JsonPropertyName(\"itemIdentifier\")]\n        public string ItemIdentifier { get; set; }\n    }\n}\n",
@@ -8152,7 +8193,7 @@
                     {
                         "title": "Reporting batch item failures for Lambda functions with a DynamoDB trigger",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_serverless_DynamoDB_Lambda_batch_item_failures_section.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "The following code examples show how to implement partial batch response for Lambda functions that receive events from a DynamoDB stream. The function reports the batch item failures in the response, signaling to Lambda to retry those messages later.",
                             "  1..NET : // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.\n// SPDX-License-Identifier: Apache-2.0\nusing System.Text.Json;\nusing System.Text;\nusing Amazon.Lambda.Core;\nusing Amazon.Lambda.DynamoDBEvents;\n\n// Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.\n[assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]\n\nnamespace AWSLambda_DDB;\n\npublic class Function\n{\n    public StreamsEventResponse FunctionHandler(DynamoDBEvent dynamoEvent, ILambdaContext context)\n\n    {\n        context.Logger.LogInformation($\"Beginning to process {dynamoEvent.Records.Count} records...\");\n        List<StreamsEventResponse.BatchItemFailure> batchItemFailures = new List<StreamsEventResponse.BatchItemFailure>();\n        StreamsEventResponse streamsEventResponse = new StreamsEventResponse();\n\n        foreach (var record in dynamoEvent.Records)\n        {\n            try\n            {\n                var sequenceNumber = record.Dynamodb.SequenceNumber;\n                context.Logger.LogInformation(sequenceNumber);\n            }\n            catch (Exception ex)\n            {\n                context.Logger.LogError(ex.Message);\n                batchItemFailures.Add(new StreamsEventResponse.BatchItemFailure() { ItemIdentifier = record.Dynamodb.SequenceNumber });\n            }\n        }\n\n        if (batchItemFailures.Count > 0)\n        {\n            streamsEventResponse.BatchItemFailures = batchItemFailures;\n        }\n\n        context.Logger.LogInformation(\"Stream processing complete.\");\n        return streamsEventResponse;\n    }\n}\n",
@@ -8186,7 +8227,7 @@
                     {
                         "title": "Reporting batch item failures for Lambda functions with an Amazon SQS trigger",
                         "href": "https://docs.aws.amazon.com/lambda/latest/dg/example_serverless_SQS_Lambda_batch_item_failures_section.html",
-                        "source": "Aws",
+                        "source": "aws_lamda",
                         "parent_content": [
                             "The following code examples show how to implement partial batch response for Lambda functions that receive events from an SQS queue. The function reports the batch item failures in the response, signaling to Lambda to retry those messages later.",
                             "  1..NET : // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.\n// SPDX-License-Identifier: Apache-2.0\nusing Amazon.Lambda.Core;\nusing Amazon.Lambda.SQSEvents;\n\n// Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.\n[assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]\nnamespace sqsSample;\n\npublic class Function\n{\n    public async Task<SQSBatchResponse> FunctionHandler(SQSEvent evnt, ILambdaContext context)\n    {\n        List<SQSBatchResponse.BatchItemFailure> batchItemFailures = new List<SQSBatchResponse.BatchItemFailure>();\n        foreach(var message in evnt.Records)\n        {\n            try\n            {\n                //process your message\n                await ProcessMessageAsync(message, context);\n            }\n            catch (System.Exception)\n            {\n                //Add failed message identifier to the batchItemFailures list\n                batchItemFailures.Add(new SQSBatchResponse.BatchItemFailure{ItemIdentifier=message.MessageId}); \n            }\n        }\n        return new SQSBatchResponse(batchItemFailures);\n    }\n\n    private async Task ProcessMessageAsync(SQSEvent.SQSMessage message, ILambdaContext context)\n    {\n        if (String.IsNullOrEmpty(message.Body))\n        {\n            throw new Exception(\"No Body in SQS Message.\");\n        }\n        context.Logger.LogInformation($\"Processed message {message.Body}\");\n        // TODO: Do interesting work based on the new message\n        await Task.CompletedTask;\n    }\n}\n",
@@ -8218,61 +8259,12 @@
                         ]
                     }
                 ],
-                "source": "Aws",
+                "source": "aws_lamda",
                 "parent_content": [
                     "The following code examples show how to use Lambda with AWS SDKs.",
                     "Examples"
                 ]
             }
-        ],
-        "source": "Aws",
-        "parent_content": [
-            "The following code examples show how to use Lambda with an AWS software development kit (SDK).        ",
-            "Basics are code examples that show you how to perform the essential operations within a service.",
-            "Actions are code excerpts from larger programs and must be run in context. While actions    show you how to call individual service functions, you can see actions in context in their related scenarios.",
-            "Scenarios are code examples that show you how to accomplish specific tasks by    calling multiple functions within a service or combined with other AWS services.",
-            "For a complete list of AWS SDK developer guides and code examples, see    Using Lambda with an AWS SDK.    This topic also includes information about getting started and details about previous SDK versions.",
-            "Get started",
-            "The following code examples show how to get started using Lambda.",
-            "  1..NET : namespace LambdaActions;\n\nusing Amazon.Lambda;\n\npublic class HelloLambda\n{\n    static async Task Main(string[] args)\n    {\n        var lambdaClient = new AmazonLambdaClient();\n\n        Console.WriteLine(\"Hello AWS Lambda\");\n        Console.WriteLine(\"Let's get started with AWS Lambda by listing your existing Lambda functions:\");\n\n        var response = await lambdaClient.ListFunctionsAsync();\n        response.Functions.ForEach(function =>\n        {\n            Console.WriteLine($\"{function.FunctionName}\\t{function.Description}\");\n        });\n    }\n}\n\n\n",
-            "  2.AWS SDK for .NET : namespace LambdaActions;\n\nusing Amazon.Lambda;\n\npublic class HelloLambda\n{\n    static async Task Main(string[] args)\n    {\n        var lambdaClient = new AmazonLambdaClient();\n\n        Console.WriteLine(\"Hello AWS Lambda\");\n        Console.WriteLine(\"Let's get started with AWS Lambda by listing your existing Lambda functions:\");\n\n        var response = await lambdaClient.ListFunctionsAsync();\n        response.Functions.ForEach(function =>\n        {\n            Console.WriteLine($\"{function.FunctionName}\\t{function.Description}\");\n        });\n    }\n}\n\n\n",
-            "  3.C++ : # Set the minimum required version of CMake for this project.\ncmake_minimum_required(VERSION 3.13)\n\n# Set the AWS service components used by this project.\nset(SERVICE_COMPONENTS lambda)\n\n# Set this project's name.\nproject(\"hello_lambda\")\n\n# Set the C++ standard to use to build this target.\n# At least C++ 11 is required for the AWS SDK for C++.\nset(CMAKE_CXX_STANDARD 11)\n\n# Use the MSVC variable to determine if this is a Windows build.\nset(WINDOWS_BUILD ${MSVC})\n\nif (WINDOWS_BUILD) # Set the location where CMake can find the installed libraries for the AWS SDK.\n    string(REPLACE \";\" \"/aws-cpp-sdk-all;\" SYSTEM_MODULE_PATH \"${CMAKE_SYSTEM_PREFIX_PATH}/aws-cpp-sdk-all\")\n    list(APPEND CMAKE_PREFIX_PATH ${SYSTEM_MODULE_PATH})\nendif ()\n\n# Find the AWS SDK for C++ package.\nfind_package(AWSSDK REQUIRED COMPONENTS ${SERVICE_COMPONENTS})\n\nif (WINDOWS_BUILD AND AWSSDK_INSTALL_AS_SHARED_LIBS)\n     # Copy relevant AWS SDK for C++ libraries into the current binary directory for running and debugging.\n\n     # set(BIN_SUB_DIR \"/Debug\") # if you are building from the command line you may need to uncomment this \n                                    # and set the proper subdirectory to the executables' location.\n\n     AWSSDK_CPY_DYN_LIBS(SERVICE_COMPONENTS \"\" ${CMAKE_CURRENT_BINARY_DIR}${BIN_SUB_DIR})\nendif ()\n\nadd_executable(${PROJECT_NAME}\n        hello_lambda.cpp)\n\ntarget_link_libraries(${PROJECT_NAME}\n        ${AWSSDK_LINK_LIBRARIES})\n\n",
-            "  4.SDK for C++ : # Set the minimum required version of CMake for this project.\ncmake_minimum_required(VERSION 3.13)\n\n# Set the AWS service components used by this project.\nset(SERVICE_COMPONENTS lambda)\n\n# Set this project's name.\nproject(\"hello_lambda\")\n\n# Set the C++ standard to use to build this target.\n# At least C++ 11 is required for the AWS SDK for C++.\nset(CMAKE_CXX_STANDARD 11)\n\n# Use the MSVC variable to determine if this is a Windows build.\nset(WINDOWS_BUILD ${MSVC})\n\nif (WINDOWS_BUILD) # Set the location where CMake can find the installed libraries for the AWS SDK.\n    string(REPLACE \";\" \"/aws-cpp-sdk-all;\" SYSTEM_MODULE_PATH \"${CMAKE_SYSTEM_PREFIX_PATH}/aws-cpp-sdk-all\")\n    list(APPEND CMAKE_PREFIX_PATH ${SYSTEM_MODULE_PATH})\nendif ()\n\n# Find the AWS SDK for C++ package.\nfind_package(AWSSDK REQUIRED COMPONENTS ${SERVICE_COMPONENTS})\n\nif (WINDOWS_BUILD AND AWSSDK_INSTALL_AS_SHARED_LIBS)\n     # Copy relevant AWS SDK for C++ libraries into the current binary directory for running and debugging.\n\n     # set(BIN_SUB_DIR \"/Debug\") # if you are building from the command line you may need to uncomment this \n                                    # and set the proper subdirectory to the executables' location.\n\n     AWSSDK_CPY_DYN_LIBS(SERVICE_COMPONENTS \"\" ${CMAKE_CURRENT_BINARY_DIR}${BIN_SUB_DIR})\nendif ()\n\nadd_executable(${PROJECT_NAME}\n        hello_lambda.cpp)\n\ntarget_link_libraries(${PROJECT_NAME}\n        ${AWSSDK_LINK_LIBRARIES})\n\n",
-            "  5.Go : \npackage main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\n\t\"github.com/aws/aws-sdk-go-v2/aws\"\n\t\"github.com/aws/aws-sdk-go-v2/config\"\n\t\"github.com/aws/aws-sdk-go-v2/service/lambda\"\n)\n\n// main uses the AWS SDK for Go (v2) to create an AWS Lambda client and list up to 10\n// functions in your account.\n// This example uses the default settings specified in your shared credentials\n// and config files.\nfunc main() {\n\tctx := context.Background()\n\tsdkConfig, err := config.LoadDefaultConfig(ctx)\n\tif err != nil {\n\t\tfmt.Println(\"Couldn't load default configuration. Have you set up your AWS account?\")\n\t\tfmt.Println(err)\n\t\treturn\n\t}\n\tlambdaClient := lambda.NewFromConfig(sdkConfig)\n\n\tmaxItems := 10\n\tfmt.Printf(\"Let's list up to %v functions for your account.\\n\", maxItems)\n\tresult, err := lambdaClient.ListFunctions(ctx, &lambda.ListFunctionsInput{\n\t\tMaxItems: aws.Int32(int32(maxItems)),\n\t})\n\tif err != nil {\n\t\tfmt.Printf(\"Couldn't list functions for your account. Here's why: %v\\n\", err)\n\t\treturn\n\t}\n\tif len(result.Functions) == 0 {\n\t\tfmt.Println(\"You don't have any functions!\")\n\t} else {\n\t\tfor _, function := range result.Functions {\n\t\t\tfmt.Printf(\"\\t%v\\n\", *function.FunctionName)\n\t\t}\n\t}\n}\n\n\n",
-            "  6.SDK for Go V2 : \npackage main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\n\t\"github.com/aws/aws-sdk-go-v2/aws\"\n\t\"github.com/aws/aws-sdk-go-v2/config\"\n\t\"github.com/aws/aws-sdk-go-v2/service/lambda\"\n)\n\n// main uses the AWS SDK for Go (v2) to create an AWS Lambda client and list up to 10\n// functions in your account.\n// This example uses the default settings specified in your shared credentials\n// and config files.\nfunc main() {\n\tctx := context.Background()\n\tsdkConfig, err := config.LoadDefaultConfig(ctx)\n\tif err != nil {\n\t\tfmt.Println(\"Couldn't load default configuration. Have you set up your AWS account?\")\n\t\tfmt.Println(err)\n\t\treturn\n\t}\n\tlambdaClient := lambda.NewFromConfig(sdkConfig)\n\n\tmaxItems := 10\n\tfmt.Printf(\"Let's list up to %v functions for your account.\\n\", maxItems)\n\tresult, err := lambdaClient.ListFunctions(ctx, &lambda.ListFunctionsInput{\n\t\tMaxItems: aws.Int32(int32(maxItems)),\n\t})\n\tif err != nil {\n\t\tfmt.Printf(\"Couldn't list functions for your account. Here's why: %v\\n\", err)\n\t\treturn\n\t}\n\tif len(result.Functions) == 0 {\n\t\tfmt.Println(\"You don't have any functions!\")\n\t} else {\n\t\tfor _, function := range result.Functions {\n\t\t\tfmt.Printf(\"\\t%v\\n\", *function.FunctionName)\n\t\t}\n\t}\n}\n\n\n",
-            "  7.Java :     /**\n     * Lists the AWS Lambda functions associated with the current AWS account.\n     *\n     * @param awsLambda an instance of the {@link LambdaClient} class, which is used to interact with the AWS Lambda service\n     *\n     * @throws LambdaException if an error occurs while interacting with the AWS Lambda service\n     */\n    public static void listFunctions(LambdaClient awsLambda) {\n        try {\n            ListFunctionsResponse functionResult = awsLambda.listFunctions();\n            List<FunctionConfiguration> list = functionResult.functions();\n            for (FunctionConfiguration config : list) {\n                System.out.println(\"The function name is \" + config.functionName());\n            }\n\n        } catch (LambdaException e) {\n            System.err.println(e.getMessage());\n            System.exit(1);\n        }\n    }\n\n",
-            "  8.SDK for Java 2.x :     /**\n     * Lists the AWS Lambda functions associated with the current AWS account.\n     *\n     * @param awsLambda an instance of the {@link LambdaClient} class, which is used to interact with the AWS Lambda service\n     *\n     * @throws LambdaException if an error occurs while interacting with the AWS Lambda service\n     */\n    public static void listFunctions(LambdaClient awsLambda) {\n        try {\n            ListFunctionsResponse functionResult = awsLambda.listFunctions();\n            List<FunctionConfiguration> list = functionResult.functions();\n            for (FunctionConfiguration config : list) {\n                System.out.println(\"The function name is \" + config.functionName());\n            }\n\n        } catch (LambdaException e) {\n            System.err.println(e.getMessage());\n            System.exit(1);\n        }\n    }\n\n",
-            "  9.JavaScript : import { LambdaClient, paginateListFunctions } from \"@aws-sdk/client-lambda\";\n\nconst client = new LambdaClient({});\n\nexport const helloLambda = async () => {\n  const paginator = paginateListFunctions({ client }, {});\n  const functions = [];\n\n  for await (const page of paginator) {\n    const funcNames = page.Functions.map((f) => f.FunctionName);\n    functions.push(...funcNames);\n  }\n\n  console.log(\"Functions:\");\n  console.log(functions.join(\"\\n\"));\n  return functions;\n};\n\n",
-            "  10.SDK for JavaScript (v3) : import { LambdaClient, paginateListFunctions } from \"@aws-sdk/client-lambda\";\n\nconst client = new LambdaClient({});\n\nexport const helloLambda = async () => {\n  const paginator = paginateListFunctions({ client }, {});\n  const functions = [];\n\n  for await (const page of paginator) {\n    const funcNames = page.Functions.map((f) => f.FunctionName);\n    functions.push(...funcNames);\n  }\n\n  console.log(\"Functions:\");\n  console.log(functions.join(\"\\n\"));\n  return functions;\n};\n\n",
-            "  11.Python : \nimport boto3\n\n\ndef main():\n    \"\"\"\n    List the Lambda functions in your AWS account.\n    \"\"\"\n    # Create the Lambda client\n    lambda_client = boto3.client(\"lambda\")\n\n    # Use the paginator to list the functions\n    paginator = lambda_client.get_paginator(\"list_functions\")\n    response_iterator = paginator.paginate()\n\n    print(\"Here are the Lambda functions in your account:\")\n    for page in response_iterator:\n        for function in page[\"Functions\"]:\n            print(f\"  {function['FunctionName']}\")\n\n\nif __name__ == \"__main__\":\n    main()\n\n\n",
-            "  12.SDK for Python (Boto3) : \nimport boto3\n\n\ndef main():\n    \"\"\"\n    List the Lambda functions in your AWS account.\n    \"\"\"\n    # Create the Lambda client\n    lambda_client = boto3.client(\"lambda\")\n\n    # Use the paginator to list the functions\n    paginator = lambda_client.get_paginator(\"list_functions\")\n    response_iterator = paginator.paginate()\n\n    print(\"Here are the Lambda functions in your account:\")\n    for page in response_iterator:\n        for function in page[\"Functions\"]:\n            print(f\"  {function['FunctionName']}\")\n\n\nif __name__ == \"__main__\":\n    main()\n\n\n",
-            "  13.Ruby : \nrequire 'aws-sdk-lambda'\n\n# Creates an AWS Lambda client using the default credentials and configuration\ndef lambda_client\n  Aws::Lambda::Client.new\nend\n\n# Lists the Lambda functions in your AWS account, paginating the results if necessary\ndef list_lambda_functions\n  lambda = lambda_client\n\n  # Use a pagination iterator to list all functions\n  functions = []\n  lambda.list_functions.each_page do |page|\n    functions.concat(page.functions)\n  end\n\n  # Print the name and ARN of each function\n  functions.each do |function|\n    puts \"Function name: #{function.function_name}\"\n    puts \"Function ARN: #{function.function_arn}\"\n    puts\n  end\n\n  puts \"Total functions: #{functions.count}\"\nend\n\nlist_lambda_functions if __FILE__ == $PROGRAM_NAME\n\n\n",
-            "  14.SDK for Ruby : \nrequire 'aws-sdk-lambda'\n\n# Creates an AWS Lambda client using the default credentials and configuration\ndef lambda_client\n  Aws::Lambda::Client.new\nend\n\n# Lists the Lambda functions in your AWS account, paginating the results if necessary\ndef list_lambda_functions\n  lambda = lambda_client\n\n  # Use a pagination iterator to list all functions\n  functions = []\n  lambda.list_functions.each_page do |page|\n    functions.concat(page.functions)\n  end\n\n  # Print the name and ARN of each function\n  functions.each do |function|\n    puts \"Function name: #{function.function_name}\"\n    puts \"Function ARN: #{function.function_arn}\"\n    puts\n  end\n\n  puts \"Total functions: #{functions.count}\"\nend\n\nlist_lambda_functions if __FILE__ == $PROGRAM_NAME\n\n\n",
-            "Hello Lambda",
-            "The following code examples show how to get started using Lambda.",
-            "  1..NET : namespace LambdaActions;\n\nusing Amazon.Lambda;\n\npublic class HelloLambda\n{\n    static async Task Main(string[] args)\n    {\n        var lambdaClient = new AmazonLambdaClient();\n\n        Console.WriteLine(\"Hello AWS Lambda\");\n        Console.WriteLine(\"Let's get started with AWS Lambda by listing your existing Lambda functions:\");\n\n        var response = await lambdaClient.ListFunctionsAsync();\n        response.Functions.ForEach(function =>\n        {\n            Console.WriteLine($\"{function.FunctionName}\\t{function.Description}\");\n        });\n    }\n}\n\n\n",
-            "  2.AWS SDK for .NET : namespace LambdaActions;\n\nusing Amazon.Lambda;\n\npublic class HelloLambda\n{\n    static async Task Main(string[] args)\n    {\n        var lambdaClient = new AmazonLambdaClient();\n\n        Console.WriteLine(\"Hello AWS Lambda\");\n        Console.WriteLine(\"Let's get started with AWS Lambda by listing your existing Lambda functions:\");\n\n        var response = await lambdaClient.ListFunctionsAsync();\n        response.Functions.ForEach(function =>\n        {\n            Console.WriteLine($\"{function.FunctionName}\\t{function.Description}\");\n        });\n    }\n}\n\n\n",
-            "  3.C++ : # Set the minimum required version of CMake for this project.\ncmake_minimum_required(VERSION 3.13)\n\n# Set the AWS service components used by this project.\nset(SERVICE_COMPONENTS lambda)\n\n# Set this project's name.\nproject(\"hello_lambda\")\n\n# Set the C++ standard to use to build this target.\n# At least C++ 11 is required for the AWS SDK for C++.\nset(CMAKE_CXX_STANDARD 11)\n\n# Use the MSVC variable to determine if this is a Windows build.\nset(WINDOWS_BUILD ${MSVC})\n\nif (WINDOWS_BUILD) # Set the location where CMake can find the installed libraries for the AWS SDK.\n    string(REPLACE \";\" \"/aws-cpp-sdk-all;\" SYSTEM_MODULE_PATH \"${CMAKE_SYSTEM_PREFIX_PATH}/aws-cpp-sdk-all\")\n    list(APPEND CMAKE_PREFIX_PATH ${SYSTEM_MODULE_PATH})\nendif ()\n\n# Find the AWS SDK for C++ package.\nfind_package(AWSSDK REQUIRED COMPONENTS ${SERVICE_COMPONENTS})\n\nif (WINDOWS_BUILD AND AWSSDK_INSTALL_AS_SHARED_LIBS)\n     # Copy relevant AWS SDK for C++ libraries into the current binary directory for running and debugging.\n\n     # set(BIN_SUB_DIR \"/Debug\") # if you are building from the command line you may need to uncomment this \n                                    # and set the proper subdirectory to the executables' location.\n\n     AWSSDK_CPY_DYN_LIBS(SERVICE_COMPONENTS \"\" ${CMAKE_CURRENT_BINARY_DIR}${BIN_SUB_DIR})\nendif ()\n\nadd_executable(${PROJECT_NAME}\n        hello_lambda.cpp)\n\ntarget_link_libraries(${PROJECT_NAME}\n        ${AWSSDK_LINK_LIBRARIES})\n\n",
-            "  4.SDK for C++ : # Set the minimum required version of CMake for this project.\ncmake_minimum_required(VERSION 3.13)\n\n# Set the AWS service components used by this project.\nset(SERVICE_COMPONENTS lambda)\n\n# Set this project's name.\nproject(\"hello_lambda\")\n\n# Set the C++ standard to use to build this target.\n# At least C++ 11 is required for the AWS SDK for C++.\nset(CMAKE_CXX_STANDARD 11)\n\n# Use the MSVC variable to determine if this is a Windows build.\nset(WINDOWS_BUILD ${MSVC})\n\nif (WINDOWS_BUILD) # Set the location where CMake can find the installed libraries for the AWS SDK.\n    string(REPLACE \";\" \"/aws-cpp-sdk-all;\" SYSTEM_MODULE_PATH \"${CMAKE_SYSTEM_PREFIX_PATH}/aws-cpp-sdk-all\")\n    list(APPEND CMAKE_PREFIX_PATH ${SYSTEM_MODULE_PATH})\nendif ()\n\n# Find the AWS SDK for C++ package.\nfind_package(AWSSDK REQUIRED COMPONENTS ${SERVICE_COMPONENTS})\n\nif (WINDOWS_BUILD AND AWSSDK_INSTALL_AS_SHARED_LIBS)\n     # Copy relevant AWS SDK for C++ libraries into the current binary directory for running and debugging.\n\n     # set(BIN_SUB_DIR \"/Debug\") # if you are building from the command line you may need to uncomment this \n                                    # and set the proper subdirectory to the executables' location.\n\n     AWSSDK_CPY_DYN_LIBS(SERVICE_COMPONENTS \"\" ${CMAKE_CURRENT_BINARY_DIR}${BIN_SUB_DIR})\nendif ()\n\nadd_executable(${PROJECT_NAME}\n        hello_lambda.cpp)\n\ntarget_link_libraries(${PROJECT_NAME}\n        ${AWSSDK_LINK_LIBRARIES})\n\n",
-            "  5.Go : \npackage main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\n\t\"github.com/aws/aws-sdk-go-v2/aws\"\n\t\"github.com/aws/aws-sdk-go-v2/config\"\n\t\"github.com/aws/aws-sdk-go-v2/service/lambda\"\n)\n\n// main uses the AWS SDK for Go (v2) to create an AWS Lambda client and list up to 10\n// functions in your account.\n// This example uses the default settings specified in your shared credentials\n// and config files.\nfunc main() {\n\tctx := context.Background()\n\tsdkConfig, err := config.LoadDefaultConfig(ctx)\n\tif err != nil {\n\t\tfmt.Println(\"Couldn't load default configuration. Have you set up your AWS account?\")\n\t\tfmt.Println(err)\n\t\treturn\n\t}\n\tlambdaClient := lambda.NewFromConfig(sdkConfig)\n\n\tmaxItems := 10\n\tfmt.Printf(\"Let's list up to %v functions for your account.\\n\", maxItems)\n\tresult, err := lambdaClient.ListFunctions(ctx, &lambda.ListFunctionsInput{\n\t\tMaxItems: aws.Int32(int32(maxItems)),\n\t})\n\tif err != nil {\n\t\tfmt.Printf(\"Couldn't list functions for your account. Here's why: %v\\n\", err)\n\t\treturn\n\t}\n\tif len(result.Functions) == 0 {\n\t\tfmt.Println(\"You don't have any functions!\")\n\t} else {\n\t\tfor _, function := range result.Functions {\n\t\t\tfmt.Printf(\"\\t%v\\n\", *function.FunctionName)\n\t\t}\n\t}\n}\n\n\n",
-            "  6.SDK for Go V2 : \npackage main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\n\t\"github.com/aws/aws-sdk-go-v2/aws\"\n\t\"github.com/aws/aws-sdk-go-v2/config\"\n\t\"github.com/aws/aws-sdk-go-v2/service/lambda\"\n)\n\n// main uses the AWS SDK for Go (v2) to create an AWS Lambda client and list up to 10\n// functions in your account.\n// This example uses the default settings specified in your shared credentials\n// and config files.\nfunc main() {\n\tctx := context.Background()\n\tsdkConfig, err := config.LoadDefaultConfig(ctx)\n\tif err != nil {\n\t\tfmt.Println(\"Couldn't load default configuration. Have you set up your AWS account?\")\n\t\tfmt.Println(err)\n\t\treturn\n\t}\n\tlambdaClient := lambda.NewFromConfig(sdkConfig)\n\n\tmaxItems := 10\n\tfmt.Printf(\"Let's list up to %v functions for your account.\\n\", maxItems)\n\tresult, err := lambdaClient.ListFunctions(ctx, &lambda.ListFunctionsInput{\n\t\tMaxItems: aws.Int32(int32(maxItems)),\n\t})\n\tif err != nil {\n\t\tfmt.Printf(\"Couldn't list functions for your account. Here's why: %v\\n\", err)\n\t\treturn\n\t}\n\tif len(result.Functions) == 0 {\n\t\tfmt.Println(\"You don't have any functions!\")\n\t} else {\n\t\tfor _, function := range result.Functions {\n\t\t\tfmt.Printf(\"\\t%v\\n\", *function.FunctionName)\n\t\t}\n\t}\n}\n\n\n",
-            "  7.Java :     /**\n     * Lists the AWS Lambda functions associated with the current AWS account.\n     *\n     * @param awsLambda an instance of the {@link LambdaClient} class, which is used to interact with the AWS Lambda service\n     *\n     * @throws LambdaException if an error occurs while interacting with the AWS Lambda service\n     */\n    public static void listFunctions(LambdaClient awsLambda) {\n        try {\n            ListFunctionsResponse functionResult = awsLambda.listFunctions();\n            List<FunctionConfiguration> list = functionResult.functions();\n            for (FunctionConfiguration config : list) {\n                System.out.println(\"The function name is \" + config.functionName());\n            }\n\n        } catch (LambdaException e) {\n            System.err.println(e.getMessage());\n            System.exit(1);\n        }\n    }\n\n",
-            "  8.SDK for Java 2.x :     /**\n     * Lists the AWS Lambda functions associated with the current AWS account.\n     *\n     * @param awsLambda an instance of the {@link LambdaClient} class, which is used to interact with the AWS Lambda service\n     *\n     * @throws LambdaException if an error occurs while interacting with the AWS Lambda service\n     */\n    public static void listFunctions(LambdaClient awsLambda) {\n        try {\n            ListFunctionsResponse functionResult = awsLambda.listFunctions();\n            List<FunctionConfiguration> list = functionResult.functions();\n            for (FunctionConfiguration config : list) {\n                System.out.println(\"The function name is \" + config.functionName());\n            }\n\n        } catch (LambdaException e) {\n            System.err.println(e.getMessage());\n            System.exit(1);\n        }\n    }\n\n",
-            "  9.JavaScript : import { LambdaClient, paginateListFunctions } from \"@aws-sdk/client-lambda\";\n\nconst client = new LambdaClient({});\n\nexport const helloLambda = async () => {\n  const paginator = paginateListFunctions({ client }, {});\n  const functions = [];\n\n  for await (const page of paginator) {\n    const funcNames = page.Functions.map((f) => f.FunctionName);\n    functions.push(...funcNames);\n  }\n\n  console.log(\"Functions:\");\n  console.log(functions.join(\"\\n\"));\n  return functions;\n};\n\n",
-            "  10.SDK for JavaScript (v3) : import { LambdaClient, paginateListFunctions } from \"@aws-sdk/client-lambda\";\n\nconst client = new LambdaClient({});\n\nexport const helloLambda = async () => {\n  const paginator = paginateListFunctions({ client }, {});\n  const functions = [];\n\n  for await (const page of paginator) {\n    const funcNames = page.Functions.map((f) => f.FunctionName);\n    functions.push(...funcNames);\n  }\n\n  console.log(\"Functions:\");\n  console.log(functions.join(\"\\n\"));\n  return functions;\n};\n\n",
-            "  11.Python : \nimport boto3\n\n\ndef main():\n    \"\"\"\n    List the Lambda functions in your AWS account.\n    \"\"\"\n    # Create the Lambda client\n    lambda_client = boto3.client(\"lambda\")\n\n    # Use the paginator to list the functions\n    paginator = lambda_client.get_paginator(\"list_functions\")\n    response_iterator = paginator.paginate()\n\n    print(\"Here are the Lambda functions in your account:\")\n    for page in response_iterator:\n        for function in page[\"Functions\"]:\n            print(f\"  {function['FunctionName']}\")\n\n\nif __name__ == \"__main__\":\n    main()\n\n\n",
-            "  12.SDK for Python (Boto3) : \nimport boto3\n\n\ndef main():\n    \"\"\"\n    List the Lambda functions in your AWS account.\n    \"\"\"\n    # Create the Lambda client\n    lambda_client = boto3.client(\"lambda\")\n\n    # Use the paginator to list the functions\n    paginator = lambda_client.get_paginator(\"list_functions\")\n    response_iterator = paginator.paginate()\n\n    print(\"Here are the Lambda functions in your account:\")\n    for page in response_iterator:\n        for function in page[\"Functions\"]:\n            print(f\"  {function['FunctionName']}\")\n\n\nif __name__ == \"__main__\":\n    main()\n\n\n",
-            "  13.Ruby : \nrequire 'aws-sdk-lambda'\n\n# Creates an AWS Lambda client using the default credentials and configuration\ndef lambda_client\n  Aws::Lambda::Client.new\nend\n\n# Lists the Lambda functions in your AWS account, paginating the results if necessary\ndef list_lambda_functions\n  lambda = lambda_client\n\n  # Use a pagination iterator to list all functions\n  functions = []\n  lambda.list_functions.each_page do |page|\n    functions.concat(page.functions)\n  end\n\n  # Print the name and ARN of each function\n  functions.each do |function|\n    puts \"Function name: #{function.function_name}\"\n    puts \"Function ARN: #{function.function_arn}\"\n    puts\n  end\n\n  puts \"Total functions: #{functions.count}\"\nend\n\nlist_lambda_functions if __FILE__ == $PROGRAM_NAME\n\n\n",
-            "  14.SDK for Ruby : \nrequire 'aws-sdk-lambda'\n\n# Creates an AWS Lambda client using the default credentials and configuration\ndef lambda_client\n  Aws::Lambda::Client.new\nend\n\n# Lists the Lambda functions in your AWS account, paginating the results if necessary\ndef list_lambda_functions\n  lambda = lambda_client\n\n  # Use a pagination iterator to list all functions\n  functions = []\n  lambda.list_functions.each_page do |page|\n    functions.concat(page.functions)\n  end\n\n  # Print the name and ARN of each function\n  functions.each do |function|\n    puts \"Function name: #{function.function_name}\"\n    puts \"Function ARN: #{function.function_arn}\"\n    puts\n  end\n\n  puts \"Total functions: #{functions.count}\"\nend\n\nlist_lambda_functions if __FILE__ == $PROGRAM_NAME\n\n\n",
-            "anchor",
-            "anchor",
-            "anchor",
-            "anchor",
-            "anchor",
-            "anchor",
-            "anchor",
-            "  1.AWS SDK for .NET : namespace LambdaActions;\n\nusing Amazon.Lambda;\n\npublic class HelloLambda\n{\n    static async Task Main(string[] args)\n    {\n        var lambdaClient = new AmazonLambdaClient();\n\n        Console.WriteLine(\"Hello AWS Lambda\");\n        Console.WriteLine(\"Let's get started with AWS Lambda by listing your existing Lambda functions:\");\n\n        var response = await lambdaClient.ListFunctionsAsync();\n        response.Functions.ForEach(function =>\n        {\n            Console.WriteLine($\"{function.FunctionName}\\t{function.Description}\");\n        });\n    }\n}\n\n\n",
-            "Code examples"
         ]
     }
 ]

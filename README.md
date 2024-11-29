@@ -12,5 +12,5 @@ pip install -r requirements.txt
 ## you can see 3 .json file swith the output
 1. react.json
 2. aws.json
-3. result.json
+3. final_result.json
 
