@@ -1,10 +1,11 @@
-import json
+import logging
 import requests
-from constants import React
+from constants.react_constants import React
 from bs4 import BeautifulSoup
-import re
+from utilities.utilities import Utilities
 
 class ReactFunction:
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
 
     def __init__(self):
         pass
@@ -34,38 +35,18 @@ class ReactFunction:
             # getting sub topics and their urls for the main sub topics
             for j in inner_li:
                 subtopic_url = url + j.find(React.A.value).get(React.HREF.value)
-                # result[main_sub_topic][j.find(React.A.value).text] ={"url": subtopic_url}
                 temp.append({"topic": j.find(React.A.value).text, "url": subtopic_url})
             temp_dic["subTopics"] = temp
             result.append(temp_dic)
         return [result, main_topic]
     
-    def make_item_list(self, all_divs):
-        page_list = []
-        for index, div in enumerate(all_divs):
-            page_list = page_list + div.contents
-        return page_list
     
-    def return_data(self, stack, content_name):
-        # poping and making the json hirachi and output the page data as a list of dictionaries
-        original = []
-        while(len(stack) > 1):
-            a = stack.pop()
-            stack[-1][content_name].append(a)
-        original.append(stack.pop())
-        return original
-    
-    
-    def sub_heddings_data_collector(self,l, main_header, url):
+    def sub_heddings_data_collector(self,l, main_header, url, util):
         stack = [{"headers":main_header, "url": url,"content": []}]  
         original = []
         for i in l:
             if(i.name == None):
                 continue
-            # print(stack)
-            # print("tag: ", i.name)
-            # print("data: ", i.text) 
-            # print("\n")
             if(i.name in ['h1', 'h2', 'h3', 'h4']):
                 level = int(i.name[1])
                 current_stack_length = len(stack)
@@ -94,40 +75,36 @@ class ReactFunction:
                 if(i.name == 'ol'):
                     for index,j in enumerate(i.find_all('li')):
                         stack[-1]["content"].append(f"  {index+1}.{j.text}")
-
+                
                 if(i.name == 'div'):
-                    code = i.find('code')
-                    if(code):
-                        stack[-1]["content"].append({"code_example": code.text})
-                    else:
-                        stack[-1]["content"].append(i.text)
+                    try:
+                        code = i.find('code')
+                        if(code and (stack[-1]["content"][-1] != {"code_example": code.text})):
+                            stack[-1]["content"].append({"code_example": code.text})
+                        elif(i.get('class')[1] == 'sandpack--playground'):
+                            code_sandbox = util.remove_redundant(i.text)
+                            stack[-1]["content"].append({"code_sandbox": code_sandbox})
+                        else:
+                            stack[-1]["content"].append(i.text)
+                    except: IndexError
+                   
             
                 else:
-                    if(i.name == "ul" or i.name == "ol"):
+                    if(i.name == "ul" or i.name == "ol" or i.name == "div"):
                         continue
                     else:
                         stack[-1]["content"].append(i.text)
 
-
-        # while(len(stack) > 1):
-        #     a = stack.pop()
-        #     stack[-1]["content"].append(a)
-        # original.append(stack.pop())
-
-        return self.return_data(stack, "content")
+        return util.return_data(stack, "content")
     
     
-    def main_heading_data_collector(self, page_item_list, main_header, url):
+    def main_heading_data_collector(self, page_item_list, main_header, url, util):
 
         stack = [{"title": main_header,"source": "react" ,"url": url,"sections": [], "subTopics": []}]
         original = []
         for i in page_item_list:
             if(i.name == None):
                 continue
-            # print(stack)
-            # print("tag: ", i.name)
-            # print("data: ", i.text) 
-            # print("\n")
             if(i.name in React.TOPIC_LIST.value):
                 level = int(i.name[1])
                 current_stack_length = len(stack)
@@ -166,28 +143,31 @@ class ReactFunction:
                         stack[-1]["sections"].append(f"  {index+1}.{j.text}")
 
                 if(i.name == 'div'):
-                    code = i.find('code')
-                    if(code):
-                        stack[-1]["sections"].append({"code_example": code.text})
-                    else:
-                        stack[-1]["sections"].append(i.text)
+                    
+                    try:
+                        code = i.find('code')
+                        if(code and (stack[-1]["sections"][-1] != {"code_example": code.text})):
+                            stack[-1]["sections"].append({"code_example": code.text})
+                        elif(i.get('class')[1] == 'sandpack--playground'):
+                            code_sandbox = util.remove_redundant(i.text)
+                            stack[-1]["sections"].append({"code_sandbox": code_sandbox})
+                        else:
+                            stack[-1]["sections"].append(i.text)
+                    except: IndexError
+                
             
                 else:
-                    if(i.name == "ul" or i.name == "ol"):
+                    if(i.name == "ul" or i.name == "ol" or i.name == "div"):
                         continue
                     else:
                         stack[-1]["sections"].append(i.text)
 
-        # while(len(stack) > 1):
-        #     a = stack.pop()
-        #     stack[-1]["sections"].append(a)
-        # original.append(stack.pop())
-
-        return self.return_data(stack, "sections")
+        return util.return_data(stack, "sections")
 
 
     #function to get the inner content of the urls
     def getting_inner_content(self,url, main_or_sub):
+        util = Utilities()
         response = requests.get(url)
         soup = BeautifulSoup(response.text, 'html.parser')
 
@@ -220,19 +200,27 @@ class ReactFunction:
         # Extracting the actual data from the data,2nd item is the footer
         actual_data = data.contents[0]  
 
+        divs = actual_data.contents
+        all_divs = []
+        for i in divs:
+            if(i.name == None):
+                continue
+            else:
+                all_divs.append(i)
+            
         # Extracting all the divs from the actual data
-        all_divs = actual_data.find_all('div', class_="max-w-4xl ms-0 2xl:mx-auto")
+        # all_divs = actual_data.find_all('div', class_="max-w-4xl ms-0 2xl:mx-auto")
 
         # Extract items with the div and make the list with inner content
-        page_item_list = self.make_item_list(all_divs)
+        page_item_list = util.make_item_list(all_divs)
 
         if(main_or_sub == React.MAIN.value):
             # getting main page data
-            main_pages = self.main_heading_data_collector(page_item_list, h1, url)
+            main_pages = self.main_heading_data_collector(page_item_list, h1, url, util)
             return main_pages
         else:
             # getting sub page data
-            sub_pages = self.sub_heddings_data_collector(page_item_list, h1, url)
+            sub_pages = self.sub_heddings_data_collector(page_item_list, h1, url, util)
             return sub_pages
 
 
@@ -247,6 +235,7 @@ class ReactFunction:
     def get_content_data(self,link_list, main_or_sub):
         body_content = []
         for link in link_list:
+            logging.info(f"-------Getting data from {link['url']}")
             original_dict = self.getting_inner_content(link["url"], main_or_sub)
             body_content.append(original_dict[0])
         return body_content 
