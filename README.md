@@ -4,6 +4,12 @@
 ```
 pip install -r requirements.txt
 ```
+
+## install playwrite
+```
+playright install
+```
+
 ## to run the program
 ```
 python drive.py
