@@ -1,4 +1,5 @@
 import logging
+import time
 import requests
 from constants.aws_constants import Aws
 from bs4 import BeautifulSoup
@@ -202,31 +203,41 @@ class AwsFunction:
     #function to get the html content of the urls
     async def getting_inner_content(self, url, page ):
 
-        await page.goto(url, wait_until="domcontentloaded")  # Load the page
+        retries = 3  # Number of retry attempts
+        timeout_duration = 60000  # Timeout duration in milliseconds (60 seconds)
+        attempt = 0
 
-        try:
-            await page.goto(url, timeout=60000)
-        except TimeoutError:
-            logging.info(f"Timeout while navigating to {url}")
-            return None 
-        
-        # Wait for the AJAX content to load (e.g., by waiting for a specific element)
-        await page.wait_for_selector('main', timeout=60000)  # Wait for dynamic content for up to 60 seconds
+        while attempt < retries:
+            try:
+                await page.goto(url, wait_until="domcontentloaded")  # First attempt to load the page
 
-        title_element = await page.query_selector('div#main')
-        inner_html_content = await title_element.inner_html() if title_element else ""
-        
-        # Parse HTML and filter specific tags using BeautifulSoup
-        soup = BeautifulSoup(inner_html_content, "html.parser")
+                # Wait for the AJAX content to load (e.g., by waiting for a specific element)
+                await page.wait_for_selector('main', timeout=timeout_duration)
 
-        main_col_body = soup.find(Aws.DIV.value, id="main-col-body") 
-        mainbody_content = main_col_body.contents
+                title_element = await page.query_selector('div#main')
+                inner_html_content = await title_element.inner_html() if title_element else ""
 
-        main_header = soup.find('h1')
+                # Parse HTML and filter specific tags using BeautifulSoup
+                soup = BeautifulSoup(inner_html_content, "html.parser")
+                main_col_body = soup.find(Aws.DIV.value, id="main-col-body")
+                mainbody_content = main_col_body.contents if main_col_body else []
 
-        content = self.data_organizer(mainbody_content, main_header, url)
+                main_header = soup.find('h1')
 
-        return content
+                content = self.data_organizer(mainbody_content, main_header, url)
+
+                return content
+            
+            except TimeoutError:
+                logging.info(f"Timeout while navigating to {url}. Attempt {attempt + 1} of {retries}")
+                attempt += 1
+                time.sleep(2)  # Wait before retrying
+
+                if attempt == retries:
+                    logging.error(f"All attempts failed for {url}. Skipping.")
+                    return None
+    
+        return None  # If all attempts fail
     
     async def getting_page_content_driver(self, urls):
         async with async_playwright() as p:
