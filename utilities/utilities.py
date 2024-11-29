@@ -1,5 +1,7 @@
 import re
 
+from constants.utility_constant import Utility
+
 
 class Utilities:
     def __init__(self):
@@ -22,7 +24,6 @@ class Utilities:
     def make_item_list(self, all_divs):
         page_list = []
         for index, div in enumerate(all_divs):
-            #print(div.get('class'))
             if(div.get('class')[0] == 'sandpack'):
                 page_list.append(div)
             else:
@@ -32,7 +33,7 @@ class Utilities:
     
     # make the string replacing redundant strings
     def remove_redundant(self, string):
-        replace_targets = ["\n", "index.js", "index.html", "index.css", "App.js", " ResetFork", "Show more"]
+        replace_targets = Utility.TARGET_VALUES.value
 
         # Replace using a loop
         processed_text = string
