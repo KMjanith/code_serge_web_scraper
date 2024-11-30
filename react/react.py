@@ -162,7 +162,7 @@ class ReactFunction:
                         code = i.find(React.CODE.value)
                         if(code and (stack[-1][React.SECTIONS.value][-1] != {React.CODE_EXAMPLE.value: code.text})):
                             stack[-1][React.SECTIONS.value].append({React.CODE_EXAMPLE.value: code.text})
-                        if(i.get('class')[1] == 'sandpack--playground'):
+                        if(i.get('class')[1] == React.SANDPACK_PLAYGROUND.value):
                             code_sandbox = util.remove_redundant(i.text)
                             stack[-1][React.SECTIONS.value].append({React.CODE_SANDBOX.value: code_sandbox})
                         else:
