@@ -41,7 +41,7 @@ the final_result.json has the combined result of the both scraped contents
 
 ## If you want to scrape documentations sepreately
 1. go to drive.py
-2. comment out follwoign lines as you want in the main function 
+2. comment out following lines as you want in the main function 
 ```
 get_react_data()
 structure_react_data()
@@ -51,7 +51,7 @@ combining_data()
 ```
 3. if you scraping individual documentations it is good to comment out the `combining_data()` line.
 
-# JSON hierachies
+# JSON hierarchies
 
 ### aws.json
 ```
