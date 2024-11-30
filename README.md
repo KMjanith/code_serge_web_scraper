@@ -1,5 +1,10 @@
 # Code_serge_web_scraper
 
+## Clone the repo
+```
+git clone https://github.com/KMjanith/code_serge_web_scraper.git
+```
+
 ## Tnstall the dependencies
 ```
 pip install -r requirements.txt
